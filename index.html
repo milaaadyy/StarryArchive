@@ -310,6 +310,7 @@
   <p class="tagline">Твой проводник в мир астрологии</p>
   <span class="main-date" id="mainDate"></span>
 
+  <!-- Исправлено: форма теперь показывается, если нет даты, а не только знака -->
   <div id="profileSetup" class="setup-birth hidden">
     <h3>Данные для натальной карты</h3>
     <div class="input-group">
@@ -334,7 +335,8 @@
 
   <div id="profileBar" class="profile-bar hidden">
     <span>Твой знак: <b id="mySignName">-</b></span>
-    <button onclick="resetProfile()">Сменить данные</button>
+    <!-- Исправлено: кнопка теперь всегда ведет к заполнению формы -->
+    <button onclick="showProfileSetup()">Заполнить дату рождения</button>
   </div>
 
   <div class="tabs">
@@ -634,7 +636,6 @@ const MOON = [
   { icon:"🌘", n:"Убывающая", d:"Отдых и восстановление сил." }
 ];
 
-/* Данные для Колеса Фортуны */
 const FORTUNE_SECTORS = [
   { name: "Любовь", icon: "❤️", advice: "Открой свое сердце новому. Скажи близкому человеку то, что давно хотел.", avoid: "Не играй с чувствами других. Избегай недосказанности.", affirm: "Я достоин любви и гармонии." },
   { name: "Финансы", icon: "💰", advice: "Сделай первый шаг к новой цели. Возможно, пришло время для инвестиций в себя.", avoid: "Не совершай импульсивных покупок. Береги ресурсы.", affirm: "Вселенная изобильна, и мой доход растет." },
@@ -708,35 +709,32 @@ function saveBirth() {
   
   initProfile();
   renderWeek(mySignId);
+  renderNatal(); // Перерисовываем карту, если открыта
 }
 
-function resetProfile() {
-  localStorage.removeItem("mySignId");
-  localStorage.removeItem("myBirthDate");
-  localStorage.removeItem("myBirthTime");
-  localStorage.removeItem("myBirthCity");
-  mySignId = null;
-  myBirthDate = null;
-  initProfile();
+function showProfileSetup() {
+  document.getElementById("profileSetup").classList.remove("hidden");
+  document.getElementById("profileBar").classList.add("hidden");
+  
+  if (myBirthDate) {
+    document.getElementById("birthDateInput").value = myBirthDate;
+    document.getElementById("birthTimeInput").value = myBirthTime;
+    document.getElementById("birthCityInput").value = myBirthCity;
+  }
 }
 
 function initProfile() {
   const setup = document.getElementById("profileSetup");
   const bar = document.getElementById("profileBar");
   
-  if (mySignId) {
+  // Показываем бар только если есть и знак, и дата
+  if (mySignId && myBirthDate) {
     setup.classList.add("hidden");
     bar.classList.remove("hidden");
     const s = SIGNS.find(x => x.id === mySignId);
     document.getElementById("mySignName").innerText = s.name + " " + s.sym;
-    
-    // Заполняем форму, если открыта
-    if (document.getElementById("birthDateInput")) {
-      document.getElementById("birthDateInput").value = myBirthDate;
-      document.getElementById("birthTimeInput").value = myBirthTime;
-      document.getElementById("birthCityInput").value = myBirthCity;
-    }
   } else {
+    // Иначе показываем форму
     setup.classList.remove("hidden");
     bar.classList.add("hidden");
   }
@@ -939,8 +937,7 @@ function renderNatal() {
   const day = date.getDate();
   const month = date.getMonth(); // 0-11
   
-  // Простая эмуляция позиций (в реальности нужны эфемериды)
-  // Считаем по прогрессии от начала года
+  // Простая эмуляция позиций
   const sunDeg = (month * 30 + day) % 360;
   const moonDeg = (sunDeg * 13.2) % 360;
   const mercuryDeg = (sunDeg + 15) % 360;
@@ -990,7 +987,6 @@ function renderNatal() {
   // Планеты
   planets.forEach((p, idx) => {
     const rad = (p.deg - 90) * Math.PI / 180;
-    // Разводим планеты по радиусу, чтобы не слипались
     const r = rInner + 20 + (idx % 3) * 15; 
     const px = cx + r * Math.cos(rad);
     const py = cy + r * Math.sin(rad);
