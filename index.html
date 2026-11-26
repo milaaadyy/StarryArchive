@@ -266,6 +266,64 @@
   @keyframes smoke-rise { 0% { transform: translateY(0) scale(1); opacity: 0.6; } 100% { transform: translateY(-40px) scale(1.5); opacity: 0; } }
   .candle-message { margin-top: 20px; font-size: 14px; color: #f4e2a1; min-height: 40px; font-style: italic; opacity: 0; transition: opacity 0.5s; }
   .candle-message.active { opacity: 1; }
+
+  /* КОЛЕСО УДАЧИ (ИСПРАВЛЕНО) */
+  .wheel-container { position: relative; width: 240px; height: 240px; margin: 25px auto 30px; }
+  .wheel-pointer { 
+    position: absolute; top: -18px; left: 50%; transform: translateX(-50%); 
+    font-size: 32px; z-index: 10; color: #c9a227; 
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6)); 
+  }
+  .wheel { 
+    width: 100%; height: 100%; border-radius: 50%; border: 4px solid #c9a227; 
+    position: relative; overflow: hidden; 
+    transition: transform 6s cubic-bezier(0.15, 0.9, 0.2, 1);
+    box-shadow: 0 0 40px rgba(201,162,39,0.2), inset 0 0 20px rgba(0,0,0,0.8); 
+  }
+  .wheel.spinning { filter: blur(1px); }
+  .wheel-center { 
+    position: absolute; top: 50%; left: 50%; width: 44px; height: 44px; 
+    background: #0d0820; border: 3px solid #c9a227; border-radius: 50%; 
+    transform: translate(-50%,-50%); z-index: 5; 
+    display: flex; align-items: center; justify-content: center; font-size: 20px; 
+    box-shadow: 0 0 15px rgba(201,162,39,0.5); transition: all 0.3s;
+  }
+  .wheel-center.pulse { animation: pulse 0.5s infinite alternate; }
+  @keyframes pulse { from { box-shadow: 0 0 15px rgba(201,162,39,0.5); } to { box-shadow: 0 0 30px rgba(201,162,39,0.9), 0 0 50px rgba(201,162,39,0.5); } }
+  
+  .segment { 
+    position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; 
+    border: 1px solid rgba(61,47,107,0.3); display: flex; align-items: center; justify-content: center; 
+    font-size: 18px; color: #fff; transition: background 0.3s;
+  }
+  .segment span { transform: rotate(45deg); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+  .seg-even { background: #1c1338; } .seg-odd { background: #2a1a4a; }
+  .segment.winner { background: linear-gradient(135deg, #8a6fe0, #c9a227); box-shadow: inset 0 0 20px rgba(255,255,255,0.5); }
+
+  /* Результат колеса */
+  .fortune-result { 
+    text-align: center; padding: 20px; 
+    background: linear-gradient(180deg, rgba(42,26,74,0.9) 0%, rgba(13,8,32,0.9) 100%); 
+    border-radius: 15px; border: 1px solid #c9a227; 
+    margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .fortune-header { 
+    color: #f4e2a1; font-size: 20px; margin-bottom: 15px; 
+    text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
+    text-shadow: 0 0 10px rgba(201,162,39,0.5);
+  }
+  .fortune-grid { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+  .fortune-item { 
+    background: rgba(0,0,0,0.3); padding: 12px 15px; border-radius: 10px; 
+    border-left: 3px solid #8a6fe0; animation: fadeUp 0.5s ease-out backwards;
+  }
+  .fortune-item:nth-child(1) { animation-delay: 0.1s; }
+  .fortune-item:nth-child(2) { animation-delay: 0.2s; border-color: #4caf50; }
+  .fortune-item:nth-child(3) { animation-delay: 0.3s; border-color: #f44336; }
+  .fortune-item:nth-child(4) { animation-delay: 0.4s; border-color: #c9a227; background: rgba(201,162,39,0.1); }
+  .fortune-item h5 { color: #c9a227; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
+  .fortune-item p { font-size: 14px; line-height: 1.5; color: #e9e4ff; }
+  .fortune-item p b { color: #fff; font-size: 15px; }
 </style>
 </head>
 <body>
@@ -768,8 +826,18 @@ function renderWeek(id) {
   }
   nav += "</div>";
 
-  const st = s.stats;
-  const power = Math.round((st.energy + st.love + st.money + st.intuition) / 4);
+  // Генерируем проценты, которые ЗАВИСЯТ от выбранного дня
+  const baseStats = s.stats;
+  const daySeed = (curDay + 1) * 3 + id.length;
+  
+  const dayStats = {
+    energy: Math.min(100, Math.max(20, baseStats.energy + (daySeed % 15) - 7)),
+    love: Math.min(100, Math.max(20, baseStats.love + (daySeed % 11) - 5)),
+    money: Math.min(100, Math.max(20, baseStats.money + (daySeed % 17) - 8)),
+    intuition: Math.min(100, Math.max(20, baseStats.intuition + (daySeed % 13) - 6))
+  };
+
+  const power = Math.round((dayStats.energy + dayStats.love + dayStats.money + dayStats.intuition) / 4);
   const R = 50;
   const CIRC = 2 * Math.PI * R;
   const offset = CIRC - (power / 100) * CIRC;
@@ -803,10 +871,10 @@ function renderWeek(id) {
         <div class="ring-label"><b>${power}%</b><small>сила</small></div>
       </div>
       <div class="stats">
-        ${statRow("⚡ Энергия", st.energy)}
-        ${statRow("❤️ Любовь", st.love)}
-        ${statRow("💰 Финансы", st.money)}
-        ${statRow("🔮 Интуиция", st.intuition)}
+        ${statRow("⚡ Энергия", dayStats.energy)}
+        ${statRow("❤️ Любовь", dayStats.love)}
+        ${statRow("💰 Финансы", dayStats.money)}
+        ${statRow("🔮 Интуиция", dayStats.intuition)}
       </div>
     </div>
     <button class="share-btn" id="btnShare">Поделиться</button>
