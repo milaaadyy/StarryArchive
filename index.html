@@ -45,26 +45,16 @@
 
   .share-btn { padding: 8px 12px; background: transparent; color: #c9a227; border: 1px solid #c9a227; border-radius: 8px; cursor: pointer; font-size: 12px; margin-bottom: 5px; }
 
-  /* Инфографика знака */
   .infographic {
-    margin: 14px 0;
-    padding: 14px;
-    background: #0d0820;
-    border: 1px solid #3d2f6b;
-    border-radius: 12px;
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: 14px;
-    align-items: center;
+    margin: 14px 0; padding: 14px; background: #0d0820;
+    border: 1px solid #3d2f6b; border-radius: 12px;
+    display: grid; grid-template-columns: 120px 1fr; gap: 14px; align-items: center;
   }
   .infographic .ring-wrap { position: relative; width: 120px; height: 120px; }
   .infographic .ring-wrap svg { transform: rotate(-90deg); }
   .infographic .ring-bg { stroke: rgba(255,255,255,0.07); }
   .infographic .ring-fg { stroke: #c9a227; stroke-linecap: round; transition: stroke-dashoffset 1s ease-out; }
-  .infographic .ring-label {
-    position: absolute; inset: 0; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-  }
+  .infographic .ring-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .infographic .ring-label b { font-size: 22px; color: #f4e2a1; line-height: 1; }
   .infographic .ring-label small { font-size: 9px; color: #9a8fc0; text-transform: uppercase; margin-top: 3px; }
   .infographic .stats { display: flex; flex-direction: column; gap: 8px; }
@@ -72,11 +62,7 @@
   .infographic .stat-head { display: flex; justify-content: space-between; margin-bottom: 3px; color: #c9bfe8; }
   .infographic .stat-head b { color: #f4e2a1; }
   .infographic .stat-track { height: 5px; background: #000; border-radius: 3px; overflow: hidden; }
-  .infographic .stat-fill {
-    height: 100%; width: 0; border-radius: 3px;
-    background: linear-gradient(90deg, #6a4fc0, #c9a227);
-    transition: width 1s ease-out;
-  }
+  .infographic .stat-fill { height: 100%; width: 0; border-radius: 3px; background: linear-gradient(90deg, #6a4fc0, #c9a227); transition: width 1s ease-out; }
   @media (max-width: 420px) {
     .infographic { grid-template-columns: 1fr; justify-items: center; }
     .infographic .stats { width: 100%; }
@@ -226,7 +212,21 @@ var FATE = {
   "Водолей": ["Новаторство","Оригинальность","Близость"], "Рыбы": ["Творчество","Эмпатия","Реализм"]
 };
 
-var COMPAT = { "Овен": { "Лев":"h", "Стрелец":"h", "Близнецы":"h", "Рак":"x", "Козерог":"x" }, "Телец": { "Дева":"h", "Козерог":"h", "Рак":"h", "Лев":"x", "Водолей":"x" }, "Близнецы": { "Весы":"h", "Водолей":"h", "Овен":"h", "Дева":"x", "Рыбы":"x" }, "Рак": { "Рыбы":"h", "Скорпион":"h", "Телец":"h", "Овен":"x", "Весы":"x" }, "Лев": { "Овен":"h", "Стрелец":"h", "Весы":"h", "Телец":"x", "Скорпион":"x" }, "Дева": { "Телец":"h", "Козерог":"h", "Скорпион":"h", "Близнецы":"x", "Стрелец":"x" }, "Весы": { "Близнецы":"h", "Водолей":"h", "Лев":"h", "Рак":"x", "Козерог":"x" }, "Скорпион": { "Рак":"h", "Рыбы":"h", "Дева":"h", "Лев":"x", "Водолей":"x" }, "Стрелец": { "Овен":"h", "Лев":"h", "Водолей":"h", "Дева":"x", "Рыбы":"x" }, "Козерог": { "Телец":"h", "Дева":"h", "Рыбы":"h", "Овен":"x", "Весы":"x" }, "Водолей": { "Близнецы":"h", "Весы":"h", "Стрелец":"h", "Телец":"x", "Скорпион":"x" }, "Рыбы": { "Рак":"h", "Скорпион":"h", "Козерог":"h", "Близнецы":"x", "Стрелец":"x" } };
+/* Полная симметричная матрица совместимости: h — гармония, x — сложно, n — нейтрально */
+var COMPAT = {
+  "Овен":      { "Лев":"h","Стрелец":"h","Близнецы":"h","Водолей":"h","Весы":"x","Рак":"x","Козерог":"x","Рыбы":"x","Телец":"n","Дева":"n","Скорпион":"n" },
+  "Телец":     { "Дева":"h","Козерог":"h","Рак":"h","Рыбы":"h","Лев":"x","Водолей":"x","Близнецы":"x","Стрелец":"x","Овен":"n","Весы":"n","Скорпион":"n" },
+  "Близнецы":  { "Весы":"h","Водолей":"h","Овен":"h","Лев":"h","Дева":"x","Рыбы":"x","Скорпион":"x","Козерог":"x","Телец":"n","Рак":"n","Стрелец":"n" },
+  "Рак":       { "Рыбы":"h","Скорпион":"h","Телец":"h","Дева":"h","Овен":"x","Весы":"x","Стрелец":"x","Водолей":"x","Близнецы":"n","Лев":"n","Козерог":"n" },
+  "Лев":       { "Овен":"h","Стрелец":"h","Весы":"h","Близнецы":"h","Телец":"x","Скорпион":"x","Козерог":"x","Рыбы":"x","Рак":"n","Дева":"n","Водолей":"n" },
+  "Дева":      { "Телец":"h","Козерог":"h","Скорпион":"h","Рак":"h","Близнецы":"x","Стрелец":"x","Овен":"x","Водолей":"x","Лев":"n","Весы":"n","Рыбы":"n" },
+  "Весы":      { "Близнецы":"h","Водолей":"h","Лев":"h","Стрелец":"h","Рак":"x","Козерог":"x","Дева":"x","Рыбы":"x","Овен":"n","Телец":"n","Скорпион":"n" },
+  "Скорпион":  { "Рак":"h","Рыбы":"h","Дева":"h","Козерог":"h","Лев":"x","Водолей":"x","Телец":"x","Близнецы":"x","Овен":"n","Весы":"n","Стрелец":"n" },
+  "Стрелец":   { "Овен":"h","Лев":"h","Водолей":"h","Весы":"h","Дева":"x","Рыбы":"x","Телец":"x","Рак":"x","Близнецы":"n","Скорпион":"n","Козерог":"n" },
+  "Козерог":   { "Телец":"h","Дева":"h","Рыбы":"h","Скорпион":"h","Овен":"x","Весы":"x","Лев":"x","Близнецы":"x","Рак":"n","Стрелец":"n","Водолей":"n" },
+  "Водолей":   { "Близнецы":"h","Весы":"h","Стрелец":"h","Овен":"h","Телец":"x","Скорпион":"x","Рак":"x","Дева":"x","Лев":"n","Козерог":"n","Рыбы":"n" },
+  "Рыбы":      { "Рак":"h","Скорпион":"h","Козерог":"h","Телец":"h","Близнецы":"x","Стрелец":"x","Овен":"x","Лев":"x","Весы":"n","Водолей":"n","Дева":"n" }
+};
 
 var TAROT = [ { icon:"🌞", name:"Солнце", m:"Успех.", a:"Делись теплом.", v:"Не хвастайся." }, { icon:"🌙", name:"Луна", m:"Иллюзии.", a:"Интуиция.", v:"Не решай в тумане." }, { icon:"⭐", name:"Звезда", m:"Надежда.", a:"Шаг к мечте.", v:"Не падай духом." }, { icon:"⚔️", name:"Справедливость", m:"Истина.", a:"Честность.", v:"Не хитри." }, { icon:"🛞", name:"Колесо Фортуны", m:"Перемены.", a:"Лови знаки.", v:"Не цепляйся." } ];
 
@@ -381,16 +381,25 @@ document.getElementById("signB").innerHTML = optHtml;
 document.getElementById("signB").selectedIndex = 1;
 
 function calcCompat() {
-  var a = document.getElementById("signA").value, b = document.getElementById("signB").value;
+  var a = document.getElementById("signA").value;
+  var b = document.getElementById("signB").value;
+  if (!a || !b) { alert("Выбери оба знака"); return; }
+
   var type = "n";
   if (COMPAT[a] && COMPAT[a][b]) type = COMPAT[a][b];
   else if (COMPAT[b] && COMPAT[b][a]) type = COMPAT[b][a];
-  var base = type==="h" ? [88, 92, 80, 85] : type==="x" ? [45, 65, 40, 45] : [65, 60, 65, 70];
-  var txt = type==="h" ? "Сильное притяжение." : type==="x" ? "Непростой союз." : "Спокойный союз.";
-  document.getElementById("bLove").style.width = base[0] + "%";
+
+  var base = type === "h" ? [88, 92, 80, 85]
+           : type === "x" ? [45, 65, 40, 45]
+           : [65, 60, 65, 70];
+  var txt = type === "h" ? "Сильное притяжение. Вы дополняете друг друга."
+          : type === "x" ? "Непростой союз. Через различия — к росту."
+          : "Спокойный союз. Всё зависит от вклада обоих.";
+
+  document.getElementById("bLove").style.width    = base[0] + "%";
   document.getElementById("bPassion").style.width = base[1] + "%";
-  document.getElementById("bMind").style.width = base[2] + "%";
-  document.getElementById("bFriend").style.width = base[3] + "%";
+  document.getElementById("bMind").style.width    = base[2] + "%";
+  document.getElementById("bFriend").style.width  = base[3] + "%";
   document.getElementById("compatText").innerText = txt;
   document.getElementById("compatResult").classList.remove("hidden");
 }
