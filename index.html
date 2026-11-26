@@ -14,55 +14,133 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body { font-family: sans-serif; background: #0d0820; color: #e9e4ff; padding: 20px; }
+body {
 
-.app { max-width: 600px; margin: 0 auto; }
+font-family: 'Segoe UI', Roboto, sans-serif;
 
-h1 { font-size: 24px; text-align: center; color: #f4e2a1; margin-bottom: 5px; }
+background: radial-gradient(circle at 50% 0%, #2a1a4a 0%, #0d0820 70%, #05030f 100%);
 
-.tagline { text-align: center; color: #9a8fc0; font-size: 13px; margin-bottom: 20px; }
+color: #e9e4ff; padding: 30px 15px; min-height: 100vh;
 
-.tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
+position: relative; overflow-x: hidden;
 
-.tab { padding: 8px 14px; border-radius: 20px; border: 1px solid #4a3a7a; background: transparent; color: #c9bfe8; cursor: pointer; }
+}
 
-.tab.active { background: #6a4fc0; color: #fff; }
+body::before {
 
-.panel { display: none; background: #1a1233; padding: 20px; border-radius: 15px; }
+content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
 
-.panel.active { display: block; }
+background-image: radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)), radial-gradient(1.5px 1.5px at 90px 40px, #c9a227, rgba(0,0,0,0));
 
-.sign-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+background-repeat: repeat; background-size: 200px 200px; opacity: 0.3; z-index: -1; animation: twinkle 4s infinite alternate;
 
-.sign-btn { padding: 10px; border-radius: 10px; border: 1px solid #3d2f6b; background: transparent; color: #d9d0f5; cursor: pointer; text-align: center; font-size: 14px; }
+}
 
-.sign-btn.active { border-color: #c9a227; background: rgba(201,162,39,.15); }
+@keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 0.5; } }
 
-.week-title { font-size: 18px; color: #f4e2a1; margin-bottom: 10px; }
+.app { max-width: 600px; margin: 0 auto; position: relative; z-index: 1; }
 
-.day { padding: 10px; border-left: 2px solid #6a4fc0; margin-bottom: 8px; background: #2a1a4a; }
+h1 { font-size: 28px; text-align: center; color: #f4e2a1; margin-bottom: 5px; text-shadow: 0 0 15px rgba(201,162,39,0.4); }
 
-.day b { color: #c9a227; }
+.tagline { text-align: center; color: #9a8fc0; font-size: 14px; margin-bottom: 25px; letter-spacing: 1px; }
 
-.meta li { list-style: none; padding: 5px 0; font-size: 14px; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 25px; }
 
-select { width: 100%; padding: 10px; margin-bottom: 10px; background: #0d0820; color: #fff; border: 1px solid #4a3a7a; border-radius: 8px; }
+.tab { padding: 10px 16px; border-radius: 20px; border: 1px solid #4a3a7a; background: rgba(255,255,255,0.03); color: #c9bfe8; cursor: pointer; transition: all 0.3s; font-size: 14px; }
 
-.btn { padding: 12px; width: 100%; background: #6a4fc0; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 10px;}
+.tab:hover { background: rgba(106,79,192,0.2); border-color: #8a6fe0; }
 
-.bar-track { height: 8px; background: #2a1a4a; border-radius: 4px; margin-bottom: 10px; overflow: hidden; }
+.tab.active { background: linear-gradient(135deg, #6a4fc0, #8a6fe0); color: #fff; border-color: #c9a227; box-shadow: 0 0 15px rgba(138,111,224,0.5); }
 
-.bar-fill { height: 100%; background: #c9a227; width: 0; transition: width 0.5s; }
+.panel { display: none; background: rgba(26, 18, 51, 0.85); padding: 24px; border-radius: 18px; border: 1px solid rgba(201, 162, 39, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.4), inset 0 0 20px rgba(106,79,192,0.1); backdrop-filter: blur(10px); }
+
+.panel.active { display: block; animation: fadeUp 0.4s ease-out; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.sign-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+
+.sign-btn { padding: 12px 5px; border-radius: 12px; border: 1px solid #3d2f6b; background: rgba(0,0,0,0.2); color: #d9d0f5; cursor: pointer; text-align: center; font-size: 13px; transition: all 0.2s; }
+
+.sign-btn:hover { border-color: #8a6fe0; transform: translateY(-2px); }
+
+.sign-btn.active { border-color: #c9a227; background: linear-gradient(135deg, rgba(201,162,39,0.2), rgba(201,162,39,0.05)); box-shadow: 0 0 10px rgba(201,162,39,0.3); color: #fff; }
+
+.week-title { font-size: 20px; color: #f4e2a1; margin-bottom: 15px; border-bottom: 1px solid rgba(201,162,39,0.2); padding-bottom: 10px; }
+
+/* Обновленный блок дней недели */
+
+.days-nav { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; }
+
+.days-nav::-webkit-scrollbar { display: none; }
+
+.day-btn {
+
+flex: 1; min-width: 55px; padding: 8px 5px; border-radius: 10px; border: 1px solid #3d2f6b;
+
+background: rgba(0,0,0,0.2); color: #9a8fc0; font-size: 12px; cursor: pointer; text-align: center; transition: all 0.2s;
+
+}
+
+.day-btn.today { border-color: #c9a227; color: #c9a227; font-weight: bold; }
+
+.day-btn.active { background: linear-gradient(135deg, #6a4fc0, #8a6fe0); color: #fff; border-color: #c9a227; box-shadow: 0 0 10px rgba(138,111,224,0.5); }
+
+.day-btn .date-num { display: block; font-size: 16px; margin-top: 2px; }
+
+.day-content {
+
+padding: 18px; border-left: 3px solid #c9a227; background: rgba(255,255,255,0.03);
+
+border-radius: 0 12px 12px 0; font-size: 15px; line-height: 1.6; margin-bottom: 15px;
+
+animation: fadeUp 0.3s ease-out;
+
+}
+
+.day-content .today-badge {
+
+display: inline-block; background: rgba(201,162,39,0.2); color: #c9a227;
+
+padding: 3px 8px; border-radius: 10px; font-size: 11px; margin-bottom: 8px; text-transform: uppercase; font-weight: bold;
+
+}
+
+.meta { margin-top: 15px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; }
+
+.meta li { list-style: none; padding: 8px 0; font-size: 14px; border-bottom: 1px dashed rgba(255,255,255,0.1); line-height: 1.4; }
+
+.meta li:last-child { border: none; }
+
+select { width: 100%; padding: 12px 15px; margin-bottom: 10px; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid #4a3a7a; border-radius: 10px; font-size: 15px; outline: none; }
+
+select:focus { border-color: #c9a227; }
+
+.btn { padding: 14px; width: 100%; background: linear-gradient(135deg, #6a4fc0, #8a6fe0); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: 600; margin-top: 10px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(106,79,192,0.3); }
+
+.btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+
+.bar-track { height: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; margin: 5px 0 15px; overflow: hidden; }
+
+.bar-fill { height: 100%; background: linear-gradient(90deg, #6a4fc0, #c9a227); width: 0; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
 
 .hidden { display: none; }
 
-.qday-box { text-align: center; padding: 20px; background: #2a1a4a; border-radius: 10px; font-size: 18px; color: #f4e2a1; margin-bottom: 15px;}
+.qday-box { text-align: center; padding: 30px 20px; background: linear-gradient(135deg, rgba(106,79,192,0.2), rgba(201,162,39,0.1)); border-radius: 15px; font-size: 19px; color: #f4e2a1; margin-bottom: 20px; border: 1px solid rgba(201,162,39,0.3); font-style: italic; line-height: 1.6; box-shadow: inset 0 0 20px rgba(0,0,0,0.3); }
 
-.tarot-card { width: 120px; height: 180px; margin: 0 auto 15px; border: 2px solid #c9a227; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 40px; background: #1c1338;}
+.tarot-card { width: 140px; height: 210px; margin: 0 auto 20px; border: 2px solid #c9a227; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 50px; background: linear-gradient(160deg, #1c1338, #2f1f5c); box-shadow: 0 0 30px rgba(201,162,39,0.2); position: relative; }
 
-.tarot-card span { font-size: 14px; color: #fff; margin-top: 10px; }
+.tarot-card::after { content: "✨"; position: absolute; top: 10px; right: 10px; font-size: 16px; opacity: 0.5;}
 
-.result-text { font-size: 14px; margin-top: 10px; color: #ddd; }
+.tarot-card span { font-size: 16px; color: #fff; margin-top: 15px; font-weight: 500;}
+
+.result-text { font-size: 15px; line-height: 1.6; margin-top: 15px; color: #d5cdec; }
+
+.info-block { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 2px solid #8a6fe0; }
+
+.info-block h4 { color: #c9a227; font-size: 14px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.info-block p { font-size: 14px; line-height: 1.5; }
 
 </style>
 
@@ -74,7 +152,7 @@ select { width: 100%; padding: 10px; margin-bottom: 10px; background: #0d0820; c
 
 <h1> Мистический гороскоп</h1>
 
-<p class="tagline">Развлекательные интерпретации</p>
+<p class="tagline">Твой проводник в мир астрологии</p>
 
 <div class="tabs">
 
@@ -106,19 +184,25 @@ select { width: 100%; padding: 10px; margin-bottom: 10px; background: #0d0820; c
 
 <select id="signB"></select>
 
-<button class="btn" onclick="calcCompat()">Проверить</button>
+<button class="btn" onclick="calcCompat()">Проверить совместимость</button>
 
-<div id="compatResult" class="hidden" style="margin-top:15px;">
+<div id="compatResult" class="hidden" style="margin-top:25px;">
 
-<div>❤️ Любовь <div class="bar-track"><div class="bar-fill" id="bLove"></div></div></div>
+<div style="font-size:14px;">❤️ Любовь <div class="bar-track"><div class="bar-fill" id="bLove"></div></div></div>
 
-<div> Страсть <div class="bar-track"><div class="bar-fill" id="bPassion"></div></div></div>
+<div style="font-size:14px;"> Страсть <div class="bar-track"><div class="bar-fill" id="bPassion"></div></div></div>
 
-<div> Понимание <div class="bar-track"><div class="bar-fill" id="bMind"></div></div></div>
+<div style="font-size:14px;"> Понимание <div class="bar-track"><div class="bar-fill" id="bMind"></div></div></div>
 
-<div> Дружба <div class="bar-track"><div class="bar-fill" id="bFriend"></div></div></div>
+<div style="font-size:14px;"> Дружба <div class="bar-track"><div class="bar-fill" id="bFriend"></div></div></div>
 
-<p class="result-text" id="compatText"></p>
+<div class="info-block" style="margin-top:15px; border-color:#c9a227;">
+
+<h4>Вердикт астролога</h4>
+
+<p id="compatText"></p>
+
+</div>
 
 </div>
 
@@ -142,13 +226,17 @@ select { width: 100%; padding: 10px; margin-bottom: 10px; background: #0d0820; c
 
 <div id="tarot" class="panel" style="text-align:center;">
 
+<p style="color:#9a8fc0; margin-bottom:15px;">Карта дня уже выбрана для тебя</p>
+
 <div class="tarot-card" id="tCard"><span id="tIcon"></span><span id="tName"></span></div>
 
-<p class="result-text" id="tMeaning"></p>
+<div id="tarotDetails" style="text-align:left;"></div>
 
 </div>
 
 <div id="qday" class="panel">
+
+<p style="color:#9a8fc0; margin-bottom:15px; text-align:center;">Случайный мистический совет</p>
 
 <div class="qday-box" id="qText"></div>
 
@@ -162,57 +250,129 @@ select { width: 100%; padding: 10px; margin-bottom: 10px; background: #0d0820; c
 
 const SIGNS = [
 
-{ id:"aries", name:"Овен", sym:"♈", dates:"21 марта — 19 апреля", week:{ general:"Начало декабря потребует решительности.", days:[["1 дек","Важный разговор."],["2 дек","Неожиданная встреча."],["3 дек","Финансовое планирование."],["4 дек","Недопонимание в отношениях."],["5 дек","Больше энергии."],["6 дек","Отдохни."],["7 дек","Планируй будущее."]], meta:["❤️ Любовь: инициатива"," Финансы: осторожно"," Карьера: новые проекты"," Совет: не путай уверенность с упрямством"," Число: 9"," Цвет: бордовый","⭐ Совместимость: Лев, Стрелец"] }, dark:"Ты привык действовать первым. Боишься не успеть. Вспыльчивость, нетерпимость. Сила: зажигать других." },
+{ id:"aries", name:"Овен", sym:"♈", dates:"21 марта — 19 апреля",
 
-{ id:"taurus", name:"Телец", sym:"♉", dates:"20 апреля — 20 мая", week:{ general:"Желание стабильности.", days:[["1 дек","Наблюдай."],["2 дек","Сюрприз."],["3 дек","Рабочие задачи."],["4 дек","Романтика."],["5 дек","Самооценка."],["6 дек","Финансы."],["7 дек","Время с близкими."]], meta:["❤️ Любовь: стабильность"," Финансы: пересмотр"," Карьера: последовательность"," Совет: отпускай прошлое"," Число: 6"," Цвет: изумрудный","⭐ Совместимость: Дева, Козерог"] }, dark:"Умеешь создавать уют. Боишься перемен. Упрямство, собственничество. Сила: терпение." },
+week:{ general:"Начало декабря потребует решительности.", days:["Важный разговор. Прямолинейность поможет решить проблему.","Неожиданная встреча. Не делай поспешных выводов.","Финансовое планирование. Избегай импульсивных покупок.","Недопонимание в отношениях. Лучше выслушать.","Энергии больше обычного. Направь её на цели.","Отдохни. Не каждый день должен быть продуктивным.","Планируй будущее. Идея перерастет в нечто серьёзное."],
 
-{ id:"gemini", name:"Близнецы", sym:"♊", dates:"21 мая — 20 июня", week:{ general:"Насыщенная неделя.", days:[["1 дек","Сообщение."],["2 дек","Знакомства."],["3 дек","Не раскрывай планы."],["4 дек","Разговор из прошлого."],["5 дек","Без эмоций."],["6 дек","Творчество."],["7 дек","Определись."]], meta:["❤️ Любовь: флирт"," Финансы: идея заработка"," Карьера: коммуникации"," Совет: молчание — золото"," Число: 5"," Цвет: жёлтый","⭐ Совместимость: Весы, Водолей"] }, dark:"Легко общаешься. Боишься остаться непонятым. Непостоянство. Сила: видеть разные стороны." },
+meta:["❤️ Любовь: инициатива"," Финансы: осторожно"," Карьера: новые проекты"," Совет: не путай уверенность с упрямством"," Число: 9"," Цвет: бордовый","⭐ Совместимость: Лев, Стрелец"] },
 
-{ id:"cancer", name:"Рак", sym:"♋", dates:"21 июня — 22 июля", week:{ general:"Задумайся о себе.", days:[["1 дек","Слушай ощущения."],["2 дек","Поддержка."],["3 дек","Отпусти обиды."],["4 дек","Укрепление отношений."],["5 дек","Не принимай на свой счёт."],["6 дек","Спокойствие."],["7 дек","Осознание."]], meta:["❤️ Любовь: проявляй чувства"," Финансы: без трат"," Карьера: не недооценивай"," Совет: забота о себе"," Число: 2"," Цвет: серебристый","⭐ Совместимость: Рыбы, Скорпион"] }, dark:"Заботишься о других. Боишься отвержения. Обидчивость. Сила: чуткость." },
+dark:"За твоей решительностью и желанием всегда быть первым часто прячется страх не успеть или оказаться недостаточно сильным. Ты привык брать ответственность на себя, но иногда это превращается в тотальный контроль и нежелание слушать других. Твоя тёмная сторона — вспыльчивость и нетерпимость к чужой медлительности. <b>Твоя скрытая сила:</b> умение зажигать других и находить выход даже в самой безвыходной ситуации." },
 
-{ id:"leo", name:"Лев", sym:"♌", dates:"23 июля — 22 августа", week:{ general:"В центре внимания.", days:[["1 дек","Заяви о желаниях."],["2 дек","Новые начинания."],["3 дек","Похвала."],["4 дек","Гордость."],["5 дек","Встречи."],["6 дек","Без соперничества."],["7 дек","Новые цели."]], meta:["❤️ Любовь: инициатива"," Финансы: без трат на других"," Карьера: покажи себя"," Совет: сила не в доказательствах"," Число: 1"," Цвет: золотой","⭐ Совместимость: Овен, Стрелец"] }, dark:"Яркий лидер. Боишься быть незамеченным. Гордость. Сила: вдохновлять." },
+{ id:"taurus", name:"Телец", sym:"♉", dates:"20 апреля — 20 мая",
 
-{ id:"virgo", name:"Дева", sym:"♍", dates:"23 августа — 22 сентября", week:{ general:"Наведи порядок.", days:[["1 дек","Разбери дела."],["2 дек","Не критикуй себя."],["3 дек","Работа."],["4 дек","Комплимент."],["5 дек","Чужие проблемы."],["6 дек","Здоровье."],["7 дек","Исправь ошибку."]], meta:["❤️ Любовь: искренность"," Финансы: бюджеты"," Карьера: внимательность"," Совет: идеального момента нет"," Число: 4"," Цвет: тёмно-зелёный","⭐ Совместимость: Телец, Козерог"] }, dark:"Видишь детали. Боишься несовершенства. Перфекционизм. Сила: ясность ума." },
+week:{ general:"Желание стабильности.", days:["Наблюдай. Не торопись с решениями.","Приятный сюрприз от близкого человека.","Рабочие задачи, которые откладывал.","Романтика и душевные разговоры.","Не позволяй чужому мнению влиять на самооценку.","Финансовые вопросы. Избегай лишних расходов.","Время с близкими."],
 
-{ id:"libra", name:"Весы", sym:"♎", dates:"23 сентября — 22 октября", week:{ general:"Время выбора.", days:[["1 дек","Не угождай всем."],["2 дек","Романтика."],["3 дек","Договорённость."],["4 дек","Без сомнений."],["5 дек","Встреча."],["6 дек","Без конфликтов."],["7 дек","Личные решения."]], meta:["❤️ Любовь: честность"," Финансы: без сомнительного"," Карьера: партнёрство"," Совет: выбор в свою пользу"," Число: 7"," Цвет: голубой","⭐ Совместимость: Близнецы, Водолей"] }, dark:"Ищешь баланс. Боишься выбрать. Нерешительность. Сила: дипломатия." },
+meta:["❤️ Любовь: стабильность"," Финансы: пересмотр"," Карьера: последовательность"," Совет: отпускай прошлое"," Число: 6"," Цвет: изумрудный","⭐ Совместимость: Дева, Козерог"] },
 
-{ id:"scorpio", name:"Скорпион", sym:"♏", dates:"23 октября — 21 ноября", week:{ general:"Разберись в чувствах.", days:[["1 дек","Детали."],["2 дек","Серьёзный разговор."],["3 дек","Ревность."],["4 дек","Поворот."],["5 дек","Откажись от привычки."],["6 дек","Идея."],["7 дек","Доверься опыту."]], meta:["❤️ Любовь: без проверок"," Финансы: без риска"," Карьера: долгосрок"," Совет: не все хотят зла"," Число: 8"," Цвет: тёмно-красный","⭐ Совместимость: Рак, Рыбы"] }, dark:"Скрываешь чувства. Боишься предательства. Подозрительность. Сила: восстанавливаться." },
+dark:"Ты ценишь комфорт и предсказуемость, но иногда твоя любовь к стабильности превращается в страх перед любыми переменами. Ты можешь держаться за токсичные отношения или нелюбимую работу просто потому, что «так привычнее». Твоя тёмная сторона — упрямство, собственничество и склонность к накопительству (как вещей, так и обид). <b>Твоя скрытая сила:</b> невероятная выносливость и умение создавать по-настоящему безопасное пространство для близких." },
 
-{ id:"sagittarius", name:"Стрелец", sym:"♐", dates:"22 ноября — 21 декабря", week:{ general:"Новые возможности.", days:[["1 дек","Возможность."],["2 дек","Путешествия."],["3 дек","Не обещай лишнего."],["4 дек","Встреча."],["5 дек","Новое."],["6 дек","Финансы."],["7 дек","Итоги."]], meta:["❤️ Любовь: искренность"," Финансы: без трат"," Карьера: новые направления"," Совет: свобода — это ответственность"," Число: 3"," Цвет: фиолетовый","⭐ Совместимость: Овен, Лев"] }, dark:"Оптимист. Боишься обязательств. Непостоянство. Сила: вдохновлять." },
+{ id:"gemini", name:"Близнецы", sym:"♊", dates:"21 мая — 20 июня",
 
-{ id:"capricorn", name:"Козерог", sym:"♑", dates:"22 декабря — 19 января", week:{ general:"Конкретные результаты.", days:[["1 дек","Цель."],["2 дек","Попроси помощи."],["3 дек","Работа."],["4 дек","Близкие."],["5 дек","Не сравнивай."],["6 дек","Праздник."],["7 дек","Привычки."]], meta:["❤️ Любовь: говори о чувствах"," Финансы: планирование"," Карьера: дисциплина"," Совет: отдых — часть успеха"," Число: 10"," Цвет: коричневый","⭐ Совместимость: Телец, Дева"] }, dark:"Идёшь к цели. Боишься слабости. Жёсткость. Сила: надёжность." },
+week:{ general:"Насыщенная неделя.", days:["Сообщение может изменить планы.","Знакомства и общение.","Не раскрывай все планы.","Разговор с человеком из прошлого.","Без важных решений на эмоциях.","Творчество и эксперименты.","Определись, чего хочешь."],
 
-{ id:"aquarius", name:"Водолей", sym:"♒", dates:"20 января — 18 февраля", week:{ general:"Нестандартность.", days:[["1 дек","Идея."],["2 дек","Друзья."],["3 дек","Критика."],["4 дек","Новость."],["5 дек","Попробуй."],["6 дек","Открытость."],["7 дек","Планы."]], meta:["❤️ Любовь: близость"," Финансы: рационально"," Карьера: нестандартность"," Совет: независимость != одиночество"," Число: 11"," Цвет: бирюзовый","⭐ Совместимость: Близнецы, Весы"] }, dark:"Мыслишь иначе. Боишься привязанности. Отстранённость. Сила: оригинальность." },
+meta:["❤️ Любовь: флирт"," Финансы: идея заработка"," Карьера: коммуникации"," Совет: молчание — золото"," Число: 5"," Цвет: жёлтый","⭐ Совместимость: Весы, Водолей"] },
 
-{ id:"pisces", name:"Рыбы", sym:"♓", dates:"19 февраля — 20 марта", week:{ general:"Самоанализ.", days:[["1 дек","Внутренний голос."],["2 дек","Творчество."],["3 дек","Чужая ответственность."],["4 дек","Романтика."],["5 дек","Прошлое."],["6 дек","Хобби."],["7 дек","Размышления."]], meta:["❤️ Любовь: открытость"," Финансы: без эмоций"," Карьера: творчество"," Совет: не идеализируй"," Число: 12"," Цвет: морской","⭐ Совместимость: Рак, Скорпион"] }, dark:"Чувствуешь глубоко. Боишься реальности. Идеализация. Сила: эмпатия." }
+dark:"Твоя легкость и коммуникабельность — это щит. За постоянной сменой масок и интересов часто скрывается страх остаться непонятым или привязаться по-настоящему. Ты можешь быть поверхностным, избегать сложных разговоров и разбрасываться обещаниями. Твоя тёмная сторона — непостоянство и склонность к сплетням. <b>Твоя скрытая сила:</b> способность видеть ситуацию с разных сторон и находить нестандартные решения." },
+
+{ id:"cancer", name:"Рак", sym:"♋", dates:"21 июня — 22 июля",
+
+week:{ general:"Задумайся о себе.", days:["Слушай ощущения.","Поддержка от близкого человека.","Отпусти обиды.","Укрепление отношений.","Не принимай чужую раздражительность на свой счёт.","Спокойствие и уют.","Осознание относительно будущего."],
+
+meta:["❤️ Любовь: проявляй чувства"," Финансы: без трат"," Карьера: не недооценивай"," Совет: забота о себе"," Число: 2"," Цвет: серебристый","⭐ Совместимость: Рыбы, Скорпион"] },
+
+dark:"Ты привык заботиться о других, но часто делаешь это в надежде получить любовь в ответ. За твоей мягкостью скрывается сильный страх быть отвергнутым. Ты склонен к эмоциональным качелям: от полного слияния с человеком до холодной отстраненности. Твоя тёмная сторона — обидчивость, манипуляции чувством вины и привычка прятаться в «раковину». <b>Твоя скрытая сила:</b> глубочайшая эмпатия и умение исцелять чужую боль." },
+
+{ id:"leo", name:"Лев", sym:"♌", dates:"23 июля — 22 августа",
+
+week:{ general:"В центре внимания.", days:["Заяви о своих желаниях.","Новые начинания.","Похвала за работу.","Не позволяй гордости испортить отношения.","Встречи и развлечения.","Без соперничества.","Новые цели."],
+
+meta:["❤️ Любовь: инициатива"," Финансы: без трат на других"," Карьера: покажи себя"," Совет: сила не в доказательствах"," Число: 1"," Цвет: золотой","⭐ Совместимость: Овен, Стрелец"] },
+
+dark:"Ты любишь быть в центре внимания, но иногда это превращается в болезненную зависимость от чужого одобрения. За показной уверенностью скрывается страх оказаться незамеченным и ненужным. Ты можешь быть слишком гордым, чтобы признать ошибку, и слишком драматичным. Твоя тёмная сторона — высокомерие и ревность к чужим успехам. <b>Твоя скрытая сила:</b> искренняя щедрость и способность вдохновлять целые толпы." },
+
+{ id:"virgo", name:"Дева", sym:"♍", dates:"23 августа — 22 сентября",
+
+week:{ general:"Наведи порядок.", days:["Разберись с делами.","Не критикуй себя.","Рабочие вопросы.","Неожиданный комплимент.","Чужие проблемы.","Здоровье и отдых.","Исправь старую ошибку."],
+
+meta:["❤️ Любовь: искренность"," Финансы: бюджеты"," Карьера: внимательность"," Совет: идеального момента нет"," Число: 4"," Цвет: тёмно-зелёный","⭐ Совместимость: Телец, Козерог"] },
+
+dark:"Твое стремление к идеалу — это попытка защититься от хаоса внешнего мира. Но иногда ты становишься заложником собственных стандартов, критикуя себя (и других) за малейшие промахи. Ты можешь застрять в тревожности и бесконечном анализе, вместо того чтобы просто начать действовать. Твоя тёмная сторона — занудство и придирчивость. <b>Твоя скрытая сила:</b> уникальная способность замечать детали и приводить любую систему в идеальный порядок." },
+
+{ id:"libra", name:"Весы", sym:"♎", dates:"23 сентября — 22 октября",
+
+week:{ general:"Время выбора.", days:["Не угождай всем.","Романтические знакомства.","Деловая договорённость.","Не позволяй сомнениям остановить тебя.","Встреча с тем, кого давно не видел.","Без конфликтов из-за мелочей.","Личные решения."],
+
+meta:["❤️ Любовь: честность"," Финансы: без сомнительного"," Карьера: партнёрство"," Совет: выбор в свою пользу"," Число: 7"," Цвет: голубой","⭐ Совместимость: Близнецы, Водолей"] },
+
+dark:"Ты всегда ищешь гармонию, но часто это оборачивается неспособностью сделать выбор и сказать твердое «нет». Ты боишься конфликтов и готов пожертвовать своими интересами, лишь бы сохранить мир. Это приводит к внутреннему напряжению и пассивной агрессии. Твоя тёмная сторона — нерешительность и зависимость от чужого мнения. <b>Твоя скрытая сила:</b> истинная дипломатия и умение находить точки соприкосновения даже у врагов." },
+
+{ id:"scorpio", name:"Скорпион", sym:"♏", dates:"23 октября — 21 ноября",
+
+week:{ general:"Разберись в чувствах.", days:["Детали.","Серьёзный разговор.","Ревность.","Поворот в личной жизни.","Откажись от привычки.","Идея.","Доверься опыту."],
+
+meta:["❤️ Любовь: без проверок"," Финансы: без риска"," Карьера: долгосрок"," Совет: не все хотят зла"," Число: 8"," Цвет: тёмно-красный","⭐ Совместимость: Рак, Рыбы"] },
+
+dark:"Ты умеешь чувствовать глубину, но твоя потребность контролировать всё вокруг становится разрушительной. За внешним спокойствием скрывается буря: подозрительность, ревность и страх предательства. Ты можешь проверять людей на прочность и долго помнить обиды. Твоя тёмная сторона — манипулятивность и желание властвовать. <b>Твоя скрытая сила:</b> феноменальная способность возрождаться из пепла после любых жизненных потрясений." },
+
+{ id:"sagittarius", name:"Стрелец", sym:"♐", dates:"22 ноября — 21 декабря",
+
+week:{ general:"Новые возможности.", days:["Возможность изменить планы.","Путешествия и впечатления.","Не обещай лишнего.","Встреча с интересным человеком.","Попробуй новое.","Финансовые вопросы.","Итоги и планы."],
+
+meta:["❤️ Любовь: искренность"," Финансы: без трат"," Карьера: новые направления"," Совет: свобода — это ответственность"," Число: 3"," Цвет: фиолетовый","⭐ Совместимость: Овен, Лев"] },
+
+dark:"Твоя любовь к свободе — это часто бегство от ответственности и рутины. Ты обещаешь горы, но можешь исчезнуть, когда станет сложно. Твой оптимизм иногда граничит с инфантильностью и нежеланием смотреть правде в глаза. Твоя тёмная сторона — безответственность и склонность к максимализму. <b>Твоя скрытая сила:</b> дар видеть большую картину и вдохновлять других на смелые свершения." },
+
+{ id:"capricorn", name:"Козерог", sym:"♑", dates:"22 декабря — 19 января",
+
+week:{ general:"Конкретные результаты.", days:["Определи цель.","Попроси помощи.","Рабочие вопросы.","Внимание близким.","Не сравнивай успех.","Праздник.","Привычки, которые мешают."],
+
+meta:["❤️ Любовь: говори о чувствах"," Финансы: планирование"," Карьера: дисциплина"," Совет: отдых — часть успеха"," Число: 10"," Цвет: коричневый","⭐ Совместимость: Телец, Дева"] },
+
+dark:"Ты привык быть сильным и надежным, но иногда превращаешься в холодного и жесткого карьериста. За стремлением к достижениям часто прячется страх оказаться слабым или уязвимым. Ты можешь отталкивать людей своей серьезностью и недоверием. Твоя тёмная сторона — эмоциональная закрытость и трудоголизм. <b>Твоя скрытая сила:</b> невероятная стойкость и умение строить долгосрочные империи с нуля." },
+
+{ id:"aquarius", name:"Водолей", sym:"♒", dates:"20 января — 18 февраля",
+
+week:{ general:"Нестандартность.", days:["Неожиданная идея.","Друзья.","Критика.","Новость.","Попробуй то, что откладывал.","Открытость.","Планы на следующий год."],
+
+meta:["❤️ Любовь: близость"," Финансы: рационально"," Карьера: нестандартность"," Совет: независимость != одиночество"," Число: 11"," Цвет: бирюзовый","⭐ Совместимость: Близнецы, Весы"] },
+
+dark:"Твоя независимость — это иногда способ защититься от боли. Ты можешь быть настолько отстраненным и логичным, что забываешь о чувствах других людей. Ты любишь спорить и доказывать свою правоту, даже если это разрушает отношения. Твоя тёмная сторона — эмоциональная холодность и упрямство. <b>Твоя скрытая сила:</b> умение мыслить на десятилетия вперед и генерировать абсолютно уникальные идеи." },
+
+{ id:"pisces", name:"Рыбы", sym:"♓", dates:"19 февраля — 20 марта",
+
+week:{ general:"Самоанализ.", days:["Внутренний голос.","Творчество.","Чужая ответственность.","Романтический момент.","Прошлое.","Хобби.","Размышления о будущем."],
+
+meta:["❤️ Любовь: открытость"," Финансы: без эмоций"," Карьера: творчество"," Совет: не идеализируй"," Число: 12"," Цвет: морской","⭐ Совместимость: Рак, Скорпион"] },
+
+dark:"Ты живешь в мире грез, но иногда реальность становится слишком жестокой, и ты предпочитаешь сбежать от нее в иллюзии, фантазии или зависимости. Ты склонен брать на себя чужую вину и роль жертвы. Твоя тёмная сторона — инфантильность, избегание конфликтов и самообман. <b>Твоя скрытая сила:</b> безграничное воображение и способность к истинному духовному исцелению." }
 
 ];
 
 const FATE = {
 
-"Овен": { theme: "Лидерство", strong: "Смелость", lesson: "Терпение" },
+"Овен": { theme: "Лидерство", themeDesc: "Прожить жизнь как первопроходца, не боясь начинать новое.", strong: "Смелость", strongDesc: "Умение брать удар на себя и вести за собой.", lesson: "Терпение", lessonDesc: "Научиться ждать и уважать чужой темп." },
 
-"Телец": { theme: "Стабильность", strong: "Надёжность", lesson: "Гибкость" },
+"Телец": { theme: "Стабильность", themeDesc: "Создать прочный фундамент и научиться наслаждаться моментом.", strong: "Надёжность", strongDesc: "Способность держать слово и создавать уют.", lesson: "Гибкость", lessonDesc: "Понять, что перемены — это не всегда угроза." },
 
-"Близнецы": { theme: "Общение", strong: "Интеллект", lesson: "Постоянство" },
+"Близнецы": { theme: "Общение", themeDesc: "Стать мостом между людьми и идеями.", strong: "Интеллект", strongDesc: "Быстро схватывать информацию и адаптироваться.", lesson: "Постоянство", lessonDesc: "Учиться доводить начатое до конца и не бояться глубины." },
 
-"Рак": { theme: "Семья", strong: "Забота", lesson: "Границы" },
+"Рак": { theme: "Семья", themeDesc: "Создать пространство любви и эмоциональной безопасности.", strong: "Забота", strongDesc: "Тонко чувствовать потребности других.", lesson: "Границы", lessonDesc: "Научиться отделять свои чувства от чужих и заботиться о себе." },
 
-"Лев": { theme: "Признание", strong: "Уверенность", lesson: "Скромность" },
+"Лев": { theme: "Признание", themeDesc: "Раскрыть свой творческий потенциал и сиять.", strong: "Уверенность", strongDesc: "Врожденное чувство собственного достоинства.", lesson: "Скромность", lessonDesc: "Понять, что ценность не зависит от аплодисментов." },
 
-"Дева": { theme: "Порядок", strong: "Аналитика", lesson: "Принятие" },
+"Дева": { theme: "Порядок", themeDesc: "Понять, как устроен мир, и сделать его лучше.", strong: "Аналитика", strongDesc: "Видеть детали и находить ошибки.", lesson: "Принятие", lessonDesc: "Смириться с тем, что идеала не существует." },
 
-"Весы": { theme: "Гармония", strong: "Дипломатия", lesson: "Самостоятельность" },
+"Весы": { theme: "Гармония", themeDesc: "Найти баланс между собой и партнером.", strong: "Дипломатия", strongDesc: "Умение сглаживать углы и договариваться.", lesson: "Самостоятельность", lessonDesc: "Научиться выбирать себя, а не только других." },
 
-"Скорпион": { theme: "Трансформация", strong: "Решительность", lesson: "Доверие" },
+"Скорпион": { theme: "Трансформация", themeDesc: "Пройти через глубину и кризисы к истинной силе.", strong: "Решительность", strongDesc: "Способность идти до конца, несмотря на страх.", lesson: "Доверие", lessonDesc: "Отпустить контроль и научиться верить людям." },
 
-"Стрелец": { theme: "Свобода", strong: "Оптимизм", lesson: "Ответственность" },
+"Стрелец": { theme: "Свобода", themeDesc: "Расширять горизонты и искать смысл жизни.", strong: "Оптимизм", strongDesc: "Врожденная вера в лучшее.", lesson: "Ответственность", lessonDesc: "Понять, что свобода требует зрелости." },
 
-"Козерог": { theme: "Достижения", strong: "Дисциплина", lesson: "Баланс" },
+"Козерог": { theme: "Достижения", themeDesc: "Взобраться на свою вершину и создать наследие.", strong: "Дисциплина", strongDesc: "Умение отказывать себе ради цели.", lesson: "Баланс", lessonDesc: "Научиться отдыхать и проявлять эмоции." },
 
-"Водолей": { theme: "Новаторство", strong: "Оригинальность", lesson: "Близость" },
+"Водолей": { theme: "Новаторство", themeDesc: "Принести в мир новые идеи и изменить правила.", strong: "Оригинальность", strongDesc: "Нестандартное мышление.", lesson: "Близость", lessonDesc: "Спуститься с небес на землю и открыть сердце." },
 
-"Рыбы": { theme: "Творчество", strong: "Эмпатия", lesson: "Реализм" }
+"Рыбы": { theme: "Творчество", themeDesc: "Прожить жизнь в гармонии с душой и помочь другим.", strong: "Эмпатия", strongDesc: "Глубокое чувствование мира.", lesson: "Реализм", lessonDesc: "Научиться стоять на ногах и видеть вещи такими, какие они есть." }
 
 };
 
@@ -246,15 +406,15 @@ const COMPAT = {
 
 const TAROT = [
 
-{ icon:"", name:"Солнце", meaning:"День обещает ясность." },
+{ icon:"", name:"Солнце", meaning:"Успех, радость и жизненная энергия. Все препятствия сегодня преодолимы.", advice:"Сияй и делись теплом с окружающими.", avoid:"Не хвастайся успехами, чтобы не сглазить." },
 
-{ icon:"", name:"Луна", meaning:"Возможны сомнения." },
+{ icon:"", name:"Луна", meaning:"Скрытые эмоции, иллюзии и подсознательные страхи. Доверяй интуиции.", advice:"Прислушайся к снам и внутреннему голосу.", avoid:"Не принимай важных решений в тумане сомнений." },
 
-{ icon:"⭐", name:"Звезда", meaning:"Хороший знак для надежды." },
+{ icon:"⭐", name:"Звезда", meaning:"Надежда, вдохновение и исцеление. Впереди светлая полоса.", advice:"Загадай желание и сделай первый шаг к мечте.", avoid:"Не падай духом из-за мелких неудач." },
 
-{ icon:"⚔️", name:"Справедливость", meaning:"День просит честности." },
+{ icon:"⚔️", name:"Справедливость", meaning:"Карма, истина и равновесие. Всё тайное станет явным.", advice:"Будь предельно честен с собой и другими.", avoid:"Не пытайся обойти правила или схитрить." },
 
-{ icon:"", name:"Колесо Фортуны", meaning:"Перемены близко." }
+{ icon:"", name:"Колесо Фортуны", meaning:"Судьбоносные перемены и удача. Жизнь меняет курс.", advice:"Плыви по течению и лови знаки судьбы.", avoid:"Не цепляйся за прошлое, оно уже уходит." }
 
 ];
 
@@ -268,11 +428,23 @@ const QDAY = [
 
 "Твой темп — правильный для тебя.",
 
-"Позволь событиям идти своим чередом."
+"Позволь событиям идти своим чередом.",
+
+"Сделай сегодня то, что давно откладывал.",
+
+"Побудь немного эгоистом — это пойдет на пользу."
 
 ];
 
 const ALL_NAMES = SIGNS.map(s => s.name);
+
+const DAYS_SHORT = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+
+const todayIdx = (new Date().getDay() + 6) % 7; // 0 = Пн, 6 = Вс
+
+let currentSignId = "aries";
+
+let currentDayIdx = todayIdx;
 
 function showTab(id, btn) {
 
@@ -300,17 +472,67 @@ document.getElementById(containerId).innerHTML = SIGNS.map(s =>
 
 }
 
+function setDay(idx) {
+
+currentDayIdx = idx;
+
+renderWeek(currentSignId);
+
+}
+
 function renderWeek(id) {
+
+currentSignId = id;
 
 const s = SIGNS.find(x => x.id === id);
 
 document.querySelectorAll("#weekSigns .sign-btn").forEach((b,i) => b.classList.toggle("active", SIGNS[i].id === id));
 
-const days = s.week.days.map(d => `<div class="day"><b>${d[0]}</b><br>${d[1]}</div>`).join("");
+// Генерация кнопок дней недели
+
+let daysNavHtml = '<div class="days-nav">';
+
+for(let i=0; i<7; i++) {
+
+const isToday = (i === todayIdx);
+
+const isActive = (i === currentDayIdx);
+
+daysNavHtml += `<button class="day-btn ${isToday?'today':''} ${isActive?'active':''}" onclick="setDay(${i})">
+
+${DAYS_SHORT[i]}
+
+<span class="date-num">${i+1}</span>
+
+</button>`;
+
+}
+
+daysNavHtml += '</div>';
 
 const meta = s.week.meta.map(m => `<li>${m}</li>`).join("");
 
-document.getElementById("weekContent").innerHTML = `<div class="week-title">${s.sym} ${s.name}</div><p>${s.week.general}</p>${days}<ul class="meta">${meta}</ul>`;
+const isTodayText = currentDayIdx === todayIdx ? `<div class="today-badge">✨ Сегодня</div>` : '';
+
+document.getElementById("weekContent").innerHTML = `
+
+<div class="week-title">${s.sym} ${s.name} <span style="font-size:12px;color:#9a8fc0;float:right">${s.dates}</span></div>
+
+<p style="margin-bottom:15px;line-height:1.6; color:#c9bfe8">${s.week.general}</p>
+
+${daysNavHtml}
+
+<div class="day-content">
+
+${isTodayText}
+
+${s.week.days[currentDayIdx]}
+
+</div>
+
+<ul class="meta">${meta}</ul>
+
+`;
 
 }
 
@@ -320,7 +542,7 @@ const s = SIGNS.find(x => x.id === id);
 
 document.querySelectorAll("#darkSigns .sign-btn").forEach((b,i) => b.classList.toggle("active", SIGNS[i].id === id));
 
-document.getElementById("darkContent").innerHTML = `<div class="week-title" style="color:#e07fb0">${s.sym} ${s.name}</div><p class="result-text">${s.dark}</p>`;
+document.getElementById("darkContent").innerHTML = `<div class="week-title" style="color:#e07fb0">${s.sym} ${s.name}</div><div class="info-block" style="border-color:#e07fb0;"><p>${s.dark}</p></div>`;
 
 }
 
@@ -332,11 +554,21 @@ document.querySelectorAll("#fateSigns .sign-btn").forEach((b,i) => b.classList.t
 
 const f = FATE[s.name];
 
-document.getElementById("fateContent").innerHTML = `<div class="week-title">${s.sym} ${s.name}</div><ul class="meta"><li> Тема: <b>${f.theme}</b></li><li> Сила: <b>${f.strong}</b></li><li> Урок: <b>${f.lesson}</b></li></ul>`;
+document.getElementById("fateContent").innerHTML = `
+
+<div class="week-title">${s.sym} ${s.name}</div>
+
+<div class="info-block"><h4> Главная тема</h4><p><b>${f.theme}:</b> ${f.themeDesc}</p></div>
+
+<div class="info-block"><h4> Сильная сторона</h4><p><b>${f.strong}:</b> ${f.strongDesc}</p></div>
+
+<div class="info-block"><h4> Главный урок</h4><p><b>${f.lesson}:</b> ${f.lessonDesc}</p></div>
+
+`;
 
 }
 
-signButtons("weekSigns", renderWeek); renderWeek("aries");
+signButtons("weekSigns", renderWeek); renderWeek(currentSignId);
 
 signButtons("darkSigns", renderDark); renderDark("aries");
 
@@ -362,15 +594,31 @@ else if (COMPAT[b] && COMPAT[b][a]) type = COMPAT[b][a];
 
 let base = [65, 60, 65, 70];
 
-if (type === "harmony") base = [88, 92, 80, 85];
+let text = "";
 
-if (type === "hard") base = [45, 65, 40, 45];
+if (type === "harmony") {
+
+base = [88, 92, 80, 85];
+
+text = "Между вами может возникнуть сильное притяжение. Вы способны дополнять друг друга, однако иногда ваши взгляды на жизнь будут различаться. Главный секрет гармонии — научиться принимать особенности друг друга, не пытаясь переделать.";
+
+} else if (type === "hard") {
+
+base = [45, 65, 40, 45];
+
+text = "Эта пара может быть непростой: ваши взгляды часто расходятся, и важно учиться слышать друг друга. Но именно через эти различия вы способны сильно вырасти. Главное — не пытаться переделать партнёра, а принять его таким, какой он есть.";
+
+} else {
+
+text = "Ваш союз — это спокойное, ровное сочетание. В нём нет ярких вспышек, но есть устойчивость. Многое будет зависеть от вашей готовности вкладываться в отношения и идти на компромиссы.";
+
+}
 
 const set = (id, v) => document.getElementById(id).style.width = v + "%";
 
 set("bLove", base[0]); set("bPassion", base[1]); set("bMind", base[2]); set("bFriend", base[3]);
 
-document.getElementById("compatText").innerText = type === "harmony" ? "Сильное притяжение. Дополняете друг друга." : type === "hard" ? "Непростой союз. Учитесь слышать." : "Спокойный союз.";
+document.getElementById("compatText").innerText = text;
 
 document.getElementById("compatResult").classList.remove("hidden");
 
@@ -380,11 +628,21 @@ function renderTarot() {
 
 const i = Math.floor(Math.random() * TAROT.length);
 
-document.getElementById("tIcon").innerText = TAROT[i].icon;
+const t = TAROT[i];
 
-document.getElementById("tName").innerText = TAROT[i].name;
+document.getElementById("tIcon").innerText = t.icon;
 
-document.getElementById("tMeaning").innerText = TAROT[i].meaning;
+document.getElementById("tName").innerText = t.name;
+
+document.getElementById("tarotDetails").innerHTML = `
+
+<div class="info-block"><h4> Значение</h4><p>${t.meaning}</p></div>
+
+<div class="info-block" style="border-color:#4caf50;"><h4>✨ Пожелание на день</h4><p>${t.advice}</p></div>
+
+<div class="info-block" style="border-color:#f44336;"><h4>⚠️ Чего избегать</h4><p>${t.avoid}</p></div>
+
+`;
 
 }
 
