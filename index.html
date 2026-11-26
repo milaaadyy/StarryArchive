@@ -55,7 +55,6 @@
   .tarot-card { width: 120px; height: 180px; margin: 0 auto 15px; border: 2px solid #c9a227; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 40px; background: #1c1338; }
   .tarot-card span { font-size: 14px; color: #fff; margin-top: 10px; }
   .moon-icon { font-size: 60px; text-align: center; margin: 15px 0; }
-  .share-btn { background: transparent; border: 1px solid #4a3a7a; color: #c9bfe8; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 12px; margin-top: 8px; }
   
   .wheel-container { position: relative; width: 200px; height: 200px; margin: 20px auto 30px; }
   .wheel-pointer { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); font-size: 24px; z-index: 10; color: #c9a227; }
@@ -94,10 +93,10 @@
     <select id="signB"></select>
     <button class="btn" onclick="calcCompat()">Проверить</button>
     <div id="compatResult" class="hidden" style="margin-top:15px;">
-      <div style="font-size:12px;">❤️ Любовь <div class="bar-track"><div class="bar-fill" id="bLove"></div></div></div>
-      <div style="font-size:12px;">🔥 Страсть <div class="bar-track"><div class="bar-fill" id="bPassion"></div></div></div>
-      <div style="font-size:12px;">🧠 Понимание <div class="bar-track"><div class="bar-fill" id="bMind"></div></div></div>
-      <div style="font-size:12px;">🤝 Дружба <div class="bar-track"><div class="bar-fill" id="bFriend"></div></div></div>
+      <div style="font-size:12px;">Любовь <div class="bar-track"><div class="bar-fill" id="bLove"></div></div></div>
+      <div style="font-size:12px;">Страсть <div class="bar-track"><div class="bar-fill" id="bPassion"></div></div></div>
+      <div style="font-size:12px;">Понимание <div class="bar-track"><div class="bar-fill" id="bMind"></div></div></div>
+      <div style="font-size:12px;">Дружба <div class="bar-track"><div class="bar-fill" id="bFriend"></div></div></div>
       <div class="info-block" style="margin-top:10px;"><h4>Вердикт</h4><p id="compatText"></p></div>
     </div>
   </div>
@@ -138,22 +137,22 @@
 </div>
 
 <script>
-const SIGNS = [
-  { id:"aries", name:"Овен", sym:"♈", el:"fire", dates:"21.03-19.04", week:{ general:"Потребует решительности.", days:["Разговор.","Встреча.","Финансы.","Отношения.","Энергия.","Отдых.","Планы."], tags:["❤️ Любовь","💰 Финансы","💼 Карьера","🍀 Число 9"] }, dark:"Страх не успеть. Вспыльчивость." },
-  { id:"taurus", name:"Телец", sym:"♉", el:"earth", dates:"20.04-20.05", week:{ general:"Желание стабильности.", days:["Наблюдай.","Сюрприз.","Работа.","Романтика.","Самооценка.","Финансы.","Близкие."], tags:["❤️ Любовь","💰 Финансы","💼 Карьера","🍀 Число 6"] }, dark:"Страх перемен. Упрямство." },
-  { id:"gemini", name:"Близнецы", sym:"♊", el:"air", dates:"21.05-20.06", week:{ general:"Насыщенная неделя.", days:["Сообщение.","Знакомства.","Планы.","Прошлое.","Эмоции.","Творчество.","Выбор."], tags:["❤️ Любовь","💰 Финансы","💼 Карьера","🍀 Число 5"] }, dark:"Страх привязанности. Непостоянство." },
-  { id:"cancer", name:"Рак", sym:"♋", el:"water", dates:"21.06-22.07", week:{ general:"Задумайся о себе.", days:["Ощущения.","Поддержка.","Обиды.","Отношения.","Раздражительность.","Спокойствие.","Осознание."], tags:["❤️ Любовь","💰 Финансы","💼 Карьера","🍀 Число 2"] }, dark:"Страх отвержения. Обидчивость." },
-  { id:"leo", name:"Лев", sym:"♌", el:"fire", dates:"23.07-22.08", week:{ general:"В центре внимания.", days:["Желания.","Начинания.","Похвала.","Гордость.","Встречи.","Соперничество.","Цели."], tags:["❤️ Любовь","💰 Финансы","💼 Карьера","🍀 Число 1"] }, dark:"Страх быть незамеченным. Гордость." },
-  { id:"virgo", name:"Дева", sym:"♍", el:"earth", dates:"23.08-22.09", week:{ general:"Наведи порядок.", days:["Дела.","Критика.","Работа.","Комплимент.","Проблемы.","Здоровье.","Ошибка."], tags:["❤️ Любовь","💰 Финансы","💼 Карьера","🍀 Число 4"] }, dark:"Страх несовершенства. Занудство." },
-  { id:"libra", name:"Весы", sym:"♎", el:"air", dates:"23.09-22.10", week:{ general:"Время выбора.", days:["Угождение.","Романтика.","Договор.","Сомнения.","Встреча.","Конфликты.","Решения."], tags:["❤️ Любовь","💰 Финансы","💼 Карьера","🍀 Число 7"] }, dark:"Страх конфликтов. Нерешительность." },
-  { id:"scorpio", name:"Скорпион", sym:"♏", el:"water", dates:"23.10-21.11", week:{ general:"Разберись в чувствах.", days:["Детали.","Разговор.","Ревность.","Поворот.","Привычки.","Идея.","Опыт."], tags:["❤️ Любовь","💰 Финансы","💼 Карьера","🍀 Число 8"] }, dark:"Страх предательства. Манипуляции." },
-  { id:"sagittarius", name:"Стрелец", sym:"♐", el:"fire", dates:"22.11-21.12", week:{ general:"Новые возможности.", days:["Шанс.","Путешествия.","Обещания.","Встреча.","Новое.","Финансы.","Итоги."], tags:["❤️ Любовь","💰 Финансы","💼 Карьера","🍀 Число 3"] }, dark:"Страх обязательств. Инфантильность." },
-  { id:"capricorn", name:"Козерог", sym:"♑", el:"earth", dates:"22.12-19.01", week:{ general:"Конкретные результаты.", days:["Цель.","Помощь.","Работа.","Близкие.","Сравнение.","Праздник.","Привычки."], tags:["❤️ Любовь","💰 Финансы","💼 Карьера","🍀 Число 10"] }, dark:"Страх слабости. Жесткость." },
-  { id:"aquarius", name:"Водолей", sym:"♒", el:"air", dates:"20.01-18.02", week:{ general:"Нестандартность.", days:["Идея.","Друзья.","Критика.","Новость.","Эксперимент.","Открытость.","Планы."], tags:["❤️ Любовь","💰 Финансы","💼 Карьера","🍀 Число 11"] }, dark:"Страх привязанности. Холодность." },
-  { id:"pisces", name:"Рыбы", sym:"♓", el:"water", dates:"19.02-20.03", week:{ general:"Самоанализ.", days:["Голос.","Творчество.","Ответственность.","Романтика.","Прошлое.","Хобби.","Размышления."], tags:["❤️ Любовь","💰 Финансы","💼 Карьера","🍀 Число 12"] }, dark:"Страх реальности. Иллюзии." }
+var SIGNS = [
+  { id:"aries", name:"Овен", sym:"♈", el:"fire", dates:"21.03-19.04", week:{ general:"Потребует решительности.", days:["Разговор.","Встреча.","Финансы.","Отношения.","Энергия.","Отдых.","Планы."], tags:["Любовь","Финансы","Карьера","Число 9"] }, dark:"Страх не успеть. Вспыльчивость." },
+  { id:"taurus", name:"Телец", sym:"♉", el:"earth", dates:"20.04-20.05", week:{ general:"Желание стабильности.", days:["Наблюдай.","Сюрприз.","Работа.","Романтика.","Самооценка.","Финансы.","Близкие."], tags:["Любовь","Финансы","Карьера","Число 6"] }, dark:"Страх перемен. Упрямство." },
+  { id:"gemini", name:"Близнецы", sym:"♊", el:"air", dates:"21.05-20.06", week:{ general:"Насыщенная неделя.", days:["Сообщение.","Знакомства.","Планы.","Прошлое.","Эмоции.","Творчество.","Выбор."], tags:["Любовь","Финансы","Карьера","Число 5"] }, dark:"Страх привязанности. Непостоянство." },
+  { id:"cancer", name:"Рак", sym:"♋", el:"water", dates:"21.06-22.07", week:{ general:"Задумайся о себе.", days:["Ощущения.","Поддержка.","Обиды.","Отношения.","Раздражительность.","Спокойствие.","Осознание."], tags:["Любовь","Финансы","Карьера","Число 2"] }, dark:"Страх отвержения. Обидчивость." },
+  { id:"leo", name:"Лев", sym:"♌", el:"fire", dates:"23.07-22.08", week:{ general:"В центре внимания.", days:["Желания.","Начинания.","Похвала.","Гордость.","Встречи.","Соперничество.","Цели."], tags:["Любовь","Финансы","Карьера","Число 1"] }, dark:"Страх быть незамеченным. Гордость." },
+  { id:"virgo", name:"Дева", sym:"♍", el:"earth", dates:"23.08-22.09", week:{ general:"Наведи порядок.", days:["Дела.","Критика.","Работа.","Комплимент.","Проблемы.","Здоровье.","Ошибка."], tags:["Любовь","Финансы","Карьера","Число 4"] }, dark:"Страх несовершенства. Занудство." },
+  { id:"libra", name:"Весы", sym:"♎", el:"air", dates:"23.09-22.10", week:{ general:"Время выбора.", days:["Угождение.","Романтика.","Договор.","Сомнения.","Встреча.","Конфликты.","Решения."], tags:["Любовь","Финансы","Карьера","Число 7"] }, dark:"Страх конфликтов. Нерешительность." },
+  { id:"scorpio", name:"Скорпион", sym:"♏", el:"water", dates:"23.10-21.11", week:{ general:"Разберись в чувствах.", days:["Детали.","Разговор.","Ревность.","Поворот.","Привычки.","Идея.","Опыт."], tags:["Любовь","Финансы","Карьера","Число 8"] }, dark:"Страх предательства. Манипуляции." },
+  { id:"sagittarius", name:"Стрелец", sym:"♐", el:"fire", dates:"22.11-21.12", week:{ general:"Новые возможности.", days:["Шанс.","Путешествия.","Обещания.","Встреча.","Новое.","Финансы.","Итоги."], tags:["Любовь","Финансы","Карьера","Число 3"] }, dark:"Страх обязательств. Инфантильность." },
+  { id:"capricorn", name:"Козерог", sym:"♑", el:"earth", dates:"22.12-19.01", week:{ general:"Конкретные результаты.", days:["Цель.","Помощь.","Работа.","Близкие.","Сравнение.","Праздник.","Привычки."], tags:["Любовь","Финансы","Карьера","Число 10"] }, dark:"Страх слабости. Жесткость." },
+  { id:"aquarius", name:"Водолей", sym:"♒", el:"air", dates:"20.01-18.02", week:{ general:"Нестандартность.", days:["Идея.","Друзья.","Критика.","Новость.","Эксперимент.","Открытость.","Планы."], tags:["Любовь","Финансы","Карьера","Число 11"] }, dark:"Страх привязанности. Холодность." },
+  { id:"pisces", name:"Рыбы", sym:"♓", el:"water", dates:"19.02-20.03", week:{ general:"Самоанализ.", days:["Голос.","Творчество.","Ответственность.","Романтика.","Прошлое.","Хобби.","Размышления."], tags:["Любовь","Финансы","Карьера","Число 12"] }, dark:"Страх реальности. Иллюзии." }
 ];
 
-const FATE = {
+var FATE = {
   "Овен": ["Лидерство","Смелость","Терпение"], "Телец": ["Стабильность","Надёжность","Гибкость"],
   "Близнецы": ["Общение","Интеллект","Постоянство"], "Рак": ["Семья","Забота","Границы"],
   "Лев": ["Признание","Уверенность","Скромность"], "Дева": ["Порядок","Аналитика","Принятие"],
@@ -162,28 +161,32 @@ const FATE = {
   "Водолей": ["Новаторство","Оригинальность","Близость"], "Рыбы": ["Творчество","Эмпатия","Реализм"]
 };
 
-const COMPAT = { "Овен": { "Лев":"h", "Стрелец":"h", "Близнецы":"h", "Рак":"x", "Козерог":"x" }, "Телец": { "Дева":"h", "Козерог":"h", "Рак":"h", "Лев":"x", "Водолей":"x" }, "Близнецы": { "Весы":"h", "Водолей":"h", "Овен":"h", "Дева":"x", "Рыбы":"x" }, "Рак": { "Рыбы":"h", "Скорпион":"h", "Телец":"h", "Овен":"x", "Весы":"x" }, "Лев": { "Овен":"h", "Стрелец":"h", "Весы":"h", "Телец":"x", "Скорпион":"x" }, "Дева": { "Телец":"h", "Козерог":"h", "Скорпион":"h", "Близнецы":"x", "Стрелец":"x" }, "Весы": { "Близнецы":"h", "Водолей":"h", "Лев":"h", "Рак":"x", "Козерог":"x" }, "Скорпион": { "Рак":"h", "Рыбы":"h", "Дева":"h", "Лев":"x", "Водолей":"x" }, "Стрелец": { "Овен":"h", "Лев":"h", "Водолей":"h", "Дева":"x", "Рыбы":"x" }, "Козерог": { "Телец":"h", "Дева":"h", "Рыбы":"h", "Овен":"x", "Весы":"x" }, "Водолей": { "Близнецы":"h", "Весы":"h", "Стрелец":"h", "Телец":"x", "Скорпион":"x" }, "Рыбы": { "Рак":"h", "Скорпион":"h", "Козерог":"h", "Близнецы":"x", "Стрелец":"x" } };
+var COMPAT = { "Овен": { "Лев":"h", "Стрелец":"h", "Близнецы":"h", "Рак":"x", "Козерог":"x" }, "Телец": { "Дева":"h", "Козерог":"h", "Рак":"h", "Лев":"x", "Водолей":"x" }, "Близнецы": { "Весы":"h", "Водолей":"h", "Овен":"h", "Дева":"x", "Рыбы":"x" }, "Рак": { "Рыбы":"h", "Скорпион":"h", "Телец":"h", "Овен":"x", "Весы":"x" }, "Лев": { "Овен":"h", "Стрелец":"h", "Весы":"h", "Телец":"x", "Скорпион":"x" }, "Дева": { "Телец":"h", "Козерог":"h", "Скорпион":"h", "Близнецы":"x", "Стрелец":"x" }, "Весы": { "Близнецы":"h", "Водолей":"h", "Лев":"h", "Рак":"x", "Козерог":"x" }, "Скорпион": { "Рак":"h", "Рыбы":"h", "Дева":"h", "Лев":"x", "Водолей":"x" }, "Стрелец": { "Овен":"h", "Лев":"h", "Водолей":"h", "Дева":"x", "Рыбы":"x" }, "Козерог": { "Телец":"h", "Дева":"h", "Рыбы":"h", "Овен":"x", "Весы":"x" }, "Водолей": { "Близнецы":"h", "Весы":"h", "Стрелец":"h", "Телец":"x", "Скорпион":"x" }, "Рыбы": { "Рак":"h", "Скорпион":"h", "Козерог":"h", "Близнецы":"x", "Стрелец":"x" } };
 
-const TAROT = [ { icon:"🌞", name:"Солнце", m:"Успех.", a:"Делись теплом.", v:"Не хвастайся." }, { icon:"🌙", name:"Луна", m:"Иллюзии.", a:"Интуиция.", v:"Не решай в тумане." }, { icon:"⭐", name:"Звезда", m:"Надежда.", a:"Шаг к мечте.", v:"Не падай духом." }, { icon:"⚔️", name:"Справедливость", m:"Истина.", a:"Честность.", v:"Не хитри." }, { icon:"🛞", name:"Колесо Фортуны", m:"Перемены.", a:"Лови знаки.", v:"Не цепляйся." } ];
+var TAROT = [ { icon:"🌞", name:"Солнце", m:"Успех.", a:"Делись теплом.", v:"Не хвастайся." }, { icon:"🌙", name:"Луна", m:"Иллюзии.", a:"Интуиция.", v:"Не решай в тумане." }, { icon:"⭐", name:"Звезда", m:"Надежда.", a:"Шаг к мечте.", v:"Не падай духом." }, { icon:"⚔️", name:"Справедливость", m:"Истина.", a:"Честность.", v:"Не хитри." }, { icon:"🛞", name:"Колесо Фортуны", m:"Перемены.", a:"Лови знаки.", v:"Не цепляйся." } ];
 
-const MOON = [ { icon:"🌑", n:"Новолуние", d:"Планирование." }, { icon:"🌒", n:"Растущая", d:"Начинания." }, { icon:"🌓", n:"Первая четверть", d:"Препятствия." }, { icon:"🌔", n:"Прибывающая", d:"Пик энергии." }, { icon:"🌕", n:"Полнолуние", d:"Пик эмоций." }, { icon:"🌖", n:"Убывающая", d:"Порядок." }, { icon:"🌗", n:"Последняя четверть", d:"Завершение." }, { icon:"🌘", n:"Убывающая", d:"Отдых." } ];
+var MOON = [ { icon:"🌑", n:"Новолуние", d:"Планирование." }, { icon:"🌒", n:"Растущая", d:"Начинания." }, { icon:"🌓", n:"Первая четверть", d:"Препятствия." }, { icon:"🌔", n:"Прибывающая", d:"Пик энергии." }, { icon:"🌕", n:"Полнолуние", d:"Пик эмоций." }, { icon:"🌖", n:"Убывающая", d:"Порядок." }, { icon:"🌗", n:"Последняя четверть", d:"Завершение." }, { icon:"🌘", n:"Убывающая", d:"Отдых." } ];
 
-const NAMES = SIGNS.map(s => s.name);
-const DAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-const today = new Date();
-const todayIdx = (today.getDay() + 6) % 7;
-const monday = new Date(today);
+var NAMES = ["Овен","Телец","Близнецы","Рак","Лев","Дева","Весы","Скорпион","Стрелец","Козерог","Водолей","Рыбы"];
+var DAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+var today = new Date();
+var todayIdx = (today.getDay() + 6) % 7;
+var monday = new Date(today);
 monday.setDate(today.getDate() - todayIdx);
 
-let curSign = "aries", curDay = todayIdx, isSpin = false, rot = 0;
+var curSign = "aries", curDay = todayIdx, isSpin = false, rot = 0;
 document.getElementById("mainDate").innerText = today.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 
-const wInner = document.getElementById("wheelInner");
-SIGNS.forEach((s, i) => { wInner.innerHTML += `<div class="segment seg-${i}" style="transform:rotate(${i*30}deg)"><span>${s.sym}</span></div>`; });
+var wInner = document.getElementById("wheelInner");
+for(var i=0; i<SIGNS.length; i++) {
+  wInner.innerHTML += '<div class="segment seg-'+i+'" style="transform:rotate('+(i*30)+'deg)"><span>'+SIGNS[i].sym+'</span></div>';
+}
 
 function showTab(id, btn) {
-  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  var panels = document.querySelectorAll(".panel");
+  for(var i=0; i<panels.length; i++) panels[i].classList.remove("active");
+  var tabs = document.querySelectorAll(".tab");
+  for(var i=0; i<tabs.length; i++) tabs[i].classList.remove("active");
   document.getElementById(id).classList.add("active");
   btn.classList.add("active");
   if (id === "tarot") renderTarot();
@@ -191,103 +194,126 @@ function showTab(id, btn) {
 }
 
 function makeBtns(cont, fn) {
-  document.getElementById(cont).innerHTML = SIGNS.map(s => `<button class="sign-btn el-${s.el}" onclick="(${fn.name})('${s.id}')">${s.sym}<br>${s.name}</button>`).join("");
+  var html = "";
+  for(var i=0; i<SIGNS.length; i++) {
+    html += '<button class="sign-btn el-'+SIGNS[i].el+'" onclick="'+fn+'(\''+SIGNS[i].id+'\')">'+SIGNS[i].sym+'<br>'+SIGNS[i].name+'</button>';
+  }
+  document.getElementById(cont).innerHTML = html;
 }
 
 function setDay(i) { curDay = i; renderWeek(curSign); }
 
 function renderWeek(id) {
   curSign = id;
-  const s = SIGNS.find(x => x.id === id);
-  document.querySelectorAll("#weekSigns .sign-btn").forEach((b,i) => b.classList.toggle("active", SIGNS[i].id === id));
-  let nav = '<div class="days-nav">';
-  for(let i=0; i<7; i++) {
-    let d = new Date(monday); d.setDate(monday.getDate() + i);
-    nav += `<button class="day-btn ${i===todayIdx?'today':''} ${i===curDay?'active':''}" onclick="setDay(${i})">${DAYS[i]}<span class="date-num">${d.getDate()}</span></button>`;
+  var s = SIGNS.find(function(x){ return x.id === id; });
+  var btns = document.querySelectorAll("#weekSigns .sign-btn");
+  for(var j=0; j<btns.length; j++) {
+    if(SIGNS[j].id === id) btns[j].classList.add("active");
+    else btns[j].classList.remove("active");
+  }
+  
+  var nav = '<div class="days-nav">';
+  for(var i=0; i<7; i++) {
+    var d = new Date(monday); d.setDate(monday.getDate() + i);
+    nav += '<button class="day-btn '+(i===todayIdx?'today':'')+' '+(i===curDay?'active':'')+'" onclick="setDay('+i+')">'+DAYS[i]+'<span class="date-num">'+d.getDate()+'</span></button>';
   }
   nav += '</div>';
-  document.getElementById("weekContent").innerHTML = `
-    <div class="week-title"><div>${s.sym} ${s.name}</div><span>${s.dates}</span></div>
-    <p style="margin-bottom:10px;font-size:12px;">${s.week.general}</p>
-    ${nav}
-    <div class="day-content">
-      <div class="zodiac-watermark">${s.sym}</div>
-      ${curDay===todayIdx ? '<div class="today-badge">✨ Сегодня</div>' : ''}
-      <div>${s.week.days[curDay]}</div>
-    </div>
-    <button class="share-btn" onclick="share()">📤 Поделиться</button>
-    <div class="meta-tags">${s.tags.map(t=>`<div class="meta-tag">${t}</div>`).join("")}</div>
-  `;
+  
+  var tagsHtml = "";
+  for(var t=0; t<s.tags.length; t++) tagsHtml += '<div class="meta-tag">'+s.tags[t]+'</div>';
+  
+  document.getElementById("weekContent").innerHTML = 
+    '<div class="week-title"><div>'+s.sym+' '+s.name+'</div><span>'+s.dates+'</span></div>'+
+    '<p style="margin-bottom:10px;font-size:12px;">'+s.week.general+'</p>'+
+    nav+
+    '<div class="day-content"><div class="zodiac-watermark">'+s.sym+'</div>'+
+    (curDay===todayIdx ? '<div class="today-badge">Сегодня</div>' : '')+
+    '<div>'+s.week.days[curDay]+'</div></div>'+
+    '<button class="share-btn" onclick="share()">Поделиться</button>'+
+    '<div class="meta-tags">'+tagsHtml+'</div>';
 }
 
 function share() {
-  const s = SIGNS.find(x => x.id === curSign);
-  navigator.clipboard.writeText(`Мой гороскоп: ${s.week.days[curDay]}`).then(()=>alert("Скопировано!"));
+  var s = SIGNS.find(function(x){ return x.id === curSign; });
+  navigator.clipboard.writeText('Мой гороскоп: ' + s.week.days[curDay]).then(function(){ alert("Скопировано!"); });
 }
 
 function renderDark(id) {
-  const s = SIGNS.find(x => x.id === id);
-  document.querySelectorAll("#darkSigns .sign-btn").forEach((b,i) => b.classList.toggle("active", SIGNS[i].id === id));
-  document.getElementById("darkContent").innerHTML = `<div class="week-title"><div>${s.sym} ${s.name}</div></div><div class="info-block"><p>${s.dark}</p></div>`;
+  var s = SIGNS.find(function(x){ return x.id === id; });
+  var btns = document.querySelectorAll("#darkSigns .sign-btn");
+  for(var j=0; j<btns.length; j++) {
+    if(SIGNS[j].id === id) btns[j].classList.add("active");
+    else btns[j].classList.remove("active");
+  }
+  document.getElementById("darkContent").innerHTML = '<div class="week-title"><div>'+s.sym+' '+s.name+'</div></div><div class="info-block"><p>'+s.dark+'</p></div>';
 }
 
 function renderFate(id) {
-  const s = SIGNS.find(x => x.id === id);
-  document.querySelectorAll("#fateSigns .sign-btn").forEach((b,i) => b.classList.toggle("active", SIGNS[i].id === id));
-  const f = FATE[s.name];
-  document.getElementById("fateContent").innerHTML = `
-    <div class="week-title"><div>${s.sym} ${s.name}</div></div>
-    <div class="info-block"><h4>Тема</h4><p>${f[0]}</p></div>
-    <div class="info-block"><h4>Сила</h4><p>${f[1]}</p></div>
-    <div class="info-block"><h4>Урок</h4><p>${f[2]}</p></div>
-  `;
+  var s = SIGNS.find(function(x){ return x.id === id; });
+  var btns = document.querySelectorAll("#fateSigns .sign-btn");
+  for(var j=0; j<btns.length; j++) {
+    if(SIGNS[j].id === id) btns[j].classList.add("active");
+    else btns[j].classList.remove("active");
+  }
+  var f = FATE[s.name];
+  document.getElementById("fateContent").innerHTML = 
+    '<div class="week-title"><div>'+s.sym+' '+s.name+'</div></div>'+
+    '<div class="info-block"><h4>Тема</h4><p>'+f[0]+'</p></div>'+
+    '<div class="info-block"><h4>Сила</h4><p>'+f[1]+'</p></div>'+
+    '<div class="info-block"><h4>Урок</h4><p>'+f[2]+'</p></div>';
 }
 
-makeBtns("weekSigns", renderWeek); renderWeek(curSign);
-makeBtns("darkSigns", renderDark); renderDark("aries");
-makeBtns("fateSigns", renderFate); renderFate("aries");
+makeBtns("weekSigns", "renderWeek"); renderWeek(curSign);
+makeBtns("darkSigns", "renderDark"); renderDark("aries");
+makeBtns("fateSigns", "renderFate"); renderFate("aries");
 
-document.getElementById("signA").innerHTML = NAMES.map(n => `<option>${n}</option>`).join("");
-document.getElementById("signB").innerHTML = NAMES.map(n => `<option>${n}</option>`).join("");
+var optHtml = "";
+for(var i=0; i<NAMES.length; i++) optHtml += '<option>'+NAMES[i]+'</option>';
+document.getElementById("signA").innerHTML = optHtml;
+document.getElementById("signB").innerHTML = optHtml;
 document.getElementById("signB").selectedIndex = 1;
 
 function calcCompat() {
-  const a = document.getElementById("signA").value, b = document.getElementById("signB").value;
-  let type = "n";
+  var a = document.getElementById("signA").value, b = document.getElementById("signB").value;
+  var type = "n";
   if (COMPAT[a] && COMPAT[a][b]) type = COMPAT[a][b];
   else if (COMPAT[b] && COMPAT[b][a]) type = COMPAT[b][a];
-  let base = type==="h" ? [88, 92, 80, 85] : type==="x" ? [45, 65, 40, 45] : [65, 60, 65, 70];
-  let txt = type==="h" ? "Сильное притяжение." : type==="x" ? "Непростой союз." : "Спокойный союз.";
-  ["bLove","bPassion","bMind","bFriend"].forEach((id,i) => document.getElementById(id).style.width = base[i] + "%");
+  var base = type==="h" ? [88, 92, 80, 85] : type==="x" ? [45, 65, 40, 45] : [65, 60, 65, 70];
+  var txt = type==="h" ? "Сильное притяжение." : type==="x" ? "Непростой союз." : "Спокойный союз.";
+  document.getElementById("bLove").style.width = base[0] + "%";
+  document.getElementById("bPassion").style.width = base[1] + "%";
+  document.getElementById("bMind").style.width = base[2] + "%";
+  document.getElementById("bFriend").style.width = base[3] + "%";
   document.getElementById("compatText").innerText = txt;
   document.getElementById("compatResult").classList.remove("hidden");
 }
 
 function renderTarot() {
-  const t = TAROT[Math.floor(Math.random() * TAROT.length)];
+  var t = TAROT[Math.floor(Math.random() * TAROT.length)];
   document.getElementById("tIcon").innerText = t.icon;
   document.getElementById("tName").innerText = t.name;
-  document.getElementById("tarotDetails").innerHTML = `<div class="info-block"><h4>🌟</h4><p>${t.m}</p></div><div class="info-block"><h4>✨</h4><p>${t.a}</p></div><div class="info-block"><h4>⚠️</h4><p>${t.v}</p></div>`;
+  document.getElementById("tarotDetails").innerHTML = '<div class="info-block"><h4>Значение</h4><p>'+t.m+'</p></div><div class="info-block"><h4>Пожелание</h4><p>'+t.a+'</p></div><div class="info-block"><h4>Избегать</h4><p>'+t.v+'</p></div>';
 }
 
 function renderMoon() {
-  const days = (new Date() - new Date('2024-01-11')) / 86400000;
-  const ph = MOON[Math.floor(((days % 29.53) / 29.53) * 8) % 8];
+  var days = (new Date() - new Date('2024-01-11')) / 86400000;
+  var ph = MOON[Math.floor(((days % 29.53) / 29.53) * 8) % 8];
   document.getElementById("moonIcon").innerText = ph.icon;
   document.getElementById("moonPhaseName").innerText = ph.n;
   document.getElementById("moonDesc").innerText = ph.d;
 }
 
 function spinWheel() {
-  if (isSpin) return; isSpin = true;
+  if (isSpin) return; 
+  isSpin = true;
   document.getElementById("fortuneResult").classList.add("hidden");
-  const idx = Math.floor(Math.random() * 12);
+  var idx = Math.floor(Math.random() * 12);
   rot += 1800 + (360 - (idx * 30) - (rot % 360));
-  document.getElementById("wheel").style.transform = `rotate(${rot}deg)`;
-  setTimeout(() => {
+  document.getElementById("wheel").style.transform = 'rotate('+rot+'deg)';
+  setTimeout(function() {
     isSpin = false;
-    document.getElementById("fSign").innerText = `Послание от ${SIGNS[idx].name} ${SIGNS[idx].sym}`;
-    document.getElementById("fText").innerText = `"${SIGNS[idx].week.days[Math.floor(Math.random() * 7)]}"`;
+    document.getElementById("fSign").innerText = 'Послание от ' + SIGNS[idx].name + ' ' + SIGNS[idx].sym;
+    document.getElementById("fText").innerText = SIGNS[idx].week.days[Math.floor(Math.random() * 7)];
     document.getElementById("fortuneResult").classList.remove("hidden");
   }, 5100);
 }
