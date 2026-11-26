@@ -1,2077 +1,1043 @@
 <!DOCTYPE html>
-
 <html lang="ru">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Мистический гороскоп</title>
-
 <style>
-
- @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
-
- * { box-sizing: border-box; margin: 0; padding: 0; }
-
- body {
-
-   font-family: 'Montserrat', sans-serif;
-
-   background: #0d0820;
-
-   color: #e9e4ff; padding: 24px 12px; min-height: 100vh;
-
-   overflow-x: hidden;
-
- }
-
- 
-
- /* Анимированный космический фон */
-
- body::before {
-
-   content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-
-   background: radial-gradient(circle at 50% 0%, #2a1a4a 0%, #0d0820 60%, #05030f 100%);
-
-   z-index: -2;
-
- }
-
- body::after {
-
-   content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-
-   background-image:
-
-     radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
-
-     radial-gradient(1.5px 1.5px at 100px 70px, #c9a227, rgba(0,0,0,0)),
-
-     radial-gradient(1px 1px at 150px 150px, #fff, rgba(0,0,0,0));
-
-   background-size: 250px 250px; opacity: 0.4; z-index: -1;
-
-   animation: twinkle 4s infinite alternate;
-
- }
-
- @keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 0.5; } }
-
- .app { max-width: 640px; margin: 0 auto; position: relative; z-index: 1; }
-
- 
-
- h1 { font-size: 28px; text-align: center; color: #f4e2a1; margin-bottom: 4px; text-shadow: 0 0 15px rgba(201,162,39,0.4); }
-
- .tagline { text-align: center; color: #9a8fc0; font-size: 12px; margin-bottom: 16px; letter-spacing: 1px; text-transform: uppercase; }
-
- 
-
- .main-date {
-
-   display: block; width: fit-content; margin: 0 auto 20px;
-
-   font-size: 12px; color: #c9a227; text-transform: uppercase;
-
-   background: rgba(26,18,51,0.8); padding: 6px 16px; border-radius: 20px;
-
-   border: 1px solid rgba(201,162,39,0.3); backdrop-filter: blur(5px);
-
- }
-
- /* Личный прогноз */
-
- .daily-forecast {
-
-   background: linear-gradient(135deg, rgba(106,79,192,0.3), rgba(201,162,39,0.15));
-
-   border: 1px solid #c9a227; border-radius: 16px; padding: 20px;
-
-   text-align: center; margin-bottom: 20px; box-shadow: 0 0 20px rgba(201,162,39,0.2);
-
-   position: relative; overflow: hidden; display: none;
-
- }
-
- .daily-forecast.active { display: block; animation: fadeUp 0.5s ease-out; }
-
- .daily-forecast h3 { color: #f4e2a1; font-size: 18px; margin-bottom: 8px; }
-
- .daily-forecast p { font-size: 14px; line-height: 1.5; color: #e9e4ff; }
-
- .daily-forecast .score { font-size: 32px; font-weight: 700; color: #c9a227; text-shadow: 0 0 10px rgba(201,162,39,0.5); margin-bottom: 5px; }
-
- .daily-forecast .forecast-tag { display: inline-block; background: rgba(201,162,39,0.2); padding: 4px 10px; border-radius: 10px; font-size: 11px; color: #c9a227; margin-top: 10px; font-weight: bold; text-transform: uppercase; }
-
- /* Личный профиль */
-
- .profile-bar {
-
-   background: linear-gradient(135deg, rgba(106,79,192,0.2), rgba(201,162,39,0.1));
-
-   border: 1px solid rgba(201,162,39,0.3); border-radius: 12px;
-
-   padding: 12px 16px; margin-bottom: 20px; display: flex;
-
-   justify-content: space-between; align-items: center; font-size: 13px;
-
- }
-
- .profile-bar b { color: #f4e2a1; }
-
- .profile-bar button {
-
-   background: none; border: 1px solid #8a6fe0; color: #c9bfe8;
-
-   padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px;
-
- }
-
- .profile-bar button:hover { background: #8a6fe0; color: #fff; }
-
- 
-
- .setup-birth { text-align: center; padding: 25px 15px; background: rgba(26,18,51,0.9); border-radius: 15px; border: 1px dashed #8a6fe0; margin-bottom: 20px; }
-
- .setup-birth h3 { color: #f4e2a1; margin-bottom: 15px; font-size: 18px; }
-
- .setup-birth .input-group { margin-bottom: 12px; text-align: left; }
-
- .setup-birth label { display: block; font-size: 12px; color: #9a8fc0; margin-bottom: 4px; margin-left: 5px; }
-
- .setup-birth input, .setup-birth select {
-
-   width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #4a3a7a;
-
-   background: #0d0820; color: #fff; font-family: inherit; font-size: 14px;
-
- }
-
- .setup-birth input:focus, .setup-birth select:focus { outline: none; border-color: #c9a227; }
-
- .tabs { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px; }
-
- .tab {
-
-   padding: 10px 14px; border-radius: 20px; border: 1px solid #4a3a7a;
-
-   background: rgba(255,255,255,0.02); color: #c9bfe8; cursor: pointer; font-size: 12px;
-
-   transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
-
- }
-
- .tab:hover { border-color: #8a6fe0; background: rgba(106,79,192,0.1); transform: translateY(-1px); }
-
- .tab.active {
-
-   background: linear-gradient(135deg, #6a4fc0, #8a6fe0); color: #fff;
-
-   border-color: #c9a227; box-shadow: 0 4px 15px rgba(138,111,224,0.4);
-
- }
-
- .panel {
-
-   display: none; background: rgba(26,18,51,0.85); padding: 22px 18px;
-
-   border-radius: 18px; border: 1px solid rgba(201,162,39,0.2);
-
-   box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(106,79,192,0.1);
-
-   backdrop-filter: blur(10px);
-
- }
-
- .panel.active { display: block; animation: fadeUp .4s ease-out; }
-
- @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
- .sign-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
-
- .sign-btn {
-
-   padding: 12px 4px; border-radius: 12px; border: 1px solid #3d2f6b;
-
-   background: rgba(0,0,0,0.2); color: #d9d0f5; cursor: pointer;
-
-   text-align: center; font-size: 11px; transition: all .2s;
-
-   font-family: inherit;
-
- }
-
- .sign-btn:hover { border-color: #8a6fe0; transform: translateY(-2px); }
-
- .sign-btn.active {
-
-   border-color: #c9a227; background: linear-gradient(135deg, rgba(201,162,39,0.15), rgba(201,162,39,0.05));
-
-   box-shadow: 0 0 15px rgba(201,162,39,0.2); color: #fff;
-
- }
-
- .el-fire { border-bottom: 2px solid #ff5722; }
-
- .el-water { border-bottom: 2px solid #2196f3; }
-
- .el-earth { border-bottom: 2px solid #4caf50; }
-
- .el-air { border-bottom: 2px solid #ffeb3b; }
-
- .week-title {
-
-   font-size: 20px; color: #f4e2a1; margin-bottom: 12px;
-
-   border-bottom: 1px solid rgba(201,162,39,0.2); padding-bottom: 10px;
-
-   display: flex; justify-content: space-between; align-items: baseline;
-
- }
-
- .week-title span { font-size: 12px; color: #9a8fc0; }
-
- .days-nav { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; }
-
- .days-nav::-webkit-scrollbar { display: none; }
-
- .day-btn {
-
-   flex: 1; min-width: 50px; padding: 10px 4px; border-radius: 10px;
-
-   border: 1px solid #3d2f6b; background: rgba(0,0,0,0.2); color: #9a8fc0;
-
-   font-size: 10px; cursor: pointer; text-align: center; transition: all .3s;
-
-   font-family: inherit;
-
- }
-
- .day-btn.today { border-color: #c9a227; color: #c9a227; }
-
- .day-btn.active { background: linear-gradient(135deg, #6a4fc0, #8a6fe0); color: #fff; border-color: #c9a227; box-shadow: 0 0 12px rgba(138,111,224,0.4); transform: translateY(-2px); }
-
- .day-btn .date-num { display: block; font-size: 16px; font-weight: bold; margin-top: 2px; }
-
- .day-btn .date-mon { display: block; font-size: 9px; color: #9a8fc0; text-transform: lowercase; margin-top: 1px; }
-
- .day-btn.today .date-mon { color: #c9a227; }
-
- .day-content {
-
-   padding: 18px; border-left: 3px solid #c9a227; background: rgba(255,255,255,0.02);
-
-   border-radius: 0 12px 12px 0; font-size: 14px; line-height: 1.6;
-
-   margin-bottom: 15px; position: relative; animation: fadeUp 0.3s ease-out;
-
- }
-
- .today-badge {
-
-   display: inline-block; background: rgba(201,162,39,0.2); color: #c9a227;
-
-   padding: 3px 8px; border-radius: 6px; font-size: 10px;
-
-   margin-bottom: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;
-
- }
-
- .zodiac-watermark { position: absolute; bottom: -5px; right: 10px; font-size: 70px; opacity: 0.05; pointer-events: none; }
-
- .meta-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-
- .meta-tag { background: rgba(0,0,0,0.3); padding: 6px 12px; border-radius: 8px; font-size: 11px; border: 1px solid rgba(255,255,255,0.05); }
-
- .share-btn {
-
-   padding: 8px 16px; background: transparent; color: #c9a227;
-
-   border: 1px solid #c9a227; border-radius: 8px; cursor: pointer;
-
-   font-size: 12px; margin-bottom: 8px; transition: all .2s; font-family: inherit;
-
- }
-
- .share-btn:hover { background: rgba(201,162,39,0.1); }
-
- .infographic {
-
-   margin: 16px 0; padding: 16px; background: rgba(0,0,0,0.2);
-
-   border: 1px solid rgba(255,255,255,0.05); border-radius: 14px;
-
-   display: grid; grid-template-columns: 130px 1fr; gap: 16px; align-items: center;
-
- }
-
- .ring-wrap { position: relative; width: 130px; height: 130px; margin: 0 auto; }
-
- .ring-wrap svg { transform: rotate(-90deg); }
-
- .ring-bg { stroke: rgba(255,255,255,0.06); }
-
- .ring-fg { stroke: #c9a227; stroke-linecap: round; transition: stroke-dashoffset 1.5s ease-out; filter: drop-shadow(0 0 5px rgba(201,162,39,0.5)); }
-
- .ring-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-
- .ring-label b { font-size: 26px; color: #f4e2a1; line-height: 1; }
-
- .ring-label small { font-size: 9px; color: #9a8fc0; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.5px; }
-
- 
-
- .stats { display: flex; flex-direction: column; gap: 10px; }
-
- .stat-row { font-size: 11px; }
-
- .stat-head { display: flex; justify-content: space-between; margin-bottom: 4px; color: #c9bfe8; }
-
- .stat-head b { color: #f4e2a1; }
-
- .stat-track { height: 6px; background: rgba(0,0,0,0.5); border-radius: 3px; overflow: hidden; }
-
- .stat-fill { height: 100%; width: 0; border-radius: 3px; background: linear-gradient(90deg, #6a4fc0, #c9a227); transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
-
- @media (max-width: 450px) {
-
-   .infographic { grid-template-columns: 1fr; }
-
-   .stats { width: 100%; }
-
- }
-
- select {
-
-   width: 100%; padding: 12px 14px; margin-bottom: 10px; background: rgba(0,0,0,0.3);
-
-   color: #fff; border: 1px solid #4a3a7a; border-radius: 10px; font-size: 14px; font-family: inherit;
-
- }
-
- select:focus { outline: none; border-color: #c9a227; }
-
- .btn {
-
-   padding: 14px; width: 100%; background: linear-gradient(135deg, #6a4fc0, #8a6fe0);
-
-   color: #fff; border: none; border-radius: 10px; cursor: pointer;
-
-   font-size: 14px; font-weight: 600; margin-top: 10px; transition: all .3s;
-
-   box-shadow: 0 4px 15px rgba(106,79,192,0.3); font-family: inherit;
-
- }
-
- .btn:hover { filter: brightness(1.15); transform: translateY(-2px); }
-
- .btn-gold { background: linear-gradient(135deg, #c9a227, #e0b84a); color: #0d0820; box-shadow: 0 4px 15px rgba(201,162,39,0.3); }
-
- .bar-track { height: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; margin: 5px 0 12px; overflow: hidden; }
-
- .bar-fill { height: 100%; background: linear-gradient(90deg, #6a4fc0, #c9a227); width: 0; transition: width 1s cubic-bezier(.4,0,.2,1); }
-
- .hidden { display: none !important; }
-
- .info-block { background: rgba(0,0,0,0.2); padding: 14px; border-radius: 10px; margin-bottom: 10px; border-left: 3px solid #8a6fe0; }
-
- .info-block h4 { color: #c9a227; font-size: 12px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-
- .info-block p { font-size: 13px; line-height: 1.5; }
-
- /* СОВМЕСТИМОСТЬ (КНОПКИ) */
-
- .compat-selectors { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 20px; }
-
- .compat-col { flex: 1; text-align: center; }
-
- .compat-col label { font-size: 11px; color: #9a8fc0; text-transform: uppercase; margin-bottom: 6px; display: block; }
-
- .compat-col select { text-align: center; margin-bottom: 0; }
-
- .compat-heart { font-size: 24px; color: #e07fb0; animation: pulse-heart 1.5s infinite; }
-
- @keyframes pulse-heart { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
-
- /* ТАРО (РУБАШКА) */
-
- .tarot-container { perspective: 1000px; width: 160px; height: 260px; margin: 20px auto; }
-
- .tarot-card-flip {
-
-   width: 100%; height: 100%; position: relative;
-
-   transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-   transform-style: preserve-3d; cursor: pointer;
-
- }
-
- .tarot-card-flip.flipped { transform: rotateY(180deg); }
-
- .tarot-face {
-
-   position: absolute; width: 100%; height: 100%;
-
-   backface-visibility: hidden; border-radius: 12px;
-
-   display: flex; flex-direction: column; align-items: center; justify-content: center;
-
-   border: 3px solid #c9a227; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-
- }
-
- .tarot-back {
-
-   background: repeating-linear-gradient(45deg, #1c1338, #1c1338 10px, #2a1a4a 10px, #2a1a4a 20px);
-
-   color: #f4e2a1; font-size: 40px;
-
- }
-
- .tarot-back::after { content: ""; filter: drop-shadow(0 0 10px rgba(201,162,39,0.5)); }
-
- .tarot-front {
-
-   background: linear-gradient(160deg, #1c1338, #2f1f5c); transform: rotateY(180deg);
-
- }
-
- .tarot-front .tarot-icon { font-size: 60px; margin-bottom: 15px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6)); }
-
- .tarot-front .tarot-name { font-size: 16px; color: #f4e2a1; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-align: center; padding: 0 10px; }
-
- /* МАТРИЦА СУДЬБЫ */
-
- .matrix-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
-
- .matrix-card { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; border: 1px solid rgba(201,162,39,0.3); display: flex; align-items: center; gap: 15px; }
-
- .matrix-icon { font-size: 28px; }
-
- .matrix-text h4 { color: #f4e2a1; font-size: 14px; margin-bottom: 4px; }
-
- .matrix-text p { font-size: 12px; color: #c9bfe8; line-height: 1.4; }
-
- /* НАТАЛЬНАЯ КАРТА */
-
- .natal-container { position: relative; width: 100%; max-width: 340px; margin: 20px auto; }
-
- .natal-svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 0 10px rgba(201,162,39,0.2)); }
-
- .natal-legend { margin-top: 15px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; }
-
- .natal-legend div { display: flex; align-items: center; gap: 6px; }
-
- .natal-legend span { color: #c9a227; font-size: 16px; }
-
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #0d0820;
+    color: #e9e4ff; padding: 24px 12px; min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  /* Анимированный космический фон */
+  body::before {
+    content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% 0%, #2a1a4a 0%, #0d0820 60%, #05030f 100%);
+    z-index: -2;
+  }
+  body::after {
+    content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+      radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)), 
+      radial-gradient(1.5px 1.5px at 100px 70px, #c9a227, rgba(0,0,0,0)),
+      radial-gradient(1px 1px at 150px 150px, #fff, rgba(0,0,0,0));
+    background-size: 250px 250px; opacity: 0.4; z-index: -1;
+    animation: twinkle 4s infinite alternate;
+  }
+  @keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 0.5; } }
+
+  .app { max-width: 640px; margin: 0 auto; position: relative; z-index: 1; }
+  
+  h1 { font-size: 28px; text-align: center; color: #f4e2a1; margin-bottom: 4px; text-shadow: 0 0 15px rgba(201,162,39,0.4); }
+  .tagline { text-align: center; color: #9a8fc0; font-size: 12px; margin-bottom: 16px; letter-spacing: 1px; text-transform: uppercase; }
+  
+  .main-date {
+    display: block; width: fit-content; margin: 0 auto 20px;
+    font-size: 12px; color: #c9a227; text-transform: uppercase;
+    background: rgba(26,18,51,0.8); padding: 6px 16px; border-radius: 20px;
+    border: 1px solid rgba(201,162,39,0.3); backdrop-filter: blur(5px);
+  }
+
+  /* Личный профиль */
+  .profile-bar {
+    background: linear-gradient(135deg, rgba(106,79,192,0.2), rgba(201,162,39,0.1));
+    border: 1px solid rgba(201,162,39,0.3); border-radius: 12px;
+    padding: 12px 16px; margin-bottom: 20px; display: flex;
+    justify-content: space-between; align-items: center; font-size: 13px;
+  }
+  .profile-bar b { color: #f4e2a1; }
+  .profile-bar button {
+    background: none; border: 1px solid #8a6fe0; color: #c9bfe8;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px;
+  }
+  .profile-bar button:hover { background: #8a6fe0; color: #fff; }
+  
+  .setup-birth { text-align: center; padding: 25px 15px; background: rgba(26,18,51,0.9); border-radius: 15px; border: 1px dashed #8a6fe0; margin-bottom: 20px; }
+  .setup-birth h3 { color: #f4e2a1; margin-bottom: 15px; font-size: 18px; }
+  .setup-birth .input-group { margin-bottom: 12px; text-align: left; }
+  .setup-birth label { display: block; font-size: 12px; color: #9a8fc0; margin-bottom: 4px; margin-left: 5px; }
+  .setup-birth input, .setup-birth select { 
+    width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #4a3a7a; 
+    background: #0d0820; color: #fff; font-family: inherit; font-size: 14px; 
+  }
+  .setup-birth input:focus, .setup-birth select:focus { outline: none; border-color: #c9a227; }
+
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px; }
+  .tab {
+    padding: 10px 14px; border-radius: 20px; border: 1px solid #4a3a7a;
+    background: rgba(255,255,255,0.02); color: #c9bfe8; cursor: pointer; font-size: 12px;
+    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .tab:hover { border-color: #8a6fe0; background: rgba(106,79,192,0.1); transform: translateY(-1px); }
+  .tab.active { 
+    background: linear-gradient(135deg, #6a4fc0, #8a6fe0); color: #fff; 
+    border-color: #c9a227; box-shadow: 0 4px 15px rgba(138,111,224,0.4); 
+  }
+
+  .panel {
+    display: none; background: rgba(26,18,51,0.85); padding: 22px 18px;
+    border-radius: 18px; border: 1px solid rgba(201,162,39,0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(106,79,192,0.1);
+    backdrop-filter: blur(10px);
+  }
+  .panel.active { display: block; animation: fadeUp .4s ease-out; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+  .sign-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+  .sign-btn {
+    padding: 12px 4px; border-radius: 12px; border: 1px solid #3d2f6b;
+    background: rgba(0,0,0,0.2); color: #d9d0f5; cursor: pointer;
+    text-align: center; font-size: 11px; transition: all .2s;
+    font-family: inherit;
+  }
+  .sign-btn:hover { border-color: #8a6fe0; transform: translateY(-2px); }
+  .sign-btn.active { 
+    border-color: #c9a227; background: linear-gradient(135deg, rgba(201,162,39,0.15), rgba(201,162,39,0.05)); 
+    box-shadow: 0 0 15px rgba(201,162,39,0.2); color: #fff; 
+  }
+  .el-fire { border-bottom: 2px solid #ff5722; }
+  .el-water { border-bottom: 2px solid #2196f3; }
+  .el-earth { border-bottom: 2px solid #4caf50; }
+  .el-air { border-bottom: 2px solid #ffeb3b; }
+
+  .week-title {
+    font-size: 20px; color: #f4e2a1; margin-bottom: 12px;
+    border-bottom: 1px solid rgba(201,162,39,0.2); padding-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .week-title span { font-size: 12px; color: #9a8fc0; }
+
+  .days-nav { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; }
+  .days-nav::-webkit-scrollbar { display: none; }
+  .day-btn {
+    flex: 1; min-width: 50px; padding: 10px 4px; border-radius: 10px;
+    border: 1px solid #3d2f6b; background: rgba(0,0,0,0.2); color: #9a8fc0;
+    font-size: 10px; cursor: pointer; text-align: center; transition: all .3s;
+    font-family: inherit;
+  }
+  .day-btn.today { border-color: #c9a227; color: #c9a227; }
+  .day-btn.active { background: linear-gradient(135deg, #6a4fc0, #8a6fe0); color: #fff; border-color: #c9a227; box-shadow: 0 0 12px rgba(138,111,224,0.4); transform: translateY(-2px); }
+  .day-btn .date-num { display: block; font-size: 16px; font-weight: bold; margin-top: 2px; }
+  .day-btn .date-mon { display: block; font-size: 9px; color: #9a8fc0; text-transform: lowercase; margin-top: 1px; }
+  .day-btn.today .date-mon { color: #c9a227; }
+
+  .day-content {
+    padding: 18px; border-left: 3px solid #c9a227; background: rgba(255,255,255,0.02);
+    border-radius: 0 12px 12px 0; font-size: 14px; line-height: 1.6;
+    margin-bottom: 15px; position: relative; animation: fadeUp 0.3s ease-out;
+  }
+  .today-badge {
+    display: inline-block; background: rgba(201,162,39,0.2); color: #c9a227;
+    padding: 3px 8px; border-radius: 6px; font-size: 10px;
+    margin-bottom: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .zodiac-watermark { position: absolute; bottom: -5px; right: 10px; font-size: 70px; opacity: 0.05; pointer-events: none; }
+
+  .meta-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .meta-tag { background: rgba(0,0,0,0.3); padding: 6px 12px; border-radius: 8px; font-size: 11px; border: 1px solid rgba(255,255,255,0.05); }
+
+  .share-btn {
+    padding: 8px 16px; background: transparent; color: #c9a227;
+    border: 1px solid #c9a227; border-radius: 8px; cursor: pointer;
+    font-size: 12px; margin-bottom: 8px; transition: all .2s; font-family: inherit;
+  }
+  .share-btn:hover { background: rgba(201,162,39,0.1); }
+
+  .infographic {
+    margin: 16px 0; padding: 16px; background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05); border-radius: 14px;
+    display: grid; grid-template-columns: 130px 1fr; gap: 16px; align-items: center;
+  }
+  .ring-wrap { position: relative; width: 130px; height: 130px; margin: 0 auto; }
+  .ring-wrap svg { transform: rotate(-90deg); }
+  .ring-bg { stroke: rgba(255,255,255,0.06); }
+  .ring-fg { stroke: #c9a227; stroke-linecap: round; transition: stroke-dashoffset 1.5s ease-out; filter: drop-shadow(0 0 5px rgba(201,162,39,0.5)); }
+  .ring-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring-label b { font-size: 26px; color: #f4e2a1; line-height: 1; }
+  .ring-label small { font-size: 9px; color: #9a8fc0; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.5px; }
+  
+  .stats { display: flex; flex-direction: column; gap: 10px; }
+  .stat-row { font-size: 11px; }
+  .stat-head { display: flex; justify-content: space-between; margin-bottom: 4px; color: #c9bfe8; }
+  .stat-head b { color: #f4e2a1; }
+  .stat-track { height: 6px; background: rgba(0,0,0,0.5); border-radius: 3px; overflow: hidden; }
+  .stat-fill { height: 100%; width: 0; border-radius: 3px; background: linear-gradient(90deg, #6a4fc0, #c9a227); transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+  @media (max-width: 450px) {
+    .infographic { grid-template-columns: 1fr; }
+    .stats { width: 100%; }
+  }
+
+  select {
+    width: 100%; padding: 12px 14px; margin-bottom: 10px; background: rgba(0,0,0,0.3);
+    color: #fff; border: 1px solid #4a3a7a; border-radius: 10px; font-size: 14px; font-family: inherit;
+  }
+  select:focus { outline: none; border-color: #c9a227; }
+  .btn {
+    padding: 14px; width: 100%; background: linear-gradient(135deg, #6a4fc0, #8a6fe0);
+    color: #fff; border: none; border-radius: 10px; cursor: pointer;
+    font-size: 14px; font-weight: 600; margin-top: 10px; transition: all .3s;
+    box-shadow: 0 4px 15px rgba(106,79,192,0.3); font-family: inherit;
+  }
+  .btn:hover { filter: brightness(1.15); transform: translateY(-2px); }
+  .btn-gold { background: linear-gradient(135deg, #c9a227, #e0b84a); color: #0d0820; box-shadow: 0 4px 15px rgba(201,162,39,0.3); }
+
+  .bar-track { height: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; margin: 5px 0 12px; overflow: hidden; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, #6a4fc0, #c9a227); width: 0; transition: width 1s cubic-bezier(.4,0,.2,1); }
+  .hidden { display: none !important; }
+
+  .info-block { background: rgba(0,0,0,0.2); padding: 14px; border-radius: 10px; margin-bottom: 10px; border-left: 3px solid #8a6fe0; }
+  .info-block h4 { color: #c9a227; font-size: 12px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .info-block p { font-size: 13px; line-height: 1.5; }
+
+  /* ТАРО (стилизованная карта) */
+  .tarot-card {
+    width: 160px; height: 260px; margin: 0 auto 20px;
+    border: 3px solid #c9a227; border-radius: 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, #1c1338, #2f1f5c);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px rgba(201,162,39,0.15); 
+    position: relative; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    overflow: hidden;
+  }
+  .tarot-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 30px rgba(201,162,39,0.3); }
+  
+  /* Стили для текста и эмодзи внутри карты */
+  .tarot-icon { font-size: 60px; z-index: 2; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6)); }
+  .tarot-name { 
+    font-size: 16px; color: #f4e2a1; font-weight: 700; 
+    text-transform: uppercase; letter-spacing: 1px; 
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8); z-index: 2; margin-top: 15px; text-align: center; padding: 0 10px;
+  }
+  
+  /* Декоративный узор на фоне карты */
+  .tarot-card::before {
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: radial-gradient(circle at 50% 50%, rgba(201,162,39,0.1) 0%, transparent 60%);
+    z-index: 1;
+  }
+  .tarot-card::after {
+    content: "✨"; position: absolute; top: 15px; right: 15px; font-size: 16px; opacity: 0.6; z-index: 2;
+  }
+
+  .moon-icon { font-size: 70px; text-align: center; margin: 20px 0; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); }
+
+  /* Колесо */
+  .wheel-container { position: relative; width: 240px; height: 240px; margin: 25px auto 30px; }
+  .wheel-pointer { 
+    position: absolute; top: -18px; left: 50%; transform: translateX(-50%); 
+    font-size: 32px; z-index: 10; color: #c9a227; 
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6)); 
+  }
+  .wheel { 
+    width: 100%; height: 100%; border-radius: 50%; border: 4px solid #c9a227; 
+    position: relative; overflow: hidden; 
+    transition: transform 6s cubic-bezier(0.15, 0.9, 0.2, 1);
+    box-shadow: 0 0 40px rgba(201,162,39,0.2), inset 0 0 20px rgba(0,0,0,0.8); 
+  }
+  .wheel.spinning { filter: blur(1px); }
+  .wheel-center { 
+    position: absolute; top: 50%; left: 50%; width: 44px; height: 44px; 
+    background: #0d0820; border: 3px solid #c9a227; border-radius: 50%; 
+    transform: translate(-50%,-50%); z-index: 5; 
+    display: flex; align-items: center; justify-content: center; font-size: 20px; 
+    box-shadow: 0 0 15px rgba(201,162,39,0.5); transition: all 0.3s;
+  }
+  .wheel-center.pulse { animation: pulse 0.5s infinite alternate; }
+  @keyframes pulse { from { box-shadow: 0 0 15px rgba(201,162,39,0.5); } to { box-shadow: 0 0 30px rgba(201,162,39,0.9), 0 0 50px rgba(201,162,39,0.5); } }
+  
+  .segment { 
+    position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; 
+    border: 1px solid rgba(61,47,107,0.3); display: flex; align-items: center; justify-content: center; 
+    font-size: 18px; color: #fff; transition: background 0.3s;
+  }
+  .segment span { transform: rotate(45deg); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+  .seg-even { background: #1c1338; } .seg-odd { background: #2a1a4a; }
+  .segment.winner { background: linear-gradient(135deg, #8a6fe0, #c9a227); box-shadow: inset 0 0 20px rgba(255,255,255,0.5); }
+
+  /* Результат колеса */
+  .fortune-result { 
+    text-align: center; padding: 20px; 
+    background: linear-gradient(180deg, rgba(42,26,74,0.9) 0%, rgba(13,8,32,0.9) 100%); 
+    border-radius: 15px; border: 1px solid #c9a227; 
+    margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .fortune-header { 
+    color: #f4e2a1; font-size: 20px; margin-bottom: 15px; 
+    text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
+    text-shadow: 0 0 10px rgba(201,162,39,0.5);
+  }
+  .fortune-grid { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+  .fortune-item { 
+    background: rgba(0,0,0,0.3); padding: 12px 15px; border-radius: 10px; 
+    border-left: 3px solid #8a6fe0; animation: fadeUp 0.5s ease-out backwards;
+  }
+  .fortune-item:nth-child(1) { animation-delay: 0.1s; }
+  .fortune-item:nth-child(2) { animation-delay: 0.2s; border-color: #4caf50; }
+  .fortune-item:nth-child(3) { animation-delay: 0.3s; border-color: #f44336; }
+  .fortune-item:nth-child(4) { animation-delay: 0.4s; border-color: #c9a227; background: rgba(201,162,39,0.1); }
+  .fortune-item h5 { color: #c9a227; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
+  .fortune-item p { font-size: 14px; line-height: 1.5; color: #e9e4ff; }
+  .fortune-item p b { color: #fff; font-size: 15px; }
+
+  /* Гороскоп на месяц */
+  .month-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+  .month-card { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); font-size: 12px; line-height: 1.4; }
+  .month-card h5 { color: #8a6fe0; font-size: 11px; margin-bottom: 5px; text-transform: uppercase; }
+  .month-bars { margin-top: 15px; }
+
+  /* Натальная карта */
+  .natal-container { position: relative; width: 100%; max-width: 340px; margin: 20px auto; }
+  .natal-svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 0 10px rgba(201,162,39,0.2)); }
+  .natal-legend { margin-top: 15px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; }
+  .natal-legend div { display: flex; align-items: center; gap: 6px; }
+  .natal-legend span { color: #c9a227; font-size: 16px; }
 </style>
-
 </head>
-
 <body>
-
 <div class="app">
-
- <h1> Мистический гороскоп</h1>
-
- <p class="tagline">Твой проводник в мир астрологии</p>
-
- 
-
- <!-- Личный прогноз -->
-
- <div id="dailyForecast" class="daily-forecast"></div>
-
- <span class="main-date" id="mainDate"></span>
-
- <div id="profileSetup" class="setup-birth hidden">
-
-   <h3>Данные для натальной карты</h3>
-
-   <div class="input-group">
-
-     <label>Дата рождения</label>
-
-     <input type="date" id="birthDateInput">
-
-   </div>
-
-   <div class="input-group">
-
-     <label>Время рождения (если знаете)</label>
-
-     <input type="time" id="birthTimeInput" value="12:00">
-
-   </div>
-
-   <div class="input-group">
-
-     <label>Город рождения</label>
-
-     <select id="birthCityInput">
-
-       <option value="moscow">Москва</option>
-
-       <option value="spb">Санкт-Петербург</option>
-
-       <option value="novosibirsk">Новосибирск</option>
-
-       <option value="other">Другой город</option>
-
-     </select>
-
-   </div>
-
-   <button  onclick="saveBirth()">Построить карту</button>
-
- </div>
-
- <div id="profileBar" class="profile-bar hidden">
-
-   <span>Твой знак: <b id="mySignName">-</b></span>
-
-   <button onclick="showProfileSetup()">Заполнить дату рождения</button>
-
- </div>
-
- <div class="tabs">
-
-   <button   active" data-tab="week">Неделя</button>
-
-   <button  data-tab="month">Месяц</button>
-
-   <button   style='    padding: 14px; width: 100%; background: linear-gradient(135deg, #6a4fc0, #8a6fe0);    color: #fff; border: none; border-radius: 10px; cursor: pointer;    font-size: 14px; font-weight: 600; margin-top: 10px; transition: all .3s;    box-shadow: 0 4px 15px rgba(106,79,192,0.3); font-family: inherit;  ;    padding: 10px 14px; border-radius: 20px; border: 1px solid #4a3a7a;    background: rgba(255,255,255,0.02); color: #c9bfe8; cursor: pointer; font-size: 12px;    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);  ;    padding: 10px 14px; border-radius: 20px; border: 1px solid #4a3a7a;    background: rgba(255,255,255,0.02); color: #c9bfe8; cursor: pointer; font-size: 12px;    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);  ;    padding: 10px 14px; border-radius: 20px; border: 1px solid #4a3a7a;    background: rgba(255,255,255,0.02); color: #c9bfe8; cursor: pointer; font-size: 12px;    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);  ' data-tab="natal">Натальная карта</button>
-
-   <button  data-tab="matrix">Матрица</button>
-
-   <button   data-tab="compat">Совместимость</button>
-
-   <button  data-tab="tarot">Таро дня</button>
-
-   <button   style='    padding: 10px 14px; border-radius: 20px; border: 1px solid #4a3a7a;    background: rgba(255,255,255,0.02); color: #c9bfe8; cursor: pointer; font-size: 12px;    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);  ;    padding: 10px 14px; border-radius: 20px; border: 1px solid #4a3a7a;    background: rgba(255,255,255,0.02); color: #c9bfe8; cursor: pointer; font-size: 12px;    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);  ;    padding: 10px 14px; border-radius: 20px; border: 1px solid #4a3a7a;    background: rgba(255,255,255,0.02); color: #c9bfe8; cursor: pointer; font-size: 12px;    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);  ;    padding: 10px 14px; border-radius: 20px; border: 1px solid #4a3a7a;    background: rgba(255,255,255,0.02); color: #c9bfe8; cursor: pointer; font-size: 12px;    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);  ' data-tab="fortune">Удача</button>
-
- </div>
-
- <div id="week"  active">
-
-   <div class="sign-grid" id="weekSigns"></div>
-
-   <div id="weekContent"></div>
-
- </div>
-
- <div id="month" class="panel">
-
-   <div class="sign-grid" id="monthSigns"></div>
-
-   <div id="monthContent"></div>
-
- </div>
-
- <div id="natal"   style="text-align:center;">
-
-   <h3 style="color:#f4e2a1; font-size:18px; margin-bottom:10px;">Твоя натальная карта</h3>
-
-   <p style="color:#9a8fc0; font-size:12px; margin-bottom:15px;">Космограмма на момент твоего рождения</p>
-
-   <div id="natalChartArea" class="natal-container"></div>
-
-   <div id="natalLegend" class="natal-legend"></div>
-
- </div>
-
- <!-- МАТРИЦА СУДЬБЫ -->
-
- <div id="matrix" class="panel">
-
-   <h3 style="color:#f4e2a1; font-size:18px; margin-bottom:10px;">Матрица Судьбы</h3>
-
-   <p style="color:#9a8fc0; font-size:12px; margin-bottom:20px;">Твой личный астрологический код</p>
-
-   <div id="matrixContent" class="matrix-grid"></div>
-
- </div>
-
- <!-- СОВМЕСТИМОСТЬ -->
-
- <div id="compat" class="panel">
-
-   <div class="compat-selectors">
-
-     <div class="compat-col">
-
-       <label>Твой знак</label>
-
-       <select id="signA"></select>
-
-     </div>
-
-     <div class="compat-heart">❤️</div>
-
-     <div class="compat-col">
-
-       <label>Его/Её знак</label>
-
-       <select id="signB"></select>
-
-     </div>
-
-   </div>
-
-   <button  id="btnCompat">Рассчитать совместимость</button>
-
-   <div id="compatResult"   style='    display: none; background: rgba(26,18,51,0.85); padding: 22px 18px;    border-radius: 18px; border: 1px solid rgba(201,162,39,0.2);    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(106,79,192,0.1);    backdrop-filter: blur(10px);  ;    display: none; background: rgba(26,18,51,0.85); padding: 22px 18px;    border-radius: 18px; border: 1px solid rgba(201,162,39,0.2);    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(106,79,192,0.1);    backdrop-filter: blur(10px);  ;    padding: 14px; width: 100%; background: linear-gradient(135deg, #6a4fc0, #8a6fe0);    color: #fff; border: none; border-radius: 10px; cursor: pointer;    font-size: 14px; font-weight: 600; margin-top: 10px; transition: all .3s;    box-shadow: 0 4px 15px rgba(106,79,192,0.3); font-family: inherit;  ; display: none !important; ' style="margin-top:20px;">
-
-     <div style="font-size:13px;">Любовь <div class="bar-track"><div class="bar-fill" id="bLove"></div></div></div>
-
-     <div style="font-size:13px;">Страсть <div class="bar-track"><div class="bar-fill" id="bPassion"></div></div></div>
-
-     <div style="font-size:13px;">Понимание <div class="bar-track"><div class="bar-fill" id="bMind"></div></div></div>
-
-     <div style="font-size:13px;">Дружба <div class="bar-track"><div class="bar-fill" id="bFriend"></div></div></div>
-
-     <div class="info-block" style="margin-top:15px; border-color:#c9a227;">
-
-       <h4>Вердикт астролога</h4>
-
-       <p id="compatText"></p>
-
-     </div>
-
-     <button class="share-btn" onclick="shareCompat()" style="width:100%; margin-top:10px;">Поделиться результатом</button>
-
-   </div>
-
- </div>
-
- <!-- ТАРО ДНЯ -->
-
- <div id="tarot"  style="text-align:center;">
-
-   <p style="color:#9a8fc0; margin-bottom:10px; font-size:13px;">Твоя карта дня</p>
-
-   <p style="color:#c9a227; font-size:11px; margin-bottom:20px;">Нажми на карту, чтобы открыть послание</p>
-
-   
-
-   <div class="tarot-container">
-
-     <div class="tarot-card-flip" id="tarotCard" onclick="flipTarot()">
-
-       <div class="tarot-face tarot-back"></div>
-
-       <div class="tarot-face tarot-front" id="tarotFront">
-
-         <div class="tarot-icon" id="tIcon"></div>
-
-         <div class="tarot-name" id="tName"></div>
-
-       </div>
-
-     </div>
-
-   </div>
-
-   
-
-   <div id="tarotDetails" style="text-align:left; margin-top: 20px; display:none;"></div>
-
- </div>
-
- <div id="fortune" class="panel">
-
-   <div class="wheel-container">
-
-     <div class="wheel-pointer">▼</div>
-
-     <div class="wheel" id="wheel"><div id="wheelInner" style="width:100%; height:100%; position:relative;"></div></div>
-
-     <div class="wheel-center">✨</div>
-
-   </div>
-
-   <button  style='    display: none; background: rgba(26,18,51,0.85); padding: 22px 18px;    border-radius: 18px; border: 1px solid rgba(201,162,39,0.2);    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(106,79,192,0.1);    backdrop-filter: blur(10px);  ;    padding: 14px; width: 100%; background: linear-gradient(135deg, #6a4fc0, #8a6fe0);    color: #fff; border: none; border-radius: 10px; cursor: pointer;    font-size: 14px; font-weight: 600; margin-top: 10px; transition: all .3s;    box-shadow: 0 4px 15px rgba(106,79,192,0.3); font-family: inherit;  ' btn-gold" id="btnSpin">Крутить колесо</button>
-
-   <div id="fortuneResult" class="fortune-result hidden">
-
-     <div class="fortune-header">Твоя удача:</div>
-
-     <div class="fortune-grid"></div>
-
-   </div>
-
- </div>
-
+  <h1>🔮 Мистический гороскоп</h1>
+  <p class="tagline">Твой проводник в мир астрологии</p>
+  <span class="main-date" id="mainDate"></span>
+
+  <div id="profileSetup" class="setup-birth hidden">
+    <h3>Данные для натальной карты</h3>
+    <div class="input-group">
+      <label>Дата рождения</label>
+      <input type="date" id="birthDateInput">
+    </div>
+    <div class="input-group">
+      <label>Время рождения (если знаете)</label>
+      <input type="time" id="birthTimeInput" value="12:00">
+    </div>
+    <div class="input-group">
+      <label>Город рождения</label>
+      <select id="birthCityInput">
+        <option value="moscow">Москва</option>
+        <option value="spb">Санкт-Петербург</option>
+        <option value="novosibirsk">Новосибирск</option>
+        <option value="other">Другой город</option>
+      </select>
+    </div>
+    <button class="btn" onclick="saveBirth()">Построить карту</button>
+  </div>
+
+  <div id="profileBar" class="profile-bar hidden">
+    <span>Твой знак: <b id="mySignName">-</b></span>
+    <button onclick="showProfileSetup()">Заполнить дату рождения</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="week">Неделя</button>
+    <button class="tab" data-tab="month">Месяц</button>
+    <button class="tab" data-tab="natal">Натальная карта</button>
+    <button class="tab" data-tab="compat">Совместимость</button>
+    <button class="tab" data-tab="tarot">Таро</button>
+    <button class="tab" data-tab="fortune">Удача</button>
+  </div>
+
+  <div id="week" class="panel active">
+    <div class="sign-grid" id="weekSigns"></div>
+    <div id="weekContent"></div>
+  </div>
+
+  <div id="month" class="panel">
+    <div class="sign-grid" id="monthSigns"></div>
+    <div id="monthContent"></div>
+  </div>
+
+  <div id="natal" class="panel" style="text-align:center;">
+    <h3 style="color:#f4e2a1; font-size:18px; margin-bottom:10px;">Твоя натальная карта</h3>
+    <p style="color:#9a8fc0; font-size:12px; margin-bottom:15px;">Космограмма на момент твоего рождения</p>
+    <div id="natalChartArea" class="natal-container"></div>
+    <div id="natalLegend" class="natal-legend"></div>
+  </div>
+
+  <div id="compat" class="panel">
+    <select id="signA"></select>
+    <select id="signB"></select>
+    <button class="btn" id="btnCompat">Проверить совместимость</button>
+    <div id="compatResult" class="hidden" style="margin-top:20px;">
+      <div style="font-size:13px;">❤️ Любовь <div class="bar-track"><div class="bar-fill" id="bLove"></div></div></div>
+      <div style="font-size:13px;">🔥 Страсть <div class="bar-track"><div class="bar-fill" id="bPassion"></div></div></div>
+      <div style="font-size:13px;">🧠 Понимание <div class="bar-track"><div class="bar-fill" id="bMind"></div></div></div>
+      <div style="font-size:13px;">🤝 Дружба <div class="bar-track"><div class="bar-fill" id="bFriend"></div></div></div>
+      <div class="info-block" style="margin-top:15px; border-color:#c9a227;">
+        <h4>Вердикт астролога</h4>
+        <p id="compatText"></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="tarot" class="panel" style="text-align:center;">
+    <p style="color:#9a8fc0; margin-bottom:15px; font-size:13px;">Твой Старший Аркан по знаку зодиака</p>
+    <div class="tarot-card" id="tCard">
+      <div class="tarot-icon" id="tIcon"></div>
+      <div class="tarot-name" id="tName"></div>
+    </div>
+    <div id="tarotDetails" style="text-align:left; margin-top: 10px;"></div>
+  </div>
+
+  <div id="fortune" class="panel">
+    <div class="wheel-container">
+      <div class="wheel-pointer">▼</div>
+      <div class="wheel" id="wheel"><div id="wheelInner" style="width:100%; height:100%; position:relative;"></div></div>
+      <div class="wheel-center">✨</div>
+    </div>
+    <button class="btn btn-gold" id="btnSpin">Крутить колесо</button>
+    <div id="fortuneResult" class="fortune-result hidden">
+      <div class="fortune-header">Твоя удача:</div>
+      <div class="fortune-grid"></div>
+    </div>
+  </div>
 </div>
 
 <script>
-
 /* ========== ДАННЫЕ ========== */
-
 const SIGNS = [
-
- { id:"aries", name:"Овен", sym:"♈", el:"fire", dates:"21.03–19.04",
-
-   stats:{ energy:92, love:70, money:65, intuition:60 },
-
-   week:{ general:"Неделя потребует решительности и инициативы.",
-
-     days:["Важный разговор. Прямолинейность поможет.","Неожиданная встреча. Не спеши с выводами.","Финансовое планирование. Без импульсивных покупок.","Недопонимание в отношениях. Лучше выслушать.","Энергии больше обычного. Направь её на цели.","Отдохни. Не каждый день должен быть продуктивным.","Планируй будущее. Идея перерастёт в серьёзное."],
-
-     tags:["❤️ Любовь: инициатива"," Финансы: осторожно"," Карьера: новые проекты"," Число: 9"] },
-
-   dark:"За решительностью прячется страх не успеть. Ты берёшь ответственность на себя, но иногда это превращается в контроль. Тёмная сторона — вспыльчивость. <b>Скрытая сила:</b> умение зажигать других.",
-
-   arcana: { icon:"", name:"Император", meaning:"Символ власти, порядка и структуры. Твоя задача — научиться управлять не только другими, но и собой.", advice:"Действуй уверенно, но не забывай о мягкости." },
-
-   matrix: { stone:"Рубин", year:"2026 — Год действий", element:"Огонь" }
-
- },
-
- { id:"taurus", name:"Телец", sym:"♉", el:"earth", dates:"20.04–20.05",
-
-   stats:{ energy:60, love:80, money:88, intuition:65 },
-
-   week:{ general:"Желание стабильности и комфорта.",
-
-     days:["Наблюдай. Не торопись с решениями.","Приятный сюрприз от близкого человека.","Рабочие задачи, которые откладывал.","Романтика и душевные разговоры.","Не позволяй чужому мнению влиять на самооценку.","Финансовые вопросы. Избегай лишних расходов.","Время с близкими."],
-
-     tags:["❤️ Любовь: стабильность"," Финансы: пересмотр"," Карьера: последовательность"," Число: 6"] },
-
-   dark:"Любовь к стабильности иногда превращается в страх перемен. Ты держишься за привычное. Тёмная сторона — упрямство и собственничество. <b>Скрытая сила:</b> выносливость и умение создавать безопасное пространство.",
-
-   arcana: { icon:"️", name:"Иерофант", meaning:"Символ традиций, духовного наставничества и поиска истины. Ты — хранитель знаний и ценностей.", advice:"Доверься мудрости, но не бойся новых путей." },
-
-   matrix: { stone:"Изумруд", year:"2026 — Год изобилия", element:"Земля" }
-
- },
-
- { id:"gemini", name:"Близнецы", sym:"♊", el:"air", dates:"21.05–20.06",
-
-   stats:{ energy:80, love:65, money:55, intuition:70 },
-
-   week:{ general:"Насыщенная неделя, много общения.",
-
-     days:["Сообщение может изменить планы.","Знакомства и общение.","Не раскрывай все планы.","Разговор с человеком из прошлого.","Без важных решений на эмоциях.","Творчество и эксперименты.","Определись, чего хочешь."],
-
-     tags:["❤️ Любовь: флирт"," Финансы: идея заработка"," Карьера: коммуникации"," Число: 5"] },
-
-   dark:"За легкостью скрывается страх привязанности. Ты можешь быть поверхностным и разбрасываться обещаниями. Тёмная сторона — непостоянство. <b>Скрытая сила:</b> видеть ситуацию с разных сторон.",
-
-   arcana: { icon:"", name:"Влюбленные", meaning:"Символ выбора, союза и гармонии противоположностей. Тебе предстоит важное решение.", advice:"Прислушайся к сердцу, а не только к разуму." },
-
-   matrix: { stone:"Хризолит", year:"2026 — Год открытий", element:"Воздух" }
-
- },
-
- { id:"cancer", name:"Рак", sym:"♋", el:"water", dates:"21.06–22.07",
-
-   stats:{ energy:55, love:90, money:60, intuition:88 },
-
-   week:{ general:"Задумайся о себе и своих чувствах.",
-
-     days:["Слушай ощущения.","Поддержка от близкого человека.","Отпусти обиды.","Укрепление отношений.","Не принимай чужую раздражительность на свой счёт.","Спокойствие и уют.","Осознание относительно будущего."],
-
-     tags:["❤️ Любовь: проявляй чувства"," Финансы: без трат"," Карьера: не недооценивай"," Число: 2"] },
-
-   dark:"Ты заботишься о других в надежде получить любовь. За мягкостью — страх отвержения. Тёмная сторона — обидчивость и манипуляции. <b>Скрытая сила:</b> глубокая эмпатия.",
-
-   arcana: { icon:"", name:"Колесница", meaning:"Символ движения, преодоления препятствий и воли. Ты способен управлять своими противоречиями.", advice:"Двигайся вперед, не оглядываясь на прошлое." },
-
-   matrix: { stone:"Жемчуг", year:"2026 — Год семьи", element:"Вода" }
-
- },
-
- { id:"leo", name:"Лев", sym:"♌", el:"fire", dates:"23.07–22.08",
-
-   stats:{ energy:90, love:85, money:70, intuition:60 },
-
-   week:{ general:"Ты в центре внимания, сияй.",
-
-     days:["Заяви о своих желаниях.","Новые начинания.","Похвала за работу.","Не позволяй гордости испортить отношения.","Встречи и развлечения.","Без соперничества.","Новые цели."],
-
-     tags:["❤️ Любовь: инициатива"," Финансы: без трат на других"," Карьера: покажи себя"," Число: 1"] },
-
-   dark:"Любовь к вниманию превращается в зависимость от одобрения. Тёмная сторона — высокомерие и ревность. <b>Скрытая сила:</b> искренняя щедрость.",
-
-   arcana: { icon:"", name:"Сила", meaning:"Символ внутренней силы, мужества и терпения. Настоящая сила — в мягкости и контроле эмоций.", advice:"Используй свою силу для созидания, а не разрушения." },
-
-   matrix: { stone:"Янтарь", year:"2026 — Год славы", element:"Огонь" }
-
- },
-
- { id:"virgo", name:"Дева", sym:"♍", el:"earth", dates:"23.08–22.09",
-
-   stats:{ energy:65, love:60, money:82, intuition:75 },
-
-   week:{ general:"Наведи порядок в делах и мыслях.",
-
-     days:["Разберись с делами.","Не критикуй себя.","Рабочие вопросы.","Неожиданный комплимент.","Чужие проблемы.","Здоровье и отдых.","Исправь старую ошибку."],
-
-     tags:["❤️ Любовь: искренность"," Финансы: бюджеты"," Карьера: внимательность"," Число: 4"] },
-
-   dark:"Стремление к идеалу — защита от хаоса. Ты становишься заложником стандартов. Тёмная сторона — придирчивость. <b>Скрытая сила:</b> замечать детали и приводить всё в порядок.",
-
-   arcana: { icon:"", name:"Отшельник", meaning:"Символ уединения, поиска истины и самопознания. Тебе полезно побыть наедине с собой.", advice:"Найди ответы внутри себя, не ищи их снаружи." },
-
-   matrix: { stone:"Нефрит", year:"2026 — Год порядка", element:"Земля" }
-
- },
-
- { id:"libra", name:"Весы", sym:"♎", el:"air", dates:"23.09–22.10",
-
-   stats:{ energy:70, love:88, money:72, intuition:68 },
-
-   week:{ general:"Время выбора и решений.",
-
-     days:["Не угождай всем.","Романтические знакомства.","Деловая договорённость.","Не позволяй сомнениям остановить тебя.","Встреча с тем, кого давно не видел.","Без конфликтов из-за мелочей.","Личные решения."],
-
-     tags:["❤️ Любовь: честность"," Финансы: без сомнительного"," Карьера: партнёрство"," Число: 7"] },
-
-   dark:"Поиск гармонии оборачивается неспособностью сказать «нет». Тёмная сторона — нерешительность. <b>Скрытая сила:</b> истинная дипломатия.",
-
-   arcana: { icon:"⚖️", name:"Справедливость", meaning:"Символ равновесия, кармы и честности. Всё, что ты делаешь, возвращается к тебе.", advice:"Принимай решения беспристрастно и честно." },
-
-   matrix: { stone:"Опал", year:"2026 — Год любви", element:"Воздух" }
-
- },
-
- { id:"scorpio", name:"Скорпион", sym:"♏", el:"water", dates:"23.10–21.11",
-
-   stats:{ energy:75, love:82, money:70, intuition:95 },
-
-   week:{ general:"Разберись в чувствах и мотивах.",
-
-     days:["Детали важны.","Серьёзный разговор.","Ревность.","Поворот в личной жизни.","Откажись от привычки.","Идея.","Доверься опыту."],
-
-     tags:["❤️ Любовь: без проверок"," Финансы: без риска"," Карьера: долгосрок"," Число: 8"] },
-
-   dark:"Потребность контролировать становится разрушительной. Тёмная сторона — манипулятивность и желание властвовать. <b>Скрытая сила:</b> возрождаться из пепла.",
-
-   arcana: { icon:"", name:"Смерть", meaning:"Символ трансформации и завершения старого. Не бойся перемен — они ведут к обновлению.", advice:"Отпусти то, что отжило, и начни новую главу." },
-
-   matrix: { stone:"Топаз", year:"2026 — Год трансформации", element:"Вода" }
-
- },
-
- { id:"sagittarius", name:"Стрелец", sym:"♐", el:"fire", dates:"22.11–21.12",
-
-   stats:{ energy:88, love:70, money:58, intuition:65 },
-
-   week:{ general:"Новые возможности и горизонты.",
-
-     days:["Возможность изменить планы.","Путешествия и впечатления.","Не обещай лишнего.","Встреча с интересным человеком.","Попробуй новое.","Финансовые вопросы.","Итоги и планы."],
-
-     tags:["❤️ Любовь: искренность"," Финансы: без трат"," Карьера: новые направления"," Число: 3"] },
-
-   dark:"Любовь к свободе — бегство от ответственности. Тёмная сторона — безответственность. <b>Скрытая сила:</b> видеть большую картину.",
-
-   arcana: { icon:"", name:"Умеренность", meaning:"Символ баланса, гармонии и исцеления. Тебе важно найти золотую середину во всем.", advice:"Избегай крайностей, ищи гармонию." },
-
-   matrix: { stone:"Бирюза", year:"2026 — Год путешествий", element:"Огонь" }
-
- },
-
- { id:"capricorn", name:"Козерог", sym:"♑", el:"earth", dates:"22.12–19.01",
-
-   stats:{ energy:72, love:55, money:92, intuition:62 },
-
-   week:{ general:"Конкретные результаты и цели.",
-
-     days:["Определи цель.","Попроси помощи.","Рабочие вопросы.","Внимание близким.","Не сравнивай успех.","Праздник.","Привычки, которые мешают."],
-
-     tags:["❤️ Любовь: говори о чувствах"," Финансы: планирование"," Карьера: дисциплина"," Число: 10"] },
-
-   dark:"Стремление к достижениям прячет страх слабости. Тёмная сторона — эмоциональная закрытость. <b>Скрытая сила:</b> строить империи с нуля.",
-
-   arcana: { icon:"", name:"Дьявол", meaning:"Символ искушений, ограничений и теневых сторон. Осознай свои оковы, чтобы освободиться.", advice:"Не позволяй страхам управлять твоей жизнью." },
-
-   matrix: { stone:"Оникс", year:"2026 — Год карьеры", element:"Земля" }
-
- },
-
- { id:"aquarius", name:"Водолей", sym:"♒", el:"air", dates:"20.01–18.02",
-
-   stats:{ energy:68, love:60, money:65, intuition:85 },
-
-   week:{ general:"Нестандартность и свежие идеи.",
-
-     days:["Неожиданная идея.","Друзья.","Критика.","Новость.","Попробуй то, что откладывал.","Открытость.","Планы на следующий год."],
-
-     tags:["❤️ Любовь: близость"," Финансы: рационально"," Карьера: нестандартность"," Число: 11"] },
-
-   dark:"Независимость — способ защититься от боли. Тёмная сторона — эмоциональная холодность. <b>Скрытая сила:</b> мыслить на десятилетия вперёд.",
-
-   arcana: { icon:"⭐", name:"Звезда", meaning:"Символ надежды, веры и вдохновения. Ты — проводник света для других.", advice:"Делись своим светом, не бойся мечтать." },
-
-   matrix: { stone:"Аметист", year:"2026 — Год идей", element:"Воздух" }
-
- },
-
- { id:"pisces", name:"Рыбы", sym:"♓", el:"water", dates:"19.02–20.03",
-
-   stats:{ energy:50, love:85, money:55, intuition:98 },
-
-   week:{ general:"Самоанализ и внутренний голос.",
-
-     days:["Внутренний голос.","Творчество.","Чужая ответственность.","Романтический момент.","Прошлое.","Хобби.","Размышления о будущем."],
-
-     tags:["❤️ Любовь: открытость"," Финансы: без эмоций"," Карьера: творчество"," Число: 12"] },
-
-   dark:"Ты убегаешь от реальности в иллюзии. Тёмная сторона — инфантильность и самообман. <b>Скрытая сила:</b> безграничное воображение.",
-
-   arcana: { icon:"", name:"Луна", meaning:"Символ интуиции, подсознания и иллюзий. Доверяй своей интуиции и снам.", advice:"Смотри вглубь, не бойся своих теней." },
-
-   matrix: { stone:"Аквамарин", year:"2026 — Год мечты", element:"Вода" }
-
- }
-
+  { id:"aries", name:"Овен", sym:"♈", el:"fire", dates:"21.03–19.04",
+    stats:{ energy:92, love:70, money:65, intuition:60 },
+    week:{ general:"Неделя потребует решительности и инициативы.",
+      days:["Важный разговор. Прямолинейность поможет.","Неожиданная встреча. Не спеши с выводами.","Финансовое планирование. Без импульсивных покупок.","Недопонимание в отношениях. Лучше выслушать.","Энергии больше обычного. Направь её на цели.","Отдохни. Не каждый день должен быть продуктивным.","Планируй будущее. Идея перерастёт в серьёзное."],
+      tags:["❤️ Любовь: инициатива","💰 Финансы: осторожно","💼 Карьера: новые проекты","🔢 Число: 9"] },
+    dark:"За решительностью прячется страх не успеть. Ты берёшь ответственность на себя, но иногда это превращается в контроль. Тёмная сторона — вспыльчивость. <b>Скрытая сила:</b> умение зажигать других.",
+    arcana: { icon:"👑", name:"Император", meaning:"Символ власти, порядка и структуры. Твоя задача — научиться управлять не только другими, но и собой.", advice:"Действуй уверенно, но не забывай о мягкости." }
+  },
+  { id:"taurus", name:"Телец", sym:"♉", el:"earth", dates:"20.04–20.05",
+    stats:{ energy:60, love:80, money:88, intuition:65 },
+    week:{ general:"Желание стабильности и комфорта.",
+      days:["Наблюдай. Не торопись с решениями.","Приятный сюрприз от близкого человека.","Рабочие задачи, которые откладывал.","Романтика и душевные разговоры.","Не позволяй чужому мнению влиять на самооценку.","Финансовые вопросы. Избегай лишних расходов.","Время с близкими."],
+      tags:["❤️ Любовь: стабильность","💰 Финансы: пересмотр","💼 Карьера: последовательность","🔢 Число: 6"] },
+    dark:"Любовь к стабильности иногда превращается в страх перемен. Ты держишься за привычное. Тёмная сторона — упрямство и собственничество. <b>Скрытая сила:</b> выносливость и умение создавать безопасное пространство.",
+    arcana: { icon:"🛡️", name:"Иерофант", meaning:"Символ традиций, духовного наставничества и поиска истины. Ты — хранитель знаний и ценностей.", advice:"Доверься мудрости, но не бойся новых путей." }
+  },
+  { id:"gemini", name:"Близнецы", sym:"♊", el:"air", dates:"21.05–20.06",
+    stats:{ energy:80, love:65, money:55, intuition:70 },
+    week:{ general:"Насыщенная неделя, много общения.",
+      days:["Сообщение может изменить планы.","Знакомства и общение.","Не раскрывай все планы.","Разговор с человеком из прошлого.","Без важных решений на эмоциях.","Творчество и эксперименты.","Определись, чего хочешь."],
+      tags:["❤️ Любовь: флирт","💰 Финансы: идея заработка","💼 Карьера: коммуникации","🔢 Число: 5"] },
+    dark:"За легкостью скрывается страх привязанности. Ты можешь быть поверхностным и разбрасываться обещаниями. Тёмная сторона — непостоянство. <b>Скрытая сила:</b> видеть ситуацию с разных сторон.",
+    arcana: { icon:"🃏", name:"Влюбленные", meaning:"Символ выбора, союза и гармонии противоположностей. Тебе предстоит важное решение.", advice:"Прислушайся к сердцу, а не только к разуму." }
+  },
+  { id:"cancer", name:"Рак", sym:"♋", el:"water", dates:"21.06–22.07",
+    stats:{ energy:55, love:90, money:60, intuition:88 },
+    week:{ general:"Задумайся о себе и своих чувствах.",
+      days:["Слушай ощущения.","Поддержка от близкого человека.","Отпусти обиды.","Укрепление отношений.","Не принимай чужую раздражительность на свой счёт.","Спокойствие и уют.","Осознание относительно будущего."],
+      tags:["❤️ Любовь: проявляй чувства","💰 Финансы: без трат","💼 Карьера: не недооценивай","🔢 Число: 2"] },
+    dark:"Ты заботишься о других в надежде получить любовь. За мягкостью — страх отвержения. Тёмная сторона — обидчивость и манипуляции. <b>Скрытая сила:</b> глубокая эмпатия.",
+    arcana: { icon:"🌙", name:"Колесница", meaning:"Символ движения, преодоления препятствий и воли. Ты способен управлять своими противоречиями.", advice:"Двигайся вперед, не оглядываясь на прошлое." }
+  },
+  { id:"leo", name:"Лев", sym:"♌", el:"fire", dates:"23.07–22.08",
+    stats:{ energy:90, love:85, money:70, intuition:60 },
+    week:{ general:"Ты в центре внимания, сияй.",
+      days:["Заяви о своих желаниях.","Новые начинания.","Похвала за работу.","Не позволяй гордости испортить отношения.","Встречи и развлечения.","Без соперничества.","Новые цели."],
+      tags:["❤️ Любовь: инициатива","💰 Финансы: без трат на других","💼 Карьера: покажи себя","🔢 Число: 1"] },
+    dark:"Любовь к вниманию превращается в зависимость от одобрения. Тёмная сторона — высокомерие и ревность. <b>Скрытая сила:</b> искренняя щедрость.",
+    arcana: { icon:"🦁", name:"Сила", meaning:"Символ внутренней силы, мужества и терпения. Настоящая сила — в мягкости и контроле эмоций.", advice:"Используй свою силу для созидания, а не разрушения." }
+  },
+  { id:"virgo", name:"Дева", sym:"♍", el:"earth", dates:"23.08–22.09",
+    stats:{ energy:65, love:60, money:82, intuition:75 },
+    week:{ general:"Наведи порядок в делах и мыслях.",
+      days:["Разберись с делами.","Не критикуй себя.","Рабочие вопросы.","Неожиданный комплимент.","Чужие проблемы.","Здоровье и отдых.","Исправь старую ошибку."],
+      tags:["❤️ Любовь: искренность","💰 Финансы: бюджеты","💼 Карьера: внимательность","🔢 Число: 4"] },
+    dark:"Стремление к идеалу — защита от хаоса. Ты становишься заложником стандартов. Тёмная сторона — придирчивость. <b>Скрытая сила:</b> замечать детали и приводить всё в порядок.",
+    arcana: { icon:"🏹", name:"Отшельник", meaning:"Символ уединения, поиска истины и самопознания. Тебе полезно побыть наедине с собой.", advice:"Найди ответы внутри себя, не ищи их снаружи." }
+  },
+  { id:"libra", name:"Весы", sym:"♎", el:"air", dates:"23.09–22.10",
+    stats:{ energy:70, love:88, money:72, intuition:68 },
+    week:{ general:"Время выбора и решений.",
+      days:["Не угождай всем.","Романтические знакомства.","Деловая договорённость.","Не позволяй сомнениям остановить тебя.","Встреча с тем, кого давно не видел.","Без конфликтов из-за мелочей.","Личные решения."],
+      tags:["❤️ Любовь: честность","💰 Финансы: без сомнительного","💼 Карьера: партнёрство","🔢 Число: 7"] },
+    dark:"Поиск гармонии оборачивается неспособностью сказать «нет». Тёмная сторона — нерешительность. <b>Скрытая сила:</b> истинная дипломатия.",
+    arcana: { icon:"⚖️", name:"Справедливость", meaning:"Символ равновесия, кармы и честности. Всё, что ты делаешь, возвращается к тебе.", advice:"Принимай решения беспристрастно и честно." }
+  },
+  { id:"scorpio", name:"Скорпион", sym:"♏", el:"water", dates:"23.10–21.11",
+    stats:{ energy:75, love:82, money:70, intuition:95 },
+    week:{ general:"Разберись в чувствах и мотивах.",
+      days:["Детали важны.","Серьёзный разговор.","Ревность.","Поворот в личной жизни.","Откажись от привычки.","Идея.","Доверься опыту."],
+      tags:["❤️ Любовь: без проверок","💰 Финансы: без риска","💼 Карьера: долгосрок","🔢 Число: 8"] },
+    dark:"Потребность контролировать становится разрушительной. Тёмная сторона — манипулятивность и желание властвовать. <b>Скрытая сила:</b> возрождаться из пепла.",
+    arcana: { icon:"💀", name:"Смерть", meaning:"Символ трансформации и завершения старого. Не бойся перемен — они ведут к обновлению.", advice:"Отпусти то, что отжило, и начни новую главу." }
+  },
+  { id:"sagittarius", name:"Стрелец", sym:"♐", el:"fire", dates:"22.11–21.12",
+    stats:{ energy:88, love:70, money:58, intuition:65 },
+    week:{ general:"Новые возможности и горизонты.",
+      days:["Возможность изменить планы.","Путешествия и впечатления.","Не обещай лишнего.","Встреча с интересным человеком.","Попробуй новое.","Финансовые вопросы.","Итоги и планы."],
+      tags:["❤️ Любовь: искренность","💰 Финансы: без трат","💼 Карьера: новые направления","🔢 Число: 3"] },
+    dark:"Любовь к свободе — бегство от ответственности. Тёмная сторона — безответственность. <b>Скрытая сила:</b> видеть большую картину.",
+    arcana: { icon:"🎯", name:"Умеренность", meaning:"Символ баланса, гармонии и исцеления. Тебе важно найти золотую середину во всем.", advice:"Избегай крайностей, ищи гармонию." }
+  },
+  { id:"capricorn", name:"Козерог", sym:"♑", el:"earth", dates:"22.12–19.01",
+    stats:{ energy:72, love:55, money:92, intuition:62 },
+    week:{ general:"Конкретные результаты и цели.",
+      days:["Определи цель.","Попроси помощи.","Рабочие вопросы.","Внимание близким.","Не сравнивай успех.","Праздник.","Привычки, которые мешают."],
+      tags:["❤️ Любовь: говори о чувствах","💰 Финансы: планирование","💼 Карьера: дисциплина","🔢 Число: 10"] },
+    dark:"Стремление к достижениям прячет страх слабости. Тёмная сторона — эмоциональная закрытость. <b>Скрытая сила:</b> строить империи с нуля.",
+    arcana: { icon:"😈", name:"Дьявол", meaning:"Символ искушений, ограничений и теневых сторон. Осознай свои оковы, чтобы освободиться.", advice:"Не позволяй страхам управлять твоей жизнью." }
+  },
+  { id:"aquarius", name:"Водолей", sym:"♒", el:"air", dates:"20.01–18.02",
+    stats:{ energy:68, love:60, money:65, intuition:85 },
+    week:{ general:"Нестандартность и свежие идеи.",
+      days:["Неожиданная идея.","Друзья.","Критика.","Новость.","Попробуй то, что откладывал.","Открытость.","Планы на следующий год."],
+      tags:["❤️ Любовь: близость","💰 Финансы: рационально","💼 Карьера: нестандартность","🔢 Число: 11"] },
+    dark:"Независимость — способ защититься от боли. Тёмная сторона — эмоциональная холодность. <b>Скрытая сила:</b> мыслить на десятилетия вперёд.",
+    arcana: { icon:"⭐", name:"Звезда", meaning:"Символ надежды, веры и вдохновения. Ты — проводник света для других.", advice:"Делись своим светом, не бойся мечтать." }
+  },
+  { id:"pisces", name:"Рыбы", sym:"♓", el:"water", dates:"19.02–20.03",
+    stats:{ energy:50, love:85, money:55, intuition:98 },
+    week:{ general:"Самоанализ и внутренний голос.",
+      days:["Внутренний голос.","Творчество.","Чужая ответственность.","Романтический момент.","Прошлое.","Хобби.","Размышления о будущем."],
+      tags:["❤️ Любовь: открытость","💰 Финансы: без эмоций","💼 Карьера: творчество","🔢 Число: 12"] },
+    dark:"Ты убегаешь от реальности в иллюзии. Тёмная сторона — инфантильность и самообман. <b>Скрытая сила:</b> безграничное воображение.",
+    arcana: { icon:"🌕", name:"Луна", meaning:"Символ интуиции, подсознания и иллюзий. Доверяй своей интуиции и снам.", advice:"Смотри вглубь, не бойся своих теней." }
+  }
 ];
 
 const MONTH_THEMES = [
-
- "Время для смелых решений и новых начинаний.",
-
- "Месяц глубокого самоанализа и переоценки ценностей.",
-
- "Период активного общения и полезных знакомств.",
-
- "Время укрепить свои позиции и заняться финансами.",
-
- "Месяц романтики, творчества и вдохновения.",
-
- "Период завершения старых дел и расчистки пространства."
-
+  "Время для смелых решений и новых начинаний.",
+  "Месяц глубокого самоанализа и переоценки ценностей.",
+  "Период активного общения и полезных знакомств.",
+  "Время укрепить свои позиции и заняться финансами.",
+  "Месяц романтики, творчества и вдохновения.",
+  "Период завершения старых дел и расчистки пространства."
 ];
 
 const FATE = {
-
- "Овен": { theme:["Лидерство","Прожить жизнь как первопроходца."], strong:["Смелость","Брать удар на себя и вести за собой."], lesson:["Терпение","Научиться ждать и уважать чужой темп."] },
-
- "Телец": { theme:["Стабильность","Создать прочный фундамент."], strong:["Надёжность","Держать слово и создавать уют."], lesson:["Гибкость","Понять, что перемены — не угроза."] },
-
- "Близнецы": { theme:["Общение","Стать мостом между людьми и идеями."], strong:["Интеллект","Быстро схватывать информацию."], lesson:["Постоянство","Доводить начатое до конца."] },
-
- "Рак": { theme:["Семья","Создать пространство любви и безопасности."], strong:["Забота","Тонко чувствовать потребности других."], lesson:["Границы","Отделять свои чувства от чужих."] },
-
- "Лев": { theme:["Признание","Раскрыть творческий потенциал."], strong:["Уверенность","Врождённое чувство достоинства."], lesson:["Скромность","Ценность не зависит от аплодисментов."] },
-
- "Дева": { theme:["Порядок","Понять, как устроен мир."], strong:["Аналитика","Видеть детали и находить ошибки."], lesson:["Принятие","Смириться с тем, что идеала нет."] },
-
- "Весы": { theme:["Гармония","Найти баланс между собой и партнёром."], strong:["Дипломатия","Сглаживать углы и договариваться."], lesson:["Самостоятельность","Выбирать себя, а не только других."] },
-
- "Скорпион": { theme:["Трансформация","Пройти через кризисы к силе."], strong:["Решительность","Идти до конца, несмотря на страх."], lesson:["Доверие","Отпустить контроль."] },
-
- "Стрелец": { theme:["Свобода","Расширять горизонты и искать смысл."], strong:["Оптимизм","Вера в лучшее."], lesson:["Ответственность","Свобода требует зрелости."] },
-
- "Козерог": { theme:["Достижения","Взобраться на свою вершину."], strong:["Дисциплина","Отказывать себе ради цели."], lesson:["Баланс","Научиться отдыхать и проявлять эмоции."] },
-
- "Водолей": { theme:["Новаторство","Принести в мир новые идеи."], strong:["Оригинальность","Нестандартное мышление."], lesson:["Близость","Спуститься с небес на землю."] },
-
- "Рыбы": { theme:["Творчество","Жить в гармонии с душой."], strong:["Эмпатия","Глубокое чувствование мира."], lesson:["Реализм","Стоять на ногах и видеть вещи как есть."] }
-
+  "Овен": { theme:["Лидерство","Прожить жизнь как первопроходца."], strong:["Смелость","Брать удар на себя и вести за собой."], lesson:["Терпение","Научиться ждать и уважать чужой темп."] },
+  "Телец": { theme:["Стабильность","Создать прочный фундамент."], strong:["Надёжность","Держать слово и создавать уют."], lesson:["Гибкость","Понять, что перемены — не угроза."] },
+  "Близнецы": { theme:["Общение","Стать мостом между людьми и идеями."], strong:["Интеллект","Быстро схватывать информацию."], lesson:["Постоянство","Доводить начатое до конца."] },
+  "Рак": { theme:["Семья","Создать пространство любви и безопасности."], strong:["Забота","Тонко чувствовать потребности других."], lesson:["Границы","Отделять свои чувства от чужих."] },
+  "Лев": { theme:["Признание","Раскрыть творческий потенциал."], strong:["Уверенность","Врождённое чувство достоинства."], lesson:["Скромность","Ценность не зависит от аплодисментов."] },
+  "Дева": { theme:["Порядок","Понять, как устроен мир."], strong:["Аналитика","Видеть детали и находить ошибки."], lesson:["Принятие","Смириться с тем, что идеала нет."] },
+  "Весы": { theme:["Гармония","Найти баланс между собой и партнёром."], strong:["Дипломатия","Сглаживать углы и договариваться."], lesson:["Самостоятельность","Выбирать себя, а не только других."] },
+  "Скорпион": { theme:["Трансформация","Пройти через кризисы к силе."], strong:["Решительность","Идти до конца, несмотря на страх."], lesson:["Доверие","Отпустить контроль."] },
+  "Стрелец": { theme:["Свобода","Расширять горизонты и искать смысл."], strong:["Оптимизм","Вера в лучшее."], lesson:["Ответственность","Свобода требует зрелости."] },
+  "Козерог": { theme:["Достижения","Взобраться на свою вершину."], strong:["Дисциплина","Отказывать себе ради цели."], lesson:["Баланс","Научиться отдыхать и проявлять эмоции."] },
+  "Водолей": { theme:["Новаторство","Принести в мир новые идеи."], strong:["Оригинальность","Нестандартное мышление."], lesson:["Близость","Спуститься с небес на землю."] },
+  "Рыбы": { theme:["Творчество","Жить в гармонии с душой."], strong:["Эмпатия","Глубокое чувствование мира."], lesson:["Реализм","Стоять на ногах и видеть вещи как есть."] }
 };
 
 const COMPAT = {
-
- "Овен":     { "Лев":"h","Стрелец":"h","Близнецы":"h","Водолей":"h","Весы":"x","Рак":"x","Козерог":"x","Рыбы":"x","Телец":"n","Дева":"n","Скорпион":"n" },
-
- "Телец":    { "Дева":"h","Козерог":"h","Рак":"h","Рыбы":"h","Лев":"x","Водолей":"x","Близнецы":"x","Стрелец":"x","Овен":"n","Весы":"n","Скорпион":"n" },
-
- "Близнецы": { "Весы":"h","Водолей":"h","Овен":"h","Лев":"h","Дева":"x","Рыбы":"x","Скорпион":"x","Козерог":"x","Телец":"n","Рак":"n","Стрелец":"n" },
-
- "Рак":      { "Рыбы":"h","Скорпион":"h","Телец":"h","Дева":"h","Овен":"x","Весы":"x","Стрелец":"x","Водолей":"x","Близнецы":"n","Лев":"n","Козерог":"n" },
-
- "Лев":      { "Овен":"h","Стрелец":"h","Весы":"h","Близнецы":"h","Телец":"x","Скорпион":"x","Козерог":"x","Рыбы":"x","Рак":"n","Дева":"n","Водолей":"n" },
-
- "Дева":     { "Телец":"h","Козерог":"h","Скорпион":"h","Рак":"h","Близнецы":"x","Стрелец":"x","Овен":"x","Водолей":"x","Лев":"n","Весы":"n","Рыбы":"n" },
-
- "Весы":     { "Близнецы":"h","Водолей":"h","Лев":"h","Стрелец":"h","Рак":"x","Козерог":"x","Дева":"x","Рыбы":"x","Овен":"n","Телец":"n","Скорпион":"n" },
-
- "Скорпион": { "Рак":"h","Рыбы":"h","Дева":"h","Козерог":"h","Лев":"x","Водолей":"x","Телец":"x","Близнецы":"x","Овен":"n","Весы":"n","Стрелец":"n" },
-
- "Стрелец":  { "Овен":"h","Лев":"h","Водолей":"h","Весы":"h","Дева":"x","Рыбы":"x","Телец":"x","Рак":"x","Близнецы":"n","Скорпион":"n","Козерог":"n" },
-
- "Козерог":  { "Телец":"h","Дева":"h","Рыбы":"h","Скорпион":"h","Овен":"x","Весы":"x","Лев":"x","Близнецы":"x","Рак":"n","Стрелец":"n","Водолей":"n" },
-
- "Водолей":  { "Близнецы":"h","Весы":"h","Стрелец":"h","Овен":"h","Телец":"x","Скорпион":"x","Рак":"x","Дева":"x","Лев":"n","Козерог":"n","Рыбы":"n" },
-
- "Рыбы":     { "Рак":"h","Скорпион":"h","Козерог":"h","Телец":"h","Близнецы":"x","Стрелец":"x","Овен":"x","Лев":"x","Весы":"n","Водолей":"n","Дева":"n" }
-
+  "Овен":     { "Лев":"h","Стрелец":"h","Близнецы":"h","Водолей":"h","Весы":"x","Рак":"x","Козерог":"x","Рыбы":"x","Телец":"n","Дева":"n","Скорпион":"n" },
+  "Телец":    { "Дева":"h","Козерог":"h","Рак":"h","Рыбы":"h","Лев":"x","Водолей":"x","Близнецы":"x","Стрелец":"x","Овен":"n","Весы":"n","Скорпион":"n" },
+  "Близнецы": { "Весы":"h","Водолей":"h","Овен":"h","Лев":"h","Дева":"x","Рыбы":"x","Скорпион":"x","Козерог":"x","Телец":"n","Рак":"n","Стрелец":"n" },
+  "Рак":      { "Рыбы":"h","Скорпион":"h","Телец":"h","Дева":"h","Овен":"x","Весы":"x","Стрелец":"x","Водолей":"x","Близнецы":"n","Лев":"n","Козерог":"n" },
+  "Лев":      { "Овен":"h","Стрелец":"h","Весы":"h","Близнецы":"h","Телец":"x","Скорпион":"x","Козерог":"x","Рыбы":"x","Рак":"n","Дева":"n","Водолей":"n" },
+  "Дева":     { "Телец":"h","Козерог":"h","Скорпион":"h","Рак":"h","Близнецы":"x","Стрелец":"x","Овен":"x","Водолей":"x","Лев":"n","Весы":"n","Рыбы":"n" },
+  "Весы":     { "Близнецы":"h","Водолей":"h","Лев":"h","Стрелец":"h","Рак":"x","Козерог":"x","Дева":"x","Рыбы":"x","Овен":"n","Телец":"n","Скорпион":"n" },
+  "Скорпион": { "Рак":"h","Рыбы":"h","Дева":"h","Козерог":"h","Лев":"x","Водолей":"x","Телец":"x","Близнецы":"x","Овен":"n","Весы":"n","Стрелец":"n" },
+  "Стрелец":  { "Овен":"h","Лев":"h","Водолей":"h","Весы":"h","Дева":"x","Рыбы":"x","Телец":"x","Рак":"x","Близнецы":"n","Скорпион":"n","Козерог":"n" },
+  "Козерог":  { "Телец":"h","Дева":"h","Рыбы":"h","Скорпион":"h","Овен":"x","Весы":"x","Лев":"x","Близнецы":"x","Рак":"n","Стрелец":"n","Водолей":"n" },
+  "Водолей":  { "Близнецы":"h","Весы":"h","Стрелец":"h","Овен":"h","Телец":"x","Скорпион":"x","Рак":"x","Дева":"x","Лев":"n","Козерог":"n","Рыбы":"n" },
+  "Рыбы":     { "Рак":"h","Скорпион":"h","Козерог":"h","Телец":"h","Близнецы":"x","Стрелец":"x","Овен":"x","Лев":"x","Весы":"n","Водолей":"n","Дева":"n" }
 };
 
+const MOON = [
+  { icon:"🌑", n:"Новолуние", d:"Время планирования и закладки намерений." },
+  { icon:"🌒", n:"Растущая", d:"Хорошее время для начинаний." },
+  { icon:"🌓", n:"Первая четверть", d:"Возможны препятствия — не сдавайся." },
+  { icon:"🌔", n:"Прибывающая", d:"Пик энергии и активности." },
+  { icon:"🌕", n:"Полнолуние", d:"Пик эмоций. Будь внимателен к чувствам." },
+  { icon:"🌖", n:"Убывающая", d:"Время наводить порядок." },
+  { icon:"🌗", n:"Последняя четверть", d:"Завершение начатых дел." },
+  { icon:"🌘", n:"Убывающая", d:"Отдых и восстановление сил." }
+];
+
 const FORTUNE_SECTORS = [
-
- { name: "Любовь", icon: "❤️", advice: "Открой свое сердце новому. Скажи близкому человеку то, что давно хотел.", avoid: "Не играй с чувствами других. Избегай недосказанности.", affirm: "Я достоин любви и гармонии." },
-
- { name: "Финансы", icon: "", advice: "Сделай первый шаг к новой цели. Возможно, пришло время для инвестиций в себя.", avoid: "Не совершай импульсивных покупок. Береги ресурсы.", affirm: "Вселенная изобильна, и мой доход растет." },
-
- { name: "Карьера", icon: "", advice: "Прояви инициативу на работе. Твои идеи сейчас особенно ценны.", avoid: "Не вступай в конфликты с коллегами. Избегай сплетен.", affirm: "Я на верном пути к своему успеху." },
-
- { name: "Здоровье", icon: "", advice: "Удели время телу: прогулка, спорт или качественный отдых.", avoid: "Не игнорируй сигналы организма. Избегай переработок.", affirm: "Мое тело — мой храм, я полон сил." },
-
- { name: "Дружба", icon: "", advice: "Напиши старому другу или проведи время в хорошей компании.", avoid: "Не забывай о границах. Не будь слишком навязчив.", affirm: "Я окружен любящими и поддерживающими людьми." },
-
- { name: "Учеба", icon: "", advice: "Запишись на курс или начни изучать то, что давно манило.", avoid: "Не распыляйся на мелочи. Фокус на главном.", affirm: "Я с легкостью усваиваю новые знания." },
-
- { name: "Творчество", icon: "", advice: "Позволь себе творить без рамок. Начни проект, который откладывал.", avoid: "Не критикуй себя. Не сравнивай с другими.", affirm: "Мой внутренний творец знает, что делает." },
-
- { name: "Путешествия", icon: "✈️", advice: "Запланируй поездку или просто смени обстановку на выходных.", avoid: "Не откладывай мечты на потом. Не бойся нового.", affirm: "Мир открыт для меня, я готов к приключениям." },
-
- { name: "Семья", icon: "", advice: "Позвони родителям или устрой уютный вечер с близкими.", avoid: "Не позволяй мелочам разрушить гармонию. Цени момент.", affirm: "Мой дом — место силы и любви." },
-
- { name: "Самопознание", icon: "", advice: "Проведи время в тишине. Задай себе важные вопросы.", avoid: "Не убегай от своих чувств. Прими их.", affirm: "Я в гармонии со своей душой и разумом." },
-
- { name: "Смелость", icon: "", advice: "Рискни сделать то, чего боялся. Сегодня твой день.", avoid: "Не сомневайся в себе. Не слушай чужое мнение.", affirm: "Я смел, решителен и уверен в себе." },
-
- { name: "Судьба", icon: "✨", advice: "Доверься потоку. Обращай внимание на знаки вокруг.", avoid: "Не сопротивляйся переменам. Не пытайся всё контролировать.", affirm: "Я доверяю вселенной, и она ведет меня к лучшему." }
-
+  { name: "Любовь", icon: "❤️", advice: "Открой свое сердце новому. Скажи близкому человеку то, что давно хотел.", avoid: "Не играй с чувствами других. Избегай недосказанности.", affirm: "Я достоин любви и гармонии." },
+  { name: "Финансы", icon: "💰", advice: "Сделай первый шаг к новой цели. Возможно, пришло время для инвестиций в себя.", avoid: "Не совершай импульсивных покупок. Береги ресурсы.", affirm: "Вселенная изобильна, и мой доход растет." },
+  { name: "Карьера", icon: "💼", advice: "Прояви инициативу на работе. Твои идеи сейчас особенно ценны.", avoid: "Не вступай в конфликты с коллегами. Избегай сплетен.", affirm: "Я на верном пути к своему успеху." },
+  { name: "Здоровье", icon: "🌿", advice: "Удели время телу: прогулка, спорт или качественный отдых.", avoid: "Не игнорируй сигналы организма. Избегай переработок.", affirm: "Мое тело — мой храм, я полон сил." },
+  { name: "Дружба", icon: "🤝", advice: "Напиши старому другу или проведи время в хорошей компании.", avoid: "Не забывай о границах. Не будь слишком навязчив.", affirm: "Я окружен любящими и поддерживающими людьми." },
+  { name: "Учеба", icon: "📚", advice: "Запишись на курс или начни изучать то, что давно манило.", avoid: "Не распыляйся на мелочи. Фокус на главном.", affirm: "Я с легкостью усваиваю новые знания." },
+  { name: "Творчество", icon: "🎨", advice: "Позволь себе творить без рамок. Начни проект, который откладывал.", avoid: "Не критикуй себя. Не сравнивай с другими.", affirm: "Мой внутренний творец знает, что делает." },
+  { name: "Путешествия", icon: "✈️", advice: "Запланируй поездку или просто смени обстановку на выходных.", avoid: "Не откладывай мечты на потом. Не бойся нового.", affirm: "Мир открыт для меня, я готов к приключениям." },
+  { name: "Семья", icon: "🏠", advice: "Позвони родителям или устрой уютный вечер с близкими.", avoid: "Не позволяй мелочам разрушить гармонию. Цени момент.", affirm: "Мой дом — место силы и любви." },
+  { name: "Самопознание", icon: "🔮", advice: "Проведи время в тишине. Задай себе важные вопросы.", avoid: "Не убегай от своих чувств. Прими их.", affirm: "Я в гармонии со своей душой и разумом." },
+  { name: "Смелость", icon: "🔥", advice: "Рискни сделать то, чего боялся. Сегодня твой день.", avoid: "Не сомневайся в себе. Не слушай чужое мнение.", affirm: "Я смел, решителен и уверен в себе." },
+  { name: "Судьба", icon: "✨", advice: "Доверься потоку. Обращай внимание на знаки вокруг.", avoid: "Не сопротивляйся переменам. Не пытайся всё контролировать.", affirm: "Я доверяю вселенной, и она ведет меня к лучшему." }
 ];
 
 const DAYS_SHORT = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
-
 const MONTHS_SHORT = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
-
 const MONTHS_FULL = ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
 
-const TAROT_DECK = [
-
- { icon: "", name: "Солнце", meaning: "Успех и радость. Все препятствия преодолимы.", advice: "Сияй и делись теплом." },
-
- { icon: "", name: "Луна", meaning: "Иллюзии и тайны. Доверяй интуиции.", advice: "Прислушайся к внутреннему голосу." },
-
- { icon: "⭐", name: "Звезда", meaning: "Надежда и вдохновение. Светлая полоса.", advice: "Загадай желание." },
-
- { icon: "⚔️", name: "Справедливость", meaning: "Карма и истина. Всё тайное станет явным.", advice: "Будь честен с собой." },
-
- { icon: "", name: "Колесо Фортуны", meaning: "Судьбоносные перемены.", advice: "Плыви по течению." },
-
- { icon: "", name: "Сила", meaning: "Внутренняя мощь и терпение.", advice: "Контролируй эмоции." },
-
- { icon: "", name: "Отшельник", meaning: "Поиск истины в одиночестве.", advice: "Побудь наедине с собой." },
-
- { icon: "", name: "Смерть", meaning: "Конец старого, начало нового.", advice: "Отпусти прошлое." },
-
- { icon: "⚖️", name: "Умеренность", meaning: "Баланс и гармония.", advice: "Избегай крайностей." },
-
- { icon: "", name: "Дьявол", meaning: "Искушения и ограничения.", advice: "Осознай свои оковы." }
-
-];
-
 /* ========== ДАТЫ ========== */
-
 const today = new Date();
-
 const todayIdx = (today.getDay() + 6) % 7;
-
 const monday = new Date(today);
-
 monday.setHours(0,0,0,0);
-
 monday.setDate(today.getDate() - todayIdx);
 
 document.getElementById("mainDate").textContent =
-
- today.toLocaleDateString("ru-RU", { day:"numeric", month:"long", year:"numeric" });
+  today.toLocaleDateString("ru-RU", { day:"numeric", month:"long", year:"numeric" });
 
 /* ========== ЛОГИКА ДАТЫ РОЖДЕНИЯ ========== */
-
 function getZodiacSign(dateStr) {
+  const d = new Date(dateStr);
+  const day = d.getDate();
+  const month = d.getMonth() + 1; // 1-12
 
- const d = new Date(dateStr);
-
- const day = d.getDate();
-
- const month = d.getMonth() + 1; // 1-12
-
- if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "aries";
-
- if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "taurus";
-
- if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return "gemini";
-
- if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return "cancer";
-
- if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "leo";
-
- if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "virgo";
-
- if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return "libra";
-
- if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return "scorpio";
-
- if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return "sagittarius";
-
- if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return "capricorn";
-
- if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "aquarius";
-
- return "pisces";
-
+  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "aries";
+  if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "taurus";
+  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return "gemini";
+  if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return "cancer";
+  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "leo";
+  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "virgo";
+  if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return "libra";
+  if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return "scorpio";
+  if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return "sagittarius";
+  if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return "capricorn";
+  if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "aquarius";
+  return "pisces";
 }
 
 let mySignId = localStorage.getItem("mySignId") || null;
-
 let myBirthDate = localStorage.getItem("myBirthDate") || null;
-
 let myBirthTime = localStorage.getItem("myBirthTime") || "12:00";
-
 let myBirthCity = localStorage.getItem("myBirthCity") || "moscow";
 
 function saveBirth() {
-
- const dateVal = document.getElementById("birthDateInput").value;
-
- const timeVal = document.getElementById("birthTimeInput").value;
-
- const cityVal = document.getElementById("birthCityInput").value;
-
- 
-
- if (!dateVal) return alert("Выбери дату");
-
- 
-
- myBirthDate = dateVal;
-
- myBirthTime = timeVal;
-
- myBirthCity = cityVal;
-
- mySignId = getZodiacSign(dateVal);
-
- 
-
- localStorage.setItem("mySignId", mySignId);
-
- localStorage.setItem("myBirthDate", myBirthDate);
-
- localStorage.setItem("myBirthTime", myBirthTime);
-
- localStorage.setItem("myBirthCity", myBirthCity);
-
- 
-
- initProfile();
-
- renderWeek(mySignId);
-
- renderNatal();
-
- renderDailyForecast();
-
- renderMatrix();
-
+  const dateVal = document.getElementById("birthDateInput").value;
+  const timeVal = document.getElementById("birthTimeInput").value;
+  const cityVal = document.getElementById("birthCityInput").value;
+  
+  if (!dateVal) return alert("Выбери дату");
+  
+  myBirthDate = dateVal;
+  myBirthTime = timeVal;
+  myBirthCity = cityVal;
+  mySignId = getZodiacSign(dateVal);
+  
+  localStorage.setItem("mySignId", mySignId);
+  localStorage.setItem("myBirthDate", myBirthDate);
+  localStorage.setItem("myBirthTime", myBirthTime);
+  localStorage.setItem("myBirthCity", myBirthCity);
+  
+  initProfile();
+  renderWeek(mySignId);
+  renderNatal(); 
 }
 
 function showProfileSetup() {
-
- document.getElementById("profileSetup").classList.remove("hidden");
-
- document.getElementById("profileBar").classList.add("hidden");
-
- 
-
- if (myBirthDate) {
-
-   document.getElementById("birthDateInput").value = myBirthDate;
-
-   document.getElementById("birthTimeInput").value = myBirthTime;
-
-   document.getElementById("birthCityInput").value = myBirthCity;
-
- }
-
+  document.getElementById("profileSetup").classList.remove("hidden");
+  document.getElementById("profileBar").classList.add("hidden");
+  
+  if (myBirthDate) {
+    document.getElementById("birthDateInput").value = myBirthDate;
+    document.getElementById("birthTimeInput").value = myBirthTime;
+    document.getElementById("birthCityInput").value = myBirthCity;
+  }
 }
 
 function initProfile() {
-
- const setup = document.getElementById("profileSetup");
-
- const bar = document.getElementById("profileBar");
-
- 
-
- if (mySignId && myBirthDate) {
-
-   setup.classList.add("hidden");
-
-   bar.classList.remove("hidden");
-
-   const s = SIGNS.find(x => x.id === mySignId);
-
-   document.getElementById("mySignName").innerText = s.name + " " + s.sym;
-
- } else {
-
-   setup.classList.remove("hidden");
-
-   bar.classList.add("hidden");
-
- }
-
-}
-
-/* ========== ЛИЧНЫЙ ПРОГНОЗ ========== */
-
-function renderDailyForecast() {
-
- const el = document.getElementById("dailyForecast");
-
- if (!mySignId || !myBirthDate) {
-
-   el.classList.remove("active");
-
-   return;
-
- }
-
- 
-
- const s = SIGNS.find(x => x.id === mySignId);
-
- // Генератор случайного числа на основе даты (чтобы прогноз менялся раз в день)
-
- const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate() + s.id.length;
-
- const score = 50 + (seed * 13) % 50;
-
- const tags = ["Отличный день!", "Будь на позитиве", "Время действовать", "Отдохни и наберись сил"];
-
- const tag = tags[seed % tags.length];
-
- 
-
- el.innerHTML = `
-
-   <h3>${s.sym} Твой день сегодня</h3>
-
-   <div class="score">${score}%</div>
-
-   <p>${s.week.days[todayIdx]}</p>
-
-   <div class="forecast-tag">${tag}</div>
-
- `;
-
- el.classList.add("active");
-
+  const setup = document.getElementById("profileSetup");
+  const bar = document.getElementById("profileBar");
+  
+  if (mySignId && myBirthDate) {
+    setup.classList.add("hidden");
+    bar.classList.remove("hidden");
+    const s = SIGNS.find(x => x.id === mySignId);
+    document.getElementById("mySignName").innerText = s.name + " " + s.sym;
+  } else {
+    setup.classList.remove("hidden");
+    bar.classList.add("hidden");
+  }
 }
 
 /* ========== СОСТОЯНИЕ ========== */
-
 let curSign = mySignId || "aries";
-
 let curMonthSign = mySignId || "aries";
-
 let curDay = todayIdx;
-
 let isSpin = false;
-
 let rot = 0;
 
-let isTarotFlipped = false;
-
 /* ========== ВКЛАДКИ ========== */
-
 document.querySelectorAll(".tab").forEach(btn => {
-
- btn.addEventListener("click", () => {
-
-   const id = btn.dataset.tab;
-
-   document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
-
-   document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-
-   btn.classList.add("active");
-
-   document.getElementById(id).classList.add("active");
-
-   if (id === "tarot") renderTarot();
-
-   if (id === "moon") renderMoon();
-
-   if (id === "month") renderMonth(curMonthSign);
-
-   if (id === "natal") renderNatal();
-
-   if (id === "matrix") renderMatrix();
-
- });
-
+  btn.addEventListener("click", () => {
+    const id = btn.dataset.tab;
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(id).classList.add("active");
+    if (id === "tarot") renderTarot();
+    if (id === "moon") renderMoon();
+    if (id === "month") renderMonth(curMonthSign);
+    if (id === "natal") renderNatal();
+  });
 });
 
 /* ========== КНОПКИ ЗНАКОВ ========== */
-
 function buildSignButtons(containerId, renderFn) {
-
- const box = document.getElementById(containerId);
-
- box.innerHTML = "";
-
- SIGNS.forEach(s => {
-
-   const b = document.createElement("button");
-
-   b.className = "sign-btn el-" + s.el;
-
-   b.dataset.sign = s.id;
-
-   b.innerHTML = s.sym + "<br>" + s.name;
-
-   b.addEventListener("click", () => renderFn(s.id));
-
-   box.appendChild(b);
-
- });
-
+  const box = document.getElementById(containerId);
+  box.innerHTML = "";
+  SIGNS.forEach(s => {
+    const b = document.createElement("button");
+    b.className = "sign-btn el-" + s.el;
+    b.dataset.sign = s.id;
+    b.innerHTML = s.sym + "<br>" + s.name;
+    b.addEventListener("click", () => renderFn(s.id));
+    box.appendChild(b);
+  });
 }
 
 function setActiveSign(containerId, id) {
-
- document.querySelectorAll("#" + containerId + " .sign-btn").forEach(b => {
-
-   b.classList.toggle("active", b.dataset.sign === id);
-
- });
-
+  document.querySelectorAll("#" + containerId + " .sign-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.sign === id);
+  });
 }
 
 /* ========== НЕДЕЛЯ ========== */
-
 function renderWeek(id) {
-
- curSign = id;
-
- const s = SIGNS.find(x => x.id === id);
-
- setActiveSign("weekSigns", id);
-
- let nav = '<div class="days-nav">';
-
- for (let i = 0; i < 7; i++) {
-
-   const d = new Date(monday);
-
-   d.setDate(monday.getDate() + i);
-
-   nav += `<button class="day-btn ${i === todayIdx ? "today" : ""} ${i === curDay ? "active" : ""}" data-day="${i}">
-
-     ${DAYS_SHORT[i]}
-
-     <span class="date-num">${d.getDate()}</span>
-
-     <span class="date-mon">${MONTHS_SHORT[d.getMonth()]}</span>
-
-   </button>`;
-
- }
-
- nav += "</div>";
-
- const st = s.stats;
-
- const power = Math.round((st.energy + st.love + st.money + st.intuition) / 4);
-
- const R = 50;
-
- const CIRC = 2 * Math.PI * R;
-
- const offset = CIRC - (power / 100) * CIRC;
-
- const statRow = (label, val) => `
-
-   <div class="stat-row">
-
-     <div class="stat-head"><span>${label}</span><b>${val}%</b></div>
-
-     <div class="stat-track"><div class="stat-fill" data-w="${val}"></div></div>
-
-   </div>`;
-
- const tagsHtml = s.week.tags.map(t => `<div class="meta-tag">${t}</div>`).join("");
-
- document.getElementById("weekContent").innerHTML = `
-
-   <div class="week-title"><div>${s.sym} ${s.name}</div><span>${s.dates}</span></div>
-
-   <p style="margin-bottom:12px;font-size:13px;line-height:1.5;color:#c9bfe8;">${s.week.general}</p>
-
-   ${nav}
-
-   <div class="day-content">
-
-     <div class="zodiac-watermark">${s.sym}</div>
-
-     ${curDay === todayIdx ? '<div class="today-badge">Сегодня</div>' : ""}
-
-     <div>${s.week.days[curDay]}</div>
-
-   </div>
-
-   <div class="infographic">
-
-     <div class="ring-wrap">
-
-       <svg width="130" height="130" viewBox="0 0 130 130">
-
-         <circle class="ring-bg" cx="65" cy="65" r="${R}" fill="none" stroke-width="8"/>
-
-         <circle class="ring-fg" cx="65" cy="65" r="${R}" fill="none" stroke-width="8"
-
-           stroke-dasharray="${CIRC.toFixed(1)}"
-
-           stroke-dashoffset="${CIRC.toFixed(1)}"
-
-           data-offset="${offset.toFixed(1)}"/>
-
-       </svg>
-
-       <div class="ring-label"><b>${power}%</b><small>сила</small></div>
-
-     </div>
-
-     <div class="stats">
-
-       ${statRow("⚡ Энергия", st.energy)}
-
-       ${statRow("❤️ Любовь", st.love)}
-
-       ${statRow(" Финансы", st.money)}
-
-       ${statRow(" Интуиция", st.intuition)}
-
-     </div>
-
-   </div>
-
-   <button class="share-btn" id="btnShare">Поделиться</button>
-
-   <div class="meta-tags">${tagsHtml}</div>
-
- `;
-
- document.querySelectorAll("#weekContent .day-btn").forEach(b => {
-
-   b.addEventListener("click", () => {
-
-     curDay = +b.dataset.day;
-
-     renderWeek(curSign);
-
-   });
-
- });
-
- document.getElementById("btnShare").addEventListener("click", shareGoroscope);
-
- requestAnimationFrame(() => {
-
-   document.querySelectorAll("#weekContent .stat-fill").forEach(el => {
-
-     el.style.width = el.dataset.w + "%";
-
-   });
-
-   const ring = document.querySelector("#weekContent .ring-fg");
-
-   if (ring) ring.style.strokeDashoffset = ring.dataset.offset;
-
- });
-
+  curSign = id;
+  const s = SIGNS.find(x => x.id === id);
+  setActiveSign("weekSigns", id);
+
+  let nav = '<div class="days-nav">';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    nav += `<button class="day-btn ${i === todayIdx ? "today" : ""} ${i === curDay ? "active" : ""}" data-day="${i}">
+      ${DAYS_SHORT[i]}
+      <span class="date-num">${d.getDate()}</span>
+      <span class="date-mon">${MONTHS_SHORT[d.getMonth()]}</span>
+    </button>`;
+  }
+  nav += "</div>";
+
+  const st = s.stats;
+  const power = Math.round((st.energy + st.love + st.money + st.intuition) / 4);
+  const R = 50;
+  const CIRC = 2 * Math.PI * R;
+  const offset = CIRC - (power / 100) * CIRC;
+
+  const statRow = (label, val) => `
+    <div class="stat-row">
+      <div class="stat-head"><span>${label}</span><b>${val}%</b></div>
+      <div class="stat-track"><div class="stat-fill" data-w="${val}"></div></div>
+    </div>`;
+
+  const tagsHtml = s.week.tags.map(t => `<div class="meta-tag">${t}</div>`).join("");
+
+  document.getElementById("weekContent").innerHTML = `
+    <div class="week-title"><div>${s.sym} ${s.name}</div><span>${s.dates}</span></div>
+    <p style="margin-bottom:12px;font-size:13px;line-height:1.5;color:#c9bfe8;">${s.week.general}</p>
+    ${nav}
+    <div class="day-content">
+      <div class="zodiac-watermark">${s.sym}</div>
+      ${curDay === todayIdx ? '<div class="today-badge">Сегодня</div>' : ""}
+      <div>${s.week.days[curDay]}</div>
+    </div>
+    <div class="infographic">
+      <div class="ring-wrap">
+        <svg width="130" height="130" viewBox="0 0 130 130">
+          <circle class="ring-bg" cx="65" cy="65" r="${R}" fill="none" stroke-width="8"/>
+          <circle class="ring-fg" cx="65" cy="65" r="${R}" fill="none" stroke-width="8"
+            stroke-dasharray="${CIRC.toFixed(1)}"
+            stroke-dashoffset="${CIRC.toFixed(1)}"
+            data-offset="${offset.toFixed(1)}"/>
+        </svg>
+        <div class="ring-label"><b>${power}%</b><small>сила</small></div>
+      </div>
+      <div class="stats">
+        ${statRow("⚡ Энергия", st.energy)}
+        ${statRow("❤️ Любовь", st.love)}
+        ${statRow("💰 Финансы", st.money)}
+        ${statRow("🔮 Интуиция", st.intuition)}
+      </div>
+    </div>
+    <button class="share-btn" id="btnShare">Поделиться</button>
+    <div class="meta-tags">${tagsHtml}</div>
+  `;
+
+  document.querySelectorAll("#weekContent .day-btn").forEach(b => {
+    b.addEventListener("click", () => {
+      curDay = +b.dataset.day;
+      renderWeek(curSign);
+    });
+  });
+  document.getElementById("btnShare").addEventListener("click", shareGoroscope);
+
+  requestAnimationFrame(() => {
+    document.querySelectorAll("#weekContent .stat-fill").forEach(el => {
+      el.style.width = el.dataset.w + "%";
+    });
+    const ring = document.querySelector("#weekContent .ring-fg");
+    if (ring) ring.style.strokeDashoffset = ring.dataset.offset;
+  });
 }
 
 function shareGoroscope() {
-
- const s = SIGNS.find(x => x.id === curSign);
-
- const text = `Мой гороскоп на сегодня: ${s.week.days[curDay]}`;
-
- shareText(text);
-
-}
-
-/* ========== ШАРИНГ ========== */
-
-function shareText(text) {
-
- if (navigator.clipboard && navigator.clipboard.writeText) {
-
-   navigator.clipboard.writeText(text).then(() => alert("Скопировано в буфер!")).catch(() => alert(text));
-
- } else {
-
-   alert(text);
-
- }
-
+  const s = SIGNS.find(x => x.id === curSign);
+  const text = `Мой гороскоп на сегодня: ${s.week.days[curDay]}`;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => alert("Скопировано в буфер!")).catch(() => alert(text));
+  } else {
+    alert(text);
+  }
 }
 
 /* ========== МЕСЯЦ ========== */
-
 function renderMonth(id) {
+  curMonthSign = id;
+  const s = SIGNS.find(x => x.id === id);
+  setActiveSign("monthSigns", id);
 
- curMonthSign = id;
+  const now = new Date();
+  const mName = MONTHS_FULL[now.getMonth()];
+  
+  const seed = now.getFullYear() * 100 + now.getMonth() + id.length;
+  const theme = MONTH_THEMES[seed % MONTH_THEMES.length];
+  
+  const w1 = 50 + (seed * 7) % 50;
+  const w2 = 50 + (seed * 13) % 50;
+  const w3 = 50 + (seed * 19) % 50;
+  const w4 = 50 + (seed * 23) % 50;
 
- const s = SIGNS.find(x => x.id === id);
+  document.getElementById("monthContent").innerHTML = `
+    <div class="week-title"><div>${s.sym} ${s.name}</div><span>${mName} ${now.getFullYear()}</span></div>
+    <p style="margin-bottom:15px;font-size:14px;line-height:1.6;color:#f4e2a1;font-style:italic;">"${theme}"</p>
+    
+    <div class="month-grid">
+      <div class="month-card">
+        <h5>1-я неделя</h5>
+        <p>${s.week.days[0]}</p>
+      </div>
+      <div class="month-card">
+        <h5>2-я неделя</h5>
+        <p>${s.week.days[2]}</p>
+      </div>
+      <div class="month-card">
+        <h5>3-я неделя</h5>
+        <p>${s.week.days[4]}</p>
+      </div>
+      <div class="month-card">
+        <h5>4-я неделя</h5>
+        <p>${s.week.days[6]}</p>
+      </div>
+    </div>
 
- setActiveSign("monthSigns", id);
-
- const now = new Date();
-
- const mName = MONTHS_FULL[now.getMonth()];
-
- 
-
- const seed = now.getFullYear() * 100 + now.getMonth() + id.length;
-
- const theme = MONTH_THEMES[seed % MONTH_THEMES.length];
-
- 
-
- const w1 = 50 + (seed * 7) % 50;
-
- const w2 = 50 + (seed * 13) % 50;
-
- const w3 = 50 + (seed * 19) % 50;
-
- const w4 = 50 + (seed * 23) % 50;
-
- document.getElementById("monthContent").innerHTML = `
-
-   <div class="week-title"><div>${s.sym} ${s.name}</div><span>${mName} ${now.getFullYear()}</span></div>
-
-   <p style="margin-bottom:15px;font-size:14px;line-height:1.6;color:#f4e2a1;font-style:italic;">"${theme}"</p>
-
-   
-
-   <div class="month-grid">
-
-     <div class="month-card">
-
-       <h5>1-я неделя</h5>
-
-       <p>${s.week.days[0]}</p>
-
-     </div>
-
-     <div class="month-card">
-
-       <h5>2-я неделя</h5>
-
-       <p>${s.week.days[2]}</p>
-
-     </div>
-
-     <div class="month-card">
-
-       <h5>3-я неделя</h5>
-
-       <p>${s.week.days[4]}</p>
-
-     </div>
-
-     <div class="month-card">
-
-       <h5>4-я неделя</h5>
-
-       <p>${s.week.days[6]}</p>
-
-     </div>
-
-   </div>
-
-   <div class="month-bars" style="margin-top:20px;">
-
-     <div style="font-size:12px; margin-bottom:5px; color:#c9bfe8;">Прогноз активности по неделям:</div>
-
-     <div class="stat-track" style="height:8px; margin-bottom:12px;"><div class="stat-fill" style="width:${w1}%"></div></div>
-
-     <div class="stat-track" style="height:8px; margin-bottom:12px;"><div class="stat-fill" style="width:${w2}%"></div></div>
-
-     <div class="stat-track" style="height:8px; margin-bottom:12px;"><div class="stat-fill" style="width:${w3}%"></div></div>
-
-     <div class="stat-track" style="height:8px; margin-bottom:12px;"><div class="stat-fill" style="width:${w4}%"></div></div>
-
-   </div>
-
- `;
-
+    <div class="month-bars" style="margin-top:20px;">
+      <div style="font-size:12px; margin-bottom:5px; color:#c9bfe8;">Прогноз активности по неделям:</div>
+      <div class="stat-track" style="height:8px; margin-bottom:12px;"><div class="stat-fill" style="width:${w1}%"></div></div>
+      <div class="stat-track" style="height:8px; margin-bottom:12px;"><div class="stat-fill" style="width:${w2}%"></div></div>
+      <div class="stat-track" style="height:8px; margin-bottom:12px;"><div class="stat-fill" style="width:${w3}%"></div></div>
+      <div class="stat-track" style="height:8px; margin-bottom:12px;"><div class="stat-fill" style="width:${w4}%"></div></div>
+    </div>
+  `;
 }
 
 /* ========== НАТАЛЬНАЯ КАРТА ========== */
-
 function renderNatal() {
-
- const container = document.getElementById("natalChartArea");
-
- const legend = document.getElementById("natalLegend");
-
- 
-
- if (!myBirthDate) {
-
-   container.innerHTML = `<p style="color:#9a8fc0; padding: 20px;">Укажи дату рождения в профиле, чтобы построить карту.</p>`;
-
-   legend.innerHTML = "";
-
-   return;
-
- }
-
- const date = new Date(myBirthDate);
-
- const day = date.getDate();
-
- const month = date.getMonth(); // 0-11
-
- 
-
- const sunDeg = (month * 30 + day) % 360;
-
- const moonDeg = (sunDeg * 13.2) % 360;
-
- const mercuryDeg = (sunDeg + 15) % 360;
-
- const venusDeg = (sunDeg + 45) % 360;
-
- const marsDeg = (sunDeg + 90) % 360;
-
- const jupiterDeg = (sunDeg + 150) % 360;
-
- const saturnDeg = (sunDeg + 210) % 360;
-
- const planets = [
-
-   { id: "sun", sym: "☉", deg: sunDeg, name: "Солнце", meaning: "Эго, суть личности" },
-
-   { id: "moon", sym: "☽", deg: moonDeg, name: "Луна", meaning: "Эмоции, подсознание" },
-
-   { id: "mercury", sym: "☿", deg: mercuryDeg, name: "Меркурий", meaning: "Ум, общение" },
-
-   { id: "venus", sym: "♀", deg: venusDeg, name: "Венера", meaning: "Любовь, гармония" },
-
-   { id: "mars", sym: "♂", deg: marsDeg, name: "Марс", meaning: "Воля, энергия" },
-
-   { id: "jupiter", sym: "♃", deg: jupiterDeg, name: "Юпитер", meaning: "Удача, рост" },
-
-   { id: "saturn", sym: "♄", deg: saturnDeg, name: "Сатурн", meaning: "Уроки, карма" }
-
- ];
-
- const rInner = 80;
-
- const rOuter = 140;
-
- const cx = 170, cy = 170;
-
- let svg = `<svg class="natal-svg" viewBox="0 0 340 340">`;
-
- 
-
- svg += `<circle cx="${cx}" cy="${cy}" r="${rOuter}" fill="#1a1233" stroke="#c9a227" stroke-width="2"/>`;
-
- svg += `<circle cx="${cx}" cy="${cy}" r="${rInner}" fill="#0d0820" stroke="#3d2f6b" stroke-width="1"/>`;
-
- for (let i = 0; i < 12; i++) {
-
-   const angle = i * 30;
-
-   const rad = (angle - 90) * Math.PI / 180;
-
-   const x1 = cx + rInner * Math.cos(rad);
-
-   const y1 = cy + rInner * Math.sin(rad);
-
-   const x2 = cx + rOuter * Math.cos(rad);
-
-   const y2 = cy + rOuter * Math.sin(rad);
-
-   
-
-   svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#3d2f6b" stroke-width="1"/>`;
-
-   
-
-   const symRad = (angle + 15 - 90) * Math.PI / 180;
-
-   const symX = cx + ((rInner + rOuter) / 2) * Math.cos(symRad);
-
-   const symY = cy + ((rInner + rOuter) / 2) * Math.sin(symRad);
-
-   svg += `<text x="${symX}" y="${symY + 5}" fill="#c9a227" font-size="16" text-anchor="middle" font-family="Arial">${SIGNS[i].sym}</text>`;
-
- }
-
- planets.forEach((p, idx) => {
-
-   const rad = (p.deg - 90) * Math.PI / 180;
-
-   const r = rInner + 20 + (idx % 3) * 15;
-
-   const px = cx + r * Math.cos(rad);
-
-   const py = cy + r * Math.sin(rad);
-
-   
-
-   svg += `<circle cx="${px}" cy="${py}" r="12" fill="#2a1a4a" stroke="#c9a227" stroke-width="1"/>`;
-
-   svg += `<text x="${px}" y="${py + 5}" fill="#fff" font-size="14" text-anchor="middle" font-family="Arial">${p.sym}</text>`;
-
- });
-
- svg += `<circle cx="${cx}" cy="${cy}" r="4" fill="#c9a227"/>`;
-
- svg += `</svg>`;
-
- container.innerHTML = svg;
-
- legend.innerHTML = planets.map(p => `
-
-   <div>
-
-     <span>${p.sym}</span>
-
-     <div><b>${p.name}</b><br><span style="font-size:10px;color:#9a8fc0">${p.meaning}</span></div>
-
-   </div>
-
- `).join("");
-
-}
-
-/* ========== МАТРИЦА СУДЬБЫ ========== */
-
-function renderMatrix() {
-
- const container = document.getElementById("matrixContent");
-
- if (!mySignId) {
-
-   container.innerHTML = `<p style="color:#9a8fc0; text-align:center;">Укажи дату рождения в профиле.</p>`;
-
-   return;
-
- }
-
- const s = SIGNS.find(x => x.id === mySignId);
-
- const m = s.matrix;
-
- container.innerHTML = `
-
-   <div class="matrix-card">
-
-     <div class="matrix-icon">${s.sym}</div>
-
-     <div class="matrix-text"><h4>Твой знак: ${s.name}</h4><p>Главная стихия: <b>${m.element}</b>. Ты черпаешь силу из этой энергии.</p></div>
-
-   </div>
-
-   <div class="matrix-card">
-
-     <div class="matrix-icon">${s.arcana.icon}</div>
-
-     <div class="matrix-text"><h4>Твой Аркан: ${s.arcana.name}</h4><p>${s.arcana.advice}</p></div>
-
-   </div>
-
-   <div class="matrix-card">
-
-     <div class="matrix-icon"></div>
-
-     <div class="matrix-text"><h4>Камень-талисман</h4><p><b>${m.stone}</b> — приносит удачу и защищает от негатива.</p></div>
-
-   </div>
-
-   <div class="matrix-card">
-
-     <div class="matrix-icon">⏳</div>
-
-     <div class="matrix-text"><h4>Управитель года</h4><p><b>${m.year}</b> — этот период задает тон твоим событиям.</p></div>
-
-   </div>
-
- `;
-
+  const container = document.getElementById("natalChartArea");
+  const legend = document.getElementById("natalLegend");
+  
+  if (!myBirthDate) {
+    container.innerHTML = `<p style="color:#9a8fc0; padding: 20px;">Укажи дату рождения в профиле, чтобы построить карту.</p>`;
+    legend.innerHTML = "";
+    return;
+  }
+
+  const date = new Date(myBirthDate);
+  const day = date.getDate();
+  const month = date.getMonth(); // 0-11
+  
+  const sunDeg = (month * 30 + day) % 360;
+  const moonDeg = (sunDeg * 13.2) % 360;
+  const mercuryDeg = (sunDeg + 15) % 360;
+  const venusDeg = (sunDeg + 45) % 360;
+  const marsDeg = (sunDeg + 90) % 360;
+  const jupiterDeg = (sunDeg + 150) % 360;
+  const saturnDeg = (sunDeg + 210) % 360;
+
+  const planets = [
+    { id: "sun", sym: "☉", deg: sunDeg, name: "Солнце", meaning: "Эго, суть личности" },
+    { id: "moon", sym: "☽", deg: moonDeg, name: "Луна", meaning: "Эмоции, подсознание" },
+    { id: "mercury", sym: "☿", deg: mercuryDeg, name: "Меркурий", meaning: "Ум, общение" },
+    { id: "venus", sym: "♀", deg: venusDeg, name: "Венера", meaning: "Любовь, гармония" },
+    { id: "mars", sym: "♂", deg: marsDeg, name: "Марс", meaning: "Воля, энергия" },
+    { id: "jupiter", sym: "♃", deg: jupiterDeg, name: "Юпитер", meaning: "Удача, рост" },
+    { id: "saturn", sym: "♄", deg: saturnDeg, name: "Сатурн", meaning: "Уроки, карма" }
+  ];
+
+  const rInner = 80;
+  const rOuter = 140;
+  const cx = 170, cy = 170;
+
+  let svg = `<svg class="natal-svg" viewBox="0 0 340 340">`;
+  
+  svg += `<circle cx="${cx}" cy="${cy}" r="${rOuter}" fill="#1a1233" stroke="#c9a227" stroke-width="2"/>`;
+  svg += `<circle cx="${cx}" cy="${cy}" r="${rInner}" fill="#0d0820" stroke="#3d2f6b" stroke-width="1"/>`;
+
+  for (let i = 0; i < 12; i++) {
+    const angle = i * 30;
+    const rad = (angle - 90) * Math.PI / 180;
+    const x1 = cx + rInner * Math.cos(rad);
+    const y1 = cy + rInner * Math.sin(rad);
+    const x2 = cx + rOuter * Math.cos(rad);
+    const y2 = cy + rOuter * Math.sin(rad);
+    
+    svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#3d2f6b" stroke-width="1"/>`;
+    
+    const symRad = (angle + 15 - 90) * Math.PI / 180;
+    const symX = cx + ((rInner + rOuter) / 2) * Math.cos(symRad);
+    const symY = cy + ((rInner + rOuter) / 2) * Math.sin(symRad);
+    svg += `<text x="${symX}" y="${symY + 5}" fill="#c9a227" font-size="16" text-anchor="middle" font-family="Arial">${SIGNS[i].sym}</text>`;
+  }
+
+  planets.forEach((p, idx) => {
+    const rad = (p.deg - 90) * Math.PI / 180;
+    const r = rInner + 20 + (idx % 3) * 15; 
+    const px = cx + r * Math.cos(rad);
+    const py = cy + r * Math.sin(rad);
+    
+    svg += `<circle cx="${px}" cy="${py}" r="12" fill="#2a1a4a" stroke="#c9a227" stroke-width="1"/>`;
+    svg += `<text x="${px}" y="${py + 5}" fill="#fff" font-size="14" text-anchor="middle" font-family="Arial">${p.sym}</text>`;
+  });
+
+  svg += `<circle cx="${cx}" cy="${cy}" r="4" fill="#c9a227"/>`;
+  svg += `</svg>`;
+
+  container.innerHTML = svg;
+
+  legend.innerHTML = planets.map(p => `
+    <div>
+      <span>${p.sym}</span> 
+      <div><b>${p.name}</b><br><span style="font-size:10px;color:#9a8fc0">${p.meaning}</span></div>
+    </div>
+  `).join("");
 }
 
 /* ========== СОВМЕСТИМОСТЬ ========== */
-
 const NAMES = SIGNS.map(s => s.name);
-
 const selA = document.getElementById("signA");
-
 const selB = document.getElementById("signB");
-
 NAMES.forEach(n => {
-
- selA.add(new Option(n, n));
-
- selB.add(new Option(n, n));
-
+  selA.add(new Option(n, n));
+  selB.add(new Option(n, n));
 });
-
 selB.selectedIndex = 1;
-
-if (mySignId) {
-
- const myName = SIGNS.find(x => x.id === mySignId).name;
-
- selA.value = myName;
-
-}
 
 document.getElementById("btnCompat").addEventListener("click", calcCompat);
 
 function calcCompat() {
+  const a = selA.value;
+  const b = selB.value;
+  let type = "n";
+  if (COMPAT[a] && COMPAT[a][b]) type = COMPAT[a][b];
+  else if (COMPAT[b] && COMPAT[b][a]) type = COMPAT[b][a];
 
- const a = selA.value;
+  const base = type === "h" ? [88, 92, 80, 85]
+             : type === "x" ? [45, 65, 40, 45]
+             : [65, 60, 65, 70];
+  const text = type === "h"
+    ? "Сильное притяжение. Вы способны дополнять друг друга, но иногда взгляды различаются. Секрет гармонии — принимать особенности, не пытаясь переделать."
+    : type === "x"
+    ? "Непростой союз: взгляды часто расходятся. Но именно через различия вы способны сильно вырасти. Главное — не пытаться переделать партнёра."
+    : "Спокойное, ровное сочетание. Ярких вспышек нет, но есть устойчивость. Всё зависит от готовности вкладываться и идти на компромиссы.";
 
- const b = selB.value;
-
- let type = "n";
-
- if (COMPAT[a] && COMPAT[a][b]) type = COMPAT[a][b];
-
- else if (COMPAT[b] && COMPAT[b][a]) type = COMPAT[b][a];
-
- const base = type === "h" ? [88, 92, 80, 85]
-
-            : type === "x" ? [45, 65, 40, 45]
-
-            : [65, 60, 65, 70];
-
- const text = type === "h"
-
-   ? "Сильное притяжение. Вы способны дополнять друг друга, но иногда взгляды различаются. Секрет гармонии — принимать особенности, не пытаясь переделать."
-
-   : type === "x"
-
-   ? "Непростой союз: взгляды часто расходятся. Но именно через различия вы способны сильно вырасти. Главное — не пытаться переделать партнёра."
-
-   : "Спокойное, ровное сочетание. Ярких вспышек нет, но есть устойчивость. Всё зависит от готовности вкладываться и идти на компромиссы.";
-
- document.getElementById("bLove").style.width = base[0] + "%";
-
- document.getElementById("bPassion").style.width = base[1] + "%";
-
- document.getElementById("bMind").style.width = base[2] + "%";
-
- document.getElementById("bFriend").style.width = base[3] + "%";
-
- document.getElementById("compatText").textContent = text;
-
- document.getElementById("compatResult").classList.remove("hidden");
-
+  document.getElementById("bLove").style.width = base[0] + "%";
+  document.getElementById("bPassion").style.width = base[1] + "%";
+  document.getElementById("bMind").style.width = base[2] + "%";
+  document.getElementById("bFriend").style.width = base[3] + "%";
+  document.getElementById("compatText").textContent = text;
+  document.getElementById("compatResult").classList.remove("hidden");
 }
 
-function shareCompat() {
-
- const a = selA.value;
-
- const b = selB.value;
-
- const text = `Наша совместимость: ${a} + ${b} = проверено астрологом! ✨`;
-
- shareText(text);
-
-}
-
-/* ========== ТАРО ДНЯ (3D) ========== */
-
+/* ========== ТАРО ========== */
 function renderTarot() {
-
- // Выбираем карту на основе текущей даты, чтобы она менялась раз в день
-
- const dateNum = today.getFullYear() * 1000 + (today.getMonth() + 1) * 100 + today.getDate();
-
- const cardIndex = dateNum % TAROT_DECK.length;
-
- const card = TAROT_DECK[cardIndex];
-
- document.getElementById("tIcon").innerText = card.icon;
-
- document.getElementById("tName").innerText = card.name;
-
- document.getElementById("tarotDetails").innerHTML = `
-
-   <div class="info-block"><h4>Значение</h4><p>${card.meaning}</p></div>
-
-   <div class="info-block" style="border-color:#4caf50;"><h4>✨ Совет дня</h4><p>${card.advice}</p></div>
-
- `;
-
- // Сбрасываем переворот при переходе на вкладку
-
- const cardEl = document.getElementById("tarotCard");
-
- cardEl.classList.remove("flipped");
-
- document.getElementById("tarotDetails").style.display = "none";
-
- isTarotFlipped = false;
-
-}
-
-function flipTarot() {
-
- if (isTarotFlipped) return;
-
- const cardEl = document.getElementById("tarotCard");
-
- cardEl.classList.add("flipped");
-
- document.getElementById("tarotDetails").style.display = "block";
-
- isTarotFlipped = true;
-
+  const targetSign = mySignId || curSign;
+  const s = SIGNS.find(x => x.id === targetSign);
+  
+  document.getElementById("tIcon").innerText = s.arcana.icon;
+  document.getElementById("tName").innerText = s.arcana.name;
+  
+  document.getElementById("tarotDetails").innerHTML = `
+    <div class="info-block"><h4>Значение для ${s.name}</h4><p>${s.arcana.meaning}</p></div>
+    <div class="info-block" style="border-color:#4caf50;"><h4>✨ Твой совет</h4><p>${s.arcana.advice}</p></div>
+  `;
 }
 
 /* ========== КОЛЕСО УДАЧИ ========== */
-
 function buildWheel() {
-
- const inner = document.getElementById("wheelInner");
-
- inner.innerHTML = "";
-
- SIGNS.forEach((s, i) => {
-
-   const seg = document.createElement("div");
-
-   seg.className = "segment " + (i % 2 === 0 ? "seg-even" : "seg-odd");
-
-   seg.style.transform = `rotate(${i * 30}deg)`;
-
-   seg.dataset.index = i;
-
-   seg.innerHTML = `<span>${s.sym}</span>`;
-
-   inner.appendChild(seg);
-
- });
-
+  const inner = document.getElementById("wheelInner");
+  inner.innerHTML = "";
+  SIGNS.forEach((s, i) => {
+    const seg = document.createElement("div");
+    seg.className = "segment " + (i % 2 === 0 ? "seg-even" : "seg-odd");
+    seg.style.transform = `rotate(${i * 30}deg)`;
+    seg.dataset.index = i;
+    seg.innerHTML = `<span>${s.sym}</span>`;
+    inner.appendChild(seg);
+  });
 }
-
 buildWheel();
 
 document.getElementById("btnSpin").addEventListener("click", spinWheel);
 
 function spinWheel() {
+  if (isSpin) return;
+  isSpin = true;
+  
+  const resBox = document.getElementById("fortuneResult");
+  resBox.classList.add("hidden");
+  document.querySelectorAll("#wheelInner .segment").forEach(s => s.classList.remove("winner"));
+  
+  const wheelEl = document.getElementById("wheel");
+  wheelEl.classList.add("spinning");
+  document.querySelector(".wheel-center").classList.add("pulse");
+  document.getElementById("btnSpin").innerText = "Колесо судьбы крутится...";
 
- if (isSpin) return;
+  const idx = Math.floor(Math.random() * 12);
+  const targetAngle = 360 * 6 + (360 - idx * 30);
+  rot += targetAngle;
+  wheelEl.style.transform = `rotate(${rot}deg)`;
 
- isSpin = true;
+  setTimeout(() => {
+    isSpin = false;
+    wheelEl.classList.remove("spinning");
+    document.querySelector(".wheel-center").classList.remove("pulse");
+    document.getElementById("btnSpin").innerText = "Крутить еще раз";
 
- 
+    document.querySelector(`#wheelInner .segment[data-index="${idx}"]`).classList.add("winner");
 
- const resBox = document.getElementById("fortuneResult");
+    const s = SIGNS[idx];
+    const f = FORTUNE_SECTORS[idx];
 
- resBox.classList.add("hidden");
-
- document.querySelectorAll("#wheelInner .segment").forEach(s => s.classList.remove("winner"));
-
- 
-
- const wheelEl = document.getElementById("wheel");
-
- wheelEl.classList.add("spinning");
-
- document.querySelector(".wheel-center").classList.add("pulse");
-
- document.getElementById("btnSpin").innerText = "Колесо судьбы крутится...";
-
- const idx = Math.floor(Math.random() * 12);
-
- const targetAngle = 360 * 6 + (360 - idx * 30);
-
- rot += targetAngle;
-
- wheelEl.style.transform = `rotate(${rot}deg)`;
-
- setTimeout(() => {
-
-   isSpin = false;
-
-   wheelEl.classList.remove("spinning");
-
-   document.querySelector(".wheel-center").classList.remove("pulse");
-
-   document.getElementById("btnSpin").innerText = "Крутить еще раз";
-
-   document.querySelector(`#wheelInner .segment[data-index="${idx}"]`).classList.add("winner");
-
-   const s = SIGNS[idx];
-
-   const f = FORTUNE_SECTORS[idx];
-
-   resBox.querySelector(".fortune-grid").innerHTML = `
-
-     <div class="fortune-item">
-
-       <h5>Сектор</h5>
-
-       <p><b>${f.icon} ${f.name}</b> — под покровительством знака <b>${s.name} ${s.sym}</b></p>
-
-     </div>
-
-     <div class="fortune-item">
-
-       <h5>✨ Совет дня</h5>
-
-       <p>${f.advice}</p>
-
-     </div>
-
-     <div class="fortune-item">
-
-       <h5>⚠️ Остерегайся</h5>
-
-       <p>${f.avoid}</p>
-
-     </div>
-
-     <div class="fortune-item">
-
-       <h5> Аффирмация</h5>
-
-       <p style="font-style:italic;">«${f.affirm}»</p>
-
-     </div>
-
-   `;
-
-   resBox.classList.remove("hidden");
-
- }, 6000);
-
+    resBox.querySelector(".fortune-grid").innerHTML = `
+      <div class="fortune-item">
+        <h5>Сектор</h5>
+        <p><b>${f.icon} ${f.name}</b> — под покровительством знака <b>${s.name} ${s.sym}</b></p>
+      </div>
+      <div class="fortune-item">
+        <h5>✨ Совет дня</h5>
+        <p>${f.advice}</p>
+      </div>
+      <div class="fortune-item">
+        <h5>⚠️ Остерегайся</h5>
+        <p>${f.avoid}</p>
+      </div>
+      <div class="fortune-item">
+        <h5>🌟 Аффирмация</h5>
+        <p style="font-style:italic;">«${f.affirm}»</p>
+      </div>
+    `;
+    resBox.classList.remove("hidden");
+  }, 6000); 
 }
 
 /* ========== ИНИЦИАЛИЗАЦИЯ ========== */
-
 buildSignButtons("weekSigns", renderWeek);
-
 buildSignButtons("monthSigns", renderMonth);
 
 initProfile();
-
 renderWeek(curSign);
-
 renderMonth(curMonthSign);
-
-renderDailyForecast();
-
 </script>
-
 </body>
-
 </html>
