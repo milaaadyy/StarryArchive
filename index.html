@@ -11,51 +11,92 @@
   h1 { font-size: 24px; text-align: center; color: #f4e2a1; margin-bottom: 5px; }
   .tagline { text-align: center; color: #9a8fc0; font-size: 13px; margin-bottom: 15px; }
   .current-date { text-align: center; font-size: 12px; color: #c9a227; margin-bottom: 20px; text-transform: uppercase; background: #1a1233; display: inline-block; padding: 4px 12px; border-radius: 15px; left: 50%; position: relative; transform: translateX(-50%); }
-  
+
   .tabs { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
   .tab { padding: 8px 12px; border-radius: 15px; border: 1px solid #4a3a7a; background: transparent; color: #c9bfe8; cursor: pointer; font-size: 12px; }
   .tab.active { background: #6a4fc0; color: #fff; border-color: #c9a227; }
-  
+
   .panel { display: none; background: #1a1233; padding: 20px 15px; border-radius: 15px; border: 1px solid #3d2f6b; }
   .panel.active { display: block; }
-  
+
   .sign-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 15px; }
   .sign-btn { padding: 10px 2px; border-radius: 8px; border: 1px solid #3d2f6b; background: #0d0820; color: #d9d0f5; cursor: pointer; text-align: center; font-size: 11px; position: relative; }
   .sign-btn.active { border-color: #c9a227; background: #2a1a4a; color: #fff; }
-  
+
   .el-fire { border-bottom: 2px solid #ff5722; } .el-water { border-bottom: 2px solid #2196f3; } .el-earth { border-bottom: 2px solid #4caf50; } .el-air { border-bottom: 2px solid #ffeb3b; }
 
   .week-title { font-size: 18px; color: #f4e2a1; margin-bottom: 10px; border-bottom: 1px solid #3d2f6b; padding-bottom: 8px; display: flex; justify-content: space-between; }
   .week-title span { font-size: 11px; color: #9a8fc0; }
-  
+
   .days-nav { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px; }
   .day-btn { flex: 1; min-width: 45px; padding: 8px 3px; border-radius: 8px; border: 1px solid #3d2f6b; background: #0d0820; color: #9a8fc0; font-size: 10px; cursor: pointer; text-align: center; }
   .day-btn.today { border-color: #c9a227; color: #c9a227; }
   .day-btn.active { background: #6a4fc0; color: #fff; border-color: #c9a227; }
   .day-btn .date-num { display: block; font-size: 15px; font-weight: bold; }
-  
+  .day-btn .date-mon { display: block; font-size: 9px; color: #9a8fc0; text-transform: lowercase; margin-top: 1px; }
+  .day-btn.today .date-mon { color: #c9a227; }
+
   .day-content { padding: 15px; border-left: 3px solid #c9a227; background: #2a1a4a; border-radius: 0 8px 8px 0; font-size: 13px; line-height: 1.5; margin-bottom: 12px; position: relative; }
   .today-badge { display: inline-block; background: #c9a227; color: #0d0820; padding: 2px 6px; border-radius: 5px; font-size: 10px; margin-bottom: 5px; font-weight: bold; }
-  
+
   .meta-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
   .meta-tag { background: #0d0820; padding: 6px 10px; border-radius: 6px; font-size: 11px; border: 1px solid #3d2f6b; }
   .zodiac-watermark { position: absolute; bottom: 0; right: 5px; font-size: 60px; opacity: 0.1; }
-  
+
+  .share-btn { padding: 8px 12px; background: transparent; color: #c9a227; border: 1px solid #c9a227; border-radius: 8px; cursor: pointer; font-size: 12px; margin-bottom: 5px; }
+
+  /* Инфографика знака */
+  .infographic {
+    margin: 14px 0;
+    padding: 14px;
+    background: #0d0820;
+    border: 1px solid #3d2f6b;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 14px;
+    align-items: center;
+  }
+  .infographic .ring-wrap { position: relative; width: 120px; height: 120px; }
+  .infographic .ring-wrap svg { transform: rotate(-90deg); }
+  .infographic .ring-bg { stroke: rgba(255,255,255,0.07); }
+  .infographic .ring-fg { stroke: #c9a227; stroke-linecap: round; transition: stroke-dashoffset 1s ease-out; }
+  .infographic .ring-label {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .infographic .ring-label b { font-size: 22px; color: #f4e2a1; line-height: 1; }
+  .infographic .ring-label small { font-size: 9px; color: #9a8fc0; text-transform: uppercase; margin-top: 3px; }
+  .infographic .stats { display: flex; flex-direction: column; gap: 8px; }
+  .infographic .stat-row { font-size: 11px; }
+  .infographic .stat-head { display: flex; justify-content: space-between; margin-bottom: 3px; color: #c9bfe8; }
+  .infographic .stat-head b { color: #f4e2a1; }
+  .infographic .stat-track { height: 5px; background: #000; border-radius: 3px; overflow: hidden; }
+  .infographic .stat-fill {
+    height: 100%; width: 0; border-radius: 3px;
+    background: linear-gradient(90deg, #6a4fc0, #c9a227);
+    transition: width 1s ease-out;
+  }
+  @media (max-width: 420px) {
+    .infographic { grid-template-columns: 1fr; justify-items: center; }
+    .infographic .stats { width: 100%; }
+  }
+
   select { width: 100%; padding: 10px; margin-bottom: 8px; background: #0d0820; color: #fff; border: 1px solid #4a3a7a; border-radius: 8px; font-size: 14px; }
   .btn { padding: 12px; width: 100%; background: #6a4fc0; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; margin-top: 8px; }
   .btn-gold { background: #c9a227; color: #0d0820; }
-  
+
   .bar-track { height: 6px; background: #0d0820; border-radius: 3px; margin: 3px 0 10px; overflow: hidden; }
   .bar-fill { height: 100%; background: #c9a227; width: 0; transition: width 1s; }
   .hidden { display: none; }
   .info-block { background: #0d0820; padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 2px solid #8a6fe0; }
   .info-block h4 { color: #c9a227; font-size: 12px; margin-bottom: 4px; }
   .info-block p { font-size: 13px; line-height: 1.4; }
-  
+
   .tarot-card { width: 120px; height: 180px; margin: 0 auto 15px; border: 2px solid #c9a227; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 40px; background: #1c1338; }
   .tarot-card span { font-size: 14px; color: #fff; margin-top: 10px; }
   .moon-icon { font-size: 60px; text-align: center; margin: 15px 0; }
-  
+
   .wheel-container { position: relative; width: 200px; height: 200px; margin: 20px auto 30px; }
   .wheel-pointer { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); font-size: 24px; z-index: 10; color: #c9a227; }
   .wheel { width: 100%; height: 100%; border-radius: 50%; border: 3px solid #c9a227; position: relative; overflow: hidden; transition: transform 5s ease-out; }
@@ -115,13 +156,13 @@
     <div class="tarot-card" id="tCard"><span id="tIcon">🌙</span><span id="tName"></span></div>
     <div id="tarotDetails" style="text-align:left;"></div>
   </div>
-  
+
   <div id="moon" class="panel" style="text-align:center;">
     <div class="moon-icon" id="moonIcon">🌕</div>
     <h3 style="color:#f4e2a1; font-size:18px; margin-bottom:8px;" id="moonPhaseName"></h3>
     <p style="font-size:13px;" id="moonDesc"></p>
   </div>
-  
+
   <div id="fortune" class="panel">
     <div class="wheel-container">
       <div class="wheel-pointer">▼</div>
@@ -138,18 +179,42 @@
 
 <script>
 var SIGNS = [
-  { id:"aries", name:"Овен", sym:"♈", el:"fire", dates:"21.03-19.04", week:{ general:"Потребует решительности.", days:["Разговор.","Встреча.","Финансы.","Отношения.","Энергия.","Отдых.","Планы."], tags:["Любовь","Финансы","Карьера","Число 9"] }, dark:"Страх не успеть. Вспыльчивость." },
-  { id:"taurus", name:"Телец", sym:"♉", el:"earth", dates:"20.04-20.05", week:{ general:"Желание стабильности.", days:["Наблюдай.","Сюрприз.","Работа.","Романтика.","Самооценка.","Финансы.","Близкие."], tags:["Любовь","Финансы","Карьера","Число 6"] }, dark:"Страх перемен. Упрямство." },
-  { id:"gemini", name:"Близнецы", sym:"♊", el:"air", dates:"21.05-20.06", week:{ general:"Насыщенная неделя.", days:["Сообщение.","Знакомства.","Планы.","Прошлое.","Эмоции.","Творчество.","Выбор."], tags:["Любовь","Финансы","Карьера","Число 5"] }, dark:"Страх привязанности. Непостоянство." },
-  { id:"cancer", name:"Рак", sym:"♋", el:"water", dates:"21.06-22.07", week:{ general:"Задумайся о себе.", days:["Ощущения.","Поддержка.","Обиды.","Отношения.","Раздражительность.","Спокойствие.","Осознание."], tags:["Любовь","Финансы","Карьера","Число 2"] }, dark:"Страх отвержения. Обидчивость." },
-  { id:"leo", name:"Лев", sym:"♌", el:"fire", dates:"23.07-22.08", week:{ general:"В центре внимания.", days:["Желания.","Начинания.","Похвала.","Гордость.","Встречи.","Соперничество.","Цели."], tags:["Любовь","Финансы","Карьера","Число 1"] }, dark:"Страх быть незамеченным. Гордость." },
-  { id:"virgo", name:"Дева", sym:"♍", el:"earth", dates:"23.08-22.09", week:{ general:"Наведи порядок.", days:["Дела.","Критика.","Работа.","Комплимент.","Проблемы.","Здоровье.","Ошибка."], tags:["Любовь","Финансы","Карьера","Число 4"] }, dark:"Страх несовершенства. Занудство." },
-  { id:"libra", name:"Весы", sym:"♎", el:"air", dates:"23.09-22.10", week:{ general:"Время выбора.", days:["Угождение.","Романтика.","Договор.","Сомнения.","Встреча.","Конфликты.","Решения."], tags:["Любовь","Финансы","Карьера","Число 7"] }, dark:"Страх конфликтов. Нерешительность." },
-  { id:"scorpio", name:"Скорпион", sym:"♏", el:"water", dates:"23.10-21.11", week:{ general:"Разберись в чувствах.", days:["Детали.","Разговор.","Ревность.","Поворот.","Привычки.","Идея.","Опыт."], tags:["Любовь","Финансы","Карьера","Число 8"] }, dark:"Страх предательства. Манипуляции." },
-  { id:"sagittarius", name:"Стрелец", sym:"♐", el:"fire", dates:"22.11-21.12", week:{ general:"Новые возможности.", days:["Шанс.","Путешествия.","Обещания.","Встреча.","Новое.","Финансы.","Итоги."], tags:["Любовь","Финансы","Карьера","Число 3"] }, dark:"Страх обязательств. Инфантильность." },
-  { id:"capricorn", name:"Козерог", sym:"♑", el:"earth", dates:"22.12-19.01", week:{ general:"Конкретные результаты.", days:["Цель.","Помощь.","Работа.","Близкие.","Сравнение.","Праздник.","Привычки."], tags:["Любовь","Финансы","Карьера","Число 10"] }, dark:"Страх слабости. Жесткость." },
-  { id:"aquarius", name:"Водолей", sym:"♒", el:"air", dates:"20.01-18.02", week:{ general:"Нестандартность.", days:["Идея.","Друзья.","Критика.","Новость.","Эксперимент.","Открытость.","Планы."], tags:["Любовь","Финансы","Карьера","Число 11"] }, dark:"Страх привязанности. Холодность." },
-  { id:"pisces", name:"Рыбы", sym:"♓", el:"water", dates:"19.02-20.03", week:{ general:"Самоанализ.", days:["Голос.","Творчество.","Ответственность.","Романтика.","Прошлое.","Хобби.","Размышления."], tags:["Любовь","Финансы","Карьера","Число 12"] }, dark:"Страх реальности. Иллюзии." }
+  { id:"aries", name:"Овен", sym:"♈", el:"fire", dates:"21.03-19.04",
+    stats: { energy: 92, love: 70, money: 65, intuition: 60 },
+    week:{ general:"Потребует решительности.", days:["Разговор.","Встреча.","Финансы.","Отношения.","Энергия.","Отдых.","Планы."], tags:["Любовь","Финансы","Карьера","Число 9"] }, dark:"Страх не успеть. Вспыльчивость." },
+  { id:"taurus", name:"Телец", sym:"♉", el:"earth", dates:"20.04-20.05",
+    stats: { energy: 60, love: 80, money: 88, intuition: 65 },
+    week:{ general:"Желание стабильности.", days:["Наблюдай.","Сюрприз.","Работа.","Романтика.","Самооценка.","Финансы.","Близкие."], tags:["Любовь","Финансы","Карьера","Число 6"] }, dark:"Страх перемен. Упрямство." },
+  { id:"gemini", name:"Близнецы", sym:"♊", el:"air", dates:"21.05-20.06",
+    stats: { energy: 80, love: 65, money: 55, intuition: 70 },
+    week:{ general:"Насыщенная неделя.", days:["Сообщение.","Знакомства.","Планы.","Прошлое.","Эмоции.","Творчество.","Выбор."], tags:["Любовь","Финансы","Карьера","Число 5"] }, dark:"Страх привязанности. Непостоянство." },
+  { id:"cancer", name:"Рак", sym:"♋", el:"water", dates:"21.06-22.07",
+    stats: { energy: 55, love: 90, money: 60, intuition: 88 },
+    week:{ general:"Задумайся о себе.", days:["Ощущения.","Поддержка.","Обиды.","Отношения.","Раздражительность.","Спокойствие.","Осознание."], tags:["Любовь","Финансы","Карьера","Число 2"] }, dark:"Страх отвержения. Обидчивость." },
+  { id:"leo", name:"Лев", sym:"♌", el:"fire", dates:"23.07-22.08",
+    stats: { energy: 90, love: 85, money: 70, intuition: 60 },
+    week:{ general:"В центре внимания.", days:["Желания.","Начинания.","Похвала.","Гордость.","Встречи.","Соперничество.","Цели."], tags:["Любовь","Финансы","Карьера","Число 1"] }, dark:"Страх быть незамеченным. Гордость." },
+  { id:"virgo", name:"Дева", sym:"♍", el:"earth", dates:"23.08-22.09",
+    stats: { energy: 65, love: 60, money: 82, intuition: 75 },
+    week:{ general:"Наведи порядок.", days:["Дела.","Критика.","Работа.","Комплимент.","Проблемы.","Здоровье.","Ошибка."], tags:["Любовь","Финансы","Карьера","Число 4"] }, dark:"Страх несовершенства. Занудство." },
+  { id:"libra", name:"Весы", sym:"♎", el:"air", dates:"23.09-22.10",
+    stats: { energy: 70, love: 88, money: 72, intuition: 68 },
+    week:{ general:"Время выбора.", days:["Угождение.","Романтика.","Договор.","Сомнения.","Встреча.","Конфликты.","Решения."], tags:["Любовь","Финансы","Карьера","Число 7"] }, dark:"Страх конфликтов. Нерешительность." },
+  { id:"scorpio", name:"Скорпион", sym:"♏", el:"water", dates:"23.10-21.11",
+    stats: { energy: 75, love: 82, money: 70, intuition: 95 },
+    week:{ general:"Разберись в чувствах.", days:["Детали.","Разговор.","Ревность.","Поворот.","Привычки.","Идея.","Опыт."], tags:["Любовь","Финансы","Карьера","Число 8"] }, dark:"Страх предательства. Манипуляции." },
+  { id:"sagittarius", name:"Стрелец", sym:"♐", el:"fire", dates:"22.11-21.12",
+    stats: { energy: 88, love: 70, money: 58, intuition: 65 },
+    week:{ general:"Новые возможности.", days:["Шанс.","Путешествия.","Обещания.","Встреча.","Новое.","Финансы.","Итоги."], tags:["Любовь","Финансы","Карьера","Число 3"] }, dark:"Страх обязательств. Инфантильность." },
+  { id:"capricorn", name:"Козерог", sym:"♑", el:"earth", dates:"22.12-19.01",
+    stats: { energy: 72, love: 55, money: 92, intuition: 62 },
+    week:{ general:"Конкретные результаты.", days:["Цель.","Помощь.","Работа.","Близкие.","Сравнение.","Праздник.","Привычки."], tags:["Любовь","Финансы","Карьера","Число 10"] }, dark:"Страх слабости. Жесткость." },
+  { id:"aquarius", name:"Водолей", sym:"♒", el:"air", dates:"20.01-18.02",
+    stats: { energy: 68, love: 60, money: 65, intuition: 85 },
+    week:{ general:"Нестандартность.", days:["Идея.","Друзья.","Критика.","Новость.","Эксперимент.","Открытость.","Планы."], tags:["Любовь","Финансы","Карьера","Число 11"] }, dark:"Страх привязанности. Холодность." },
+  { id:"pisces", name:"Рыбы", sym:"♓", el:"water", dates:"19.02-20.03",
+    stats: { energy: 50, love: 85, money: 55, intuition: 98 },
+    week:{ general:"Самоанализ.", days:["Голос.","Творчество.","Ответственность.","Романтика.","Прошлое.","Хобби.","Размышления."], tags:["Любовь","Финансы","Карьера","Число 12"] }, dark:"Страх реальности. Иллюзии." }
 ];
 
 var FATE = {
@@ -169,9 +234,12 @@ var MOON = [ { icon:"🌑", n:"Новолуние", d:"Планирование.
 
 var NAMES = ["Овен","Телец","Близнецы","Рак","Лев","Дева","Весы","Скорпион","Стрелец","Козерог","Водолей","Рыбы"];
 var DAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+var MONTHS = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
+
 var today = new Date();
 var todayIdx = (today.getDay() + 6) % 7;
 var monday = new Date(today);
+monday.setHours(0,0,0,0);
 monday.setDate(today.getDate() - todayIdx);
 
 var curSign = "aries", curDay = todayIdx, isSpin = false, rot = 0;
@@ -211,26 +279,65 @@ function renderWeek(id) {
     if(SIGNS[j].id === id) btns[j].classList.add("active");
     else btns[j].classList.remove("active");
   }
-  
+
   var nav = '<div class="days-nav">';
   for(var i=0; i<7; i++) {
     var d = new Date(monday); d.setDate(monday.getDate() + i);
-    nav += '<button class="day-btn '+(i===todayIdx?'today':'')+' '+(i===curDay?'active':'')+'" onclick="setDay('+i+')">'+DAYS[i]+'<span class="date-num">'+d.getDate()+'</span></button>';
+    nav += '<button class="day-btn '+(i===todayIdx?'today':'')+' '+(i===curDay?'active':'')+'" onclick="setDay('+i+')">'
+         + DAYS[i]
+         + '<span class="date-num">'+d.getDate()+'</span>'
+         + '<span class="date-mon">'+MONTHS[d.getMonth()]+'</span>'
+         + '</button>';
   }
   nav += '</div>';
-  
+
   var tagsHtml = "";
   for(var t=0; t<s.tags.length; t++) tagsHtml += '<div class="meta-tag">'+s.tags[t]+'</div>';
-  
-  document.getElementById("weekContent").innerHTML = 
+
+  var st = s.stats || { energy: 70, love: 70, money: 70, intuition: 70 };
+  var power = Math.round((st.energy + st.love + st.money + st.intuition) / 4);
+  var R = 50, CIRC = 2 * Math.PI * R;
+  var off = CIRC - (power / 100) * CIRC;
+
+  var row = function(label, val) {
+    return '<div class="stat-row"><div class="stat-head"><span>'+label+'</span><b>'+val+'%</b></div>'
+         + '<div class="stat-track"><div class="stat-fill" data-w="'+val+'"></div></div></div>';
+  };
+
+  document.getElementById("weekContent").innerHTML =
     '<div class="week-title"><div>'+s.sym+' '+s.name+'</div><span>'+s.dates+'</span></div>'+
     '<p style="margin-bottom:10px;font-size:12px;">'+s.week.general+'</p>'+
     nav+
     '<div class="day-content"><div class="zodiac-watermark">'+s.sym+'</div>'+
     (curDay===todayIdx ? '<div class="today-badge">Сегодня</div>' : '')+
     '<div>'+s.week.days[curDay]+'</div></div>'+
+    '<div class="infographic">'+
+      '<div class="ring-wrap">'+
+        '<svg width="120" height="120" viewBox="0 0 120 120">'+
+          '<circle class="ring-bg" cx="60" cy="60" r="'+R+'" fill="none" stroke-width="8"/>'+
+          '<circle class="ring-fg" cx="60" cy="60" r="'+R+'" fill="none" stroke-width="8" '+
+                  'stroke-dasharray="'+CIRC.toFixed(1)+'" '+
+                  'stroke-dashoffset="'+CIRC.toFixed(1)+'" '+
+                  'data-offset="'+off.toFixed(1)+'"/>'+
+        '</svg>'+
+        '<div class="ring-label"><b>'+power+'%</b><small>сила недели</small></div>'+
+      '</div>'+
+      '<div class="stats">'+
+        row("⚡ Энергия", st.energy)+
+        row("❤️ Любовь", st.love)+
+        row("💰 Финансы", st.money)+
+        row("🔮 Интуиция", st.intuition)+
+      '</div>'+
+    '</div>'+
     '<button class="share-btn" onclick="share()">Поделиться</button>'+
     '<div class="meta-tags">'+tagsHtml+'</div>';
+
+  requestAnimationFrame(function() {
+    var fills = document.querySelectorAll("#weekContent .stat-fill");
+    for(var k=0; k<fills.length; k++) fills[k].style.width = fills[k].dataset.w + "%";
+    var ring = document.querySelector("#weekContent .ring-fg");
+    if(ring) ring.style.strokeDashoffset = ring.dataset.offset;
+  });
 }
 
 function share() {
@@ -256,7 +363,7 @@ function renderFate(id) {
     else btns[j].classList.remove("active");
   }
   var f = FATE[s.name];
-  document.getElementById("fateContent").innerHTML = 
+  document.getElementById("fateContent").innerHTML =
     '<div class="week-title"><div>'+s.sym+' '+s.name+'</div></div>'+
     '<div class="info-block"><h4>Тема</h4><p>'+f[0]+'</p></div>'+
     '<div class="info-block"><h4>Сила</h4><p>'+f[1]+'</p></div>'+
@@ -304,7 +411,7 @@ function renderMoon() {
 }
 
 function spinWheel() {
-  if (isSpin) return; 
+  if (isSpin) return;
   isSpin = true;
   document.getElementById("fortuneResult").classList.add("hidden");
   var idx = Math.floor(Math.random() * 12);
