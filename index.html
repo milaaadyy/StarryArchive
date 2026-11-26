@@ -195,7 +195,7 @@
   .info-block h4 { color: #c9a227; font-size: 12px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
   .info-block p { font-size: 13px; line-height: 1.5; }
 
-  /* ТАРО */
+  /* ТАРО (стилизованная карта) */
   .tarot-card {
     width: 160px; height: 260px; margin: 0 auto 20px;
     border: 3px solid #c9a227; border-radius: 12px;
@@ -207,28 +207,23 @@
   }
   .tarot-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 30px rgba(201,162,39,0.3); }
   
-  .tarot-img { 
-    width: 100%; height: 100%; object-fit: cover; 
-    border-radius: 9px; position: absolute; top: 0; left: 0; z-index: 1; 
-  }
-  
-  .tarot-overlay {
-    position: absolute; bottom: 0; left: 0; width: 100%; 
-    background: linear-gradient(to top, rgba(13,8,32,0.95), transparent);
-    z-index: 2; padding: 40px 10px 15px; text-align: center;
-  }
-  .tarot-overlay span { 
-    font-size: 15px; color: #f4e2a1; font-weight: 700; 
+  /* Стили для текста и эмодзи внутри карты */
+  .tarot-icon { font-size: 60px; z-index: 2; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6)); }
+  .tarot-name { 
+    font-size: 16px; color: #f4e2a1; font-weight: 700; 
     text-transform: uppercase; letter-spacing: 1px; 
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8); z-index: 2; margin-top: 15px; text-align: center; padding: 0 10px;
   }
   
+  /* Декоративный узор на фоне карты */
   .tarot-card::before {
-    content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
-    transform: skewX(-25deg); transition: 0.5s; z-index: 3; pointer-events: none;
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: radial-gradient(circle at 50% 50%, rgba(201,162,39,0.1) 0%, transparent 60%);
+    z-index: 1;
   }
-  .tarot-card:hover::before { left: 100%; }
+  .tarot-card::after {
+    content: "✨"; position: absolute; top: 15px; right: 15px; font-size: 16px; opacity: 0.6; z-index: 2;
+  }
 
   .moon-icon { font-size: 70px; text-align: center; margin: 20px 0; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); }
 
@@ -310,7 +305,6 @@
   <p class="tagline">Твой проводник в мир астрологии</p>
   <span class="main-date" id="mainDate"></span>
 
-  <!-- Исправлено: форма теперь показывается, если нет даты, а не только знака -->
   <div id="profileSetup" class="setup-birth hidden">
     <h3>Данные для натальной карты</h3>
     <div class="input-group">
@@ -335,7 +329,6 @@
 
   <div id="profileBar" class="profile-bar hidden">
     <span>Твой знак: <b id="mySignName">-</b></span>
-    <!-- Исправлено: кнопка теперь всегда ведет к заполнению формы -->
     <button onclick="showProfileSetup()">Заполнить дату рождения</button>
   </div>
 
@@ -348,29 +341,23 @@
     <button class="tab" data-tab="fortune">Удача</button>
   </div>
 
-  <!-- НЕДЕЛЯ -->
   <div id="week" class="panel active">
     <div class="sign-grid" id="weekSigns"></div>
     <div id="weekContent"></div>
   </div>
 
-  <!-- МЕСЯЦ -->
   <div id="month" class="panel">
     <div class="sign-grid" id="monthSigns"></div>
     <div id="monthContent"></div>
   </div>
 
-  <!-- НАТАЛЬНАЯ КАРТА -->
   <div id="natal" class="panel" style="text-align:center;">
     <h3 style="color:#f4e2a1; font-size:18px; margin-bottom:10px;">Твоя натальная карта</h3>
     <p style="color:#9a8fc0; font-size:12px; margin-bottom:15px;">Космограмма на момент твоего рождения</p>
-    <div id="natalChartArea" class="natal-container">
-      <!-- Сюда рендерится SVG -->
-    </div>
+    <div id="natalChartArea" class="natal-container"></div>
     <div id="natalLegend" class="natal-legend"></div>
   </div>
 
-  <!-- СОВМЕСТИМОСТЬ -->
   <div id="compat" class="panel">
     <select id="signA"></select>
     <select id="signB"></select>
@@ -387,16 +374,15 @@
     </div>
   </div>
 
-  <!-- ТАРО -->
   <div id="tarot" class="panel" style="text-align:center;">
     <p style="color:#9a8fc0; margin-bottom:15px; font-size:13px;">Твой Старший Аркан по знаку зодиака</p>
     <div class="tarot-card" id="tCard">
-      <!-- Сюда JS вставит картинку и название -->
+      <div class="tarot-icon" id="tIcon"></div>
+      <div class="tarot-name" id="tName"></div>
     </div>
     <div id="tarotDetails" style="text-align:left; margin-top: 10px;"></div>
   </div>
 
-  <!-- УДАЧА -->
   <div id="fortune" class="panel">
     <div class="wheel-container">
       <div class="wheel-pointer">▼</div>
@@ -406,9 +392,7 @@
     <button class="btn btn-gold" id="btnSpin">Крутить колесо</button>
     <div id="fortuneResult" class="fortune-result hidden">
       <div class="fortune-header">Твоя удача:</div>
-      <div class="fortune-grid">
-        <!-- Заполняется через JS -->
-      </div>
+      <div class="fortune-grid"></div>
     </div>
   </div>
 </div>
@@ -422,13 +406,7 @@ const SIGNS = [
       days:["Важный разговор. Прямолинейность поможет.","Неожиданная встреча. Не спеши с выводами.","Финансовое планирование. Без импульсивных покупок.","Недопонимание в отношениях. Лучше выслушать.","Энергии больше обычного. Направь её на цели.","Отдохни. Не каждый день должен быть продуктивным.","Планируй будущее. Идея перерастёт в серьёзное."],
       tags:["❤️ Любовь: инициатива","💰 Финансы: осторожно","💼 Карьера: новые проекты","🔢 Число: 9"] },
     dark:"За решительностью прячется страх не успеть. Ты берёшь ответственность на себя, но иногда это превращается в контроль. Тёмная сторона — вспыльчивость. <b>Скрытая сила:</b> умение зажигать других.",
-    arcana: { 
-      icon:"👑", 
-      name:"Император", 
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/RWS_Tarot_04_Emperor.jpg/400px-RWS_Tarot_04_Emperor.jpg",
-      meaning:"Символ власти, порядка и структуры. Твоя задача — научиться управлять не только другими, но и собой.", 
-      advice:"Действуй уверенно, но не забывай о мягкости." 
-    }
+    arcana: { icon:"👑", name:"Император", meaning:"Символ власти, порядка и структуры. Твоя задача — научиться управлять не только другими, но и собой.", advice:"Действуй уверенно, но не забывай о мягкости." }
   },
   { id:"taurus", name:"Телец", sym:"♉", el:"earth", dates:"20.04–20.05",
     stats:{ energy:60, love:80, money:88, intuition:65 },
@@ -436,13 +414,7 @@ const SIGNS = [
       days:["Наблюдай. Не торопись с решениями.","Приятный сюрприз от близкого человека.","Рабочие задачи, которые откладывал.","Романтика и душевные разговоры.","Не позволяй чужому мнению влиять на самооценку.","Финансовые вопросы. Избегай лишних расходов.","Время с близкими."],
       tags:["❤️ Любовь: стабильность","💰 Финансы: пересмотр","💼 Карьера: последовательность","🔢 Число: 6"] },
     dark:"Любовь к стабильности иногда превращается в страх перемен. Ты держишься за привычное. Тёмная сторона — упрямство и собственничество. <b>Скрытая сила:</b> выносливость и умение создавать безопасное пространство.",
-    arcana: { 
-      icon:"🛡️", 
-      name:"Иерофант", 
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RWS_Tarot_05_Hierophant.jpg/400px-RWS_Tarot_05_Hierophant.jpg",
-      meaning:"Символ традиций, духовного наставничества и поиска истины. Ты — хранитель знаний и ценностей.", 
-      advice:"Доверься мудрости, но не бойся новых путей." 
-    }
+    arcana: { icon:"🛡️", name:"Иерофант", meaning:"Символ традиций, духовного наставничества и поиска истины. Ты — хранитель знаний и ценностей.", advice:"Доверься мудрости, но не бойся новых путей." }
   },
   { id:"gemini", name:"Близнецы", sym:"♊", el:"air", dates:"21.05–20.06",
     stats:{ energy:80, love:65, money:55, intuition:70 },
@@ -450,13 +422,7 @@ const SIGNS = [
       days:["Сообщение может изменить планы.","Знакомства и общение.","Не раскрывай все планы.","Разговор с человеком из прошлого.","Без важных решений на эмоциях.","Творчество и эксперименты.","Определись, чего хочешь."],
       tags:["❤️ Любовь: флирт","💰 Финансы: идея заработка","💼 Карьера: коммуникации","🔢 Число: 5"] },
     dark:"За легкостью скрывается страх привязанности. Ты можешь быть поверхностным и разбрасываться обещаниями. Тёмная сторона — непостоянство. <b>Скрытая сила:</b> видеть ситуацию с разных сторон.",
-    arcana: { 
-      icon:"🃏", 
-      name:"Влюбленные", 
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/RWS_Tarot_06_Lovers.jpg/400px-RWS_Tarot_06_Lovers.jpg",
-      meaning:"Символ выбора, союза и гармонии противоположностей. Тебе предстоит важное решение.", 
-      advice:"Прислушайся к сердцу, а не только к разуму." 
-    }
+    arcana: { icon:"🃏", name:"Влюбленные", meaning:"Символ выбора, союза и гармонии противоположностей. Тебе предстоит важное решение.", advice:"Прислушайся к сердцу, а не только к разуму." }
   },
   { id:"cancer", name:"Рак", sym:"♋", el:"water", dates:"21.06–22.07",
     stats:{ energy:55, love:90, money:60, intuition:88 },
@@ -464,13 +430,7 @@ const SIGNS = [
       days:["Слушай ощущения.","Поддержка от близкого человека.","Отпусти обиды.","Укрепление отношений.","Не принимай чужую раздражительность на свой счёт.","Спокойствие и уют.","Осознание относительно будущего."],
       tags:["❤️ Любовь: проявляй чувства","💰 Финансы: без трат","💼 Карьера: не недооценивай","🔢 Число: 2"] },
     dark:"Ты заботишься о других в надежде получить любовь. За мягкостью — страх отвержения. Тёмная сторона — обидчивость и манипуляции. <b>Скрытая сила:</b> глубокая эмпатия.",
-    arcana: { 
-      icon:"🌙", 
-      name:"Колесница", 
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/RWS_Tarot_07_Chariot.jpg/400px-RWS_Tarot_07_Chariot.jpg",
-      meaning:"Символ движения, преодоления препятствий и воли. Ты способен управлять своими противоречиями.", 
-      advice:"Двигайся вперед, не оглядываясь на прошлое." 
-    }
+    arcana: { icon:"🌙", name:"Колесница", meaning:"Символ движения, преодоления препятствий и воли. Ты способен управлять своими противоречиями.", advice:"Двигайся вперед, не оглядываясь на прошлое." }
   },
   { id:"leo", name:"Лев", sym:"♌", el:"fire", dates:"23.07–22.08",
     stats:{ energy:90, love:85, money:70, intuition:60 },
@@ -478,13 +438,7 @@ const SIGNS = [
       days:["Заяви о своих желаниях.","Новые начинания.","Похвала за работу.","Не позволяй гордости испортить отношения.","Встречи и развлечения.","Без соперничества.","Новые цели."],
       tags:["❤️ Любовь: инициатива","💰 Финансы: без трат на других","💼 Карьера: покажи себя","🔢 Число: 1"] },
     dark:"Любовь к вниманию превращается в зависимость от одобрения. Тёмная сторона — высокомерие и ревность. <b>Скрытая сила:</b> искренняя щедрость.",
-    arcana: { 
-      icon:"🦁", 
-      name:"Сила", 
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/RWS_Tarot_08_Strength.jpg/400px-RWS_Tarot_08_Strength.jpg",
-      meaning:"Символ внутренней силы, мужества и терпения. Настоящая сила — в мягкости и контроле эмоций.", 
-      advice:"Используй свою силу для созидания, а не разрушения." 
-    }
+    arcana: { icon:"🦁", name:"Сила", meaning:"Символ внутренней силы, мужества и терпения. Настоящая сила — в мягкости и контроле эмоций.", advice:"Используй свою силу для созидания, а не разрушения." }
   },
   { id:"virgo", name:"Дева", sym:"♍", el:"earth", dates:"23.08–22.09",
     stats:{ energy:65, love:60, money:82, intuition:75 },
@@ -492,13 +446,7 @@ const SIGNS = [
       days:["Разберись с делами.","Не критикуй себя.","Рабочие вопросы.","Неожиданный комплимент.","Чужие проблемы.","Здоровье и отдых.","Исправь старую ошибку."],
       tags:["❤️ Любовь: искренность","💰 Финансы: бюджеты","💼 Карьера: внимательность","🔢 Число: 4"] },
     dark:"Стремление к идеалу — защита от хаоса. Ты становишься заложником стандартов. Тёмная сторона — придирчивость. <b>Скрытая сила:</b> замечать детали и приводить всё в порядок.",
-    arcana: { 
-      icon:"🏹", 
-      name:"Отшельник", 
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/RWS_Tarot_09_Hermit.jpg/400px-RWS_Tarot_09_Hermit.jpg",
-      meaning:"Символ уединения, поиска истины и самопознания. Тебе полезно побыть наедине с собой.", 
-      advice:"Найди ответы внутри себя, не ищи их снаружи." 
-    }
+    arcana: { icon:"🏹", name:"Отшельник", meaning:"Символ уединения, поиска истины и самопознания. Тебе полезно побыть наедине с собой.", advice:"Найди ответы внутри себя, не ищи их снаружи." }
   },
   { id:"libra", name:"Весы", sym:"♎", el:"air", dates:"23.09–22.10",
     stats:{ energy:70, love:88, money:72, intuition:68 },
@@ -506,13 +454,7 @@ const SIGNS = [
       days:["Не угождай всем.","Романтические знакомства.","Деловая договорённость.","Не позволяй сомнениям остановить тебя.","Встреча с тем, кого давно не видел.","Без конфликтов из-за мелочей.","Личные решения."],
       tags:["❤️ Любовь: честность","💰 Финансы: без сомнительного","💼 Карьера: партнёрство","🔢 Число: 7"] },
     dark:"Поиск гармонии оборачивается неспособностью сказать «нет». Тёмная сторона — нерешительность. <b>Скрытая сила:</b> истинная дипломатия.",
-    arcana: { 
-      icon:"⚖️", 
-      name:"Справедливость", 
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/RWS_Tarot_11_Justice.jpg/400px-RWS_Tarot_11_Justice.jpg",
-      meaning:"Символ равновесия, кармы и честности. Всё, что ты делаешь, возвращается к тебе.", 
-      advice:"Принимай решения беспристрастно и честно." 
-    }
+    arcana: { icon:"⚖️", name:"Справедливость", meaning:"Символ равновесия, кармы и честности. Всё, что ты делаешь, возвращается к тебе.", advice:"Принимай решения беспристрастно и честно." }
   },
   { id:"scorpio", name:"Скорпион", sym:"♏", el:"water", dates:"23.10–21.11",
     stats:{ energy:75, love:82, money:70, intuition:95 },
@@ -520,13 +462,7 @@ const SIGNS = [
       days:["Детали важны.","Серьёзный разговор.","Ревность.","Поворот в личной жизни.","Откажись от привычки.","Идея.","Доверься опыту."],
       tags:["❤️ Любовь: без проверок","💰 Финансы: без риска","💼 Карьера: долгосрок","🔢 Число: 8"] },
     dark:"Потребность контролировать становится разрушительной. Тёмная сторона — манипулятивность и желание властвовать. <b>Скрытая сила:</b> возрождаться из пепла.",
-    arcana: { 
-      icon:"💀", 
-      name:"Смерть", 
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/RWS_Tarot_13_Death.jpg/400px-RWS_Tarot_13_Death.jpg",
-      meaning:"Символ трансформации и завершения старого. Не бойся перемен — они ведут к обновлению.", 
-      advice:"Отпусти то, что отжило, и начни новую главу." 
-    }
+    arcana: { icon:"💀", name:"Смерть", meaning:"Символ трансформации и завершения старого. Не бойся перемен — они ведут к обновлению.", advice:"Отпусти то, что отжило, и начни новую главу." }
   },
   { id:"sagittarius", name:"Стрелец", sym:"♐", el:"fire", dates:"22.11–21.12",
     stats:{ energy:88, love:70, money:58, intuition:65 },
@@ -534,13 +470,7 @@ const SIGNS = [
       days:["Возможность изменить планы.","Путешествия и впечатления.","Не обещай лишнего.","Встреча с интересным человеком.","Попробуй новое.","Финансовые вопросы.","Итоги и планы."],
       tags:["❤️ Любовь: искренность","💰 Финансы: без трат","💼 Карьера: новые направления","🔢 Число: 3"] },
     dark:"Любовь к свободе — бегство от ответственности. Тёмная сторона — безответственность. <b>Скрытая сила:</b> видеть большую картину.",
-    arcana: { 
-      icon:"🎯", 
-      name:"Умеренность", 
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/RWS_Tarot_14_Temperance.jpg/400px-RWS_Tarot_14_Temperance.jpg",
-      meaning:"Символ баланса, гармонии и исцеления. Тебе важно найти золотую середину во всем.", 
-      advice:"Избегай крайностей, ищи гармонию." 
-    }
+    arcana: { icon:"🎯", name:"Умеренность", meaning:"Символ баланса, гармонии и исцеления. Тебе важно найти золотую середину во всем.", advice:"Избегай крайностей, ищи гармонию." }
   },
   { id:"capricorn", name:"Козерог", sym:"♑", el:"earth", dates:"22.12–19.01",
     stats:{ energy:72, love:55, money:92, intuition:62 },
@@ -548,13 +478,7 @@ const SIGNS = [
       days:["Определи цель.","Попроси помощи.","Рабочие вопросы.","Внимание близким.","Не сравнивай успех.","Праздник.","Привычки, которые мешают."],
       tags:["❤️ Любовь: говори о чувствах","💰 Финансы: планирование","💼 Карьера: дисциплина","🔢 Число: 10"] },
     dark:"Стремление к достижениям прячет страх слабости. Тёмная сторона — эмоциональная закрытость. <b>Скрытая сила:</b> строить империи с нуля.",
-    arcana: { 
-      icon:"😈", 
-      name:"Дьявол", 
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/RWS_Tarot_15_Devil.jpg/400px-RWS_Tarot_15_Devil.jpg",
-      meaning:"Символ искушений, ограничений и теневых сторон. Осознай свои оковы, чтобы освободиться.", 
-      advice:"Не позволяй страхам управлять твоей жизнью." 
-    }
+    arcana: { icon:"😈", name:"Дьявол", meaning:"Символ искушений, ограничений и теневых сторон. Осознай свои оковы, чтобы освободиться.", advice:"Не позволяй страхам управлять твоей жизнью." }
   },
   { id:"aquarius", name:"Водолей", sym:"♒", el:"air", dates:"20.01–18.02",
     stats:{ energy:68, love:60, money:65, intuition:85 },
@@ -562,13 +486,7 @@ const SIGNS = [
       days:["Неожиданная идея.","Друзья.","Критика.","Новость.","Попробуй то, что откладывал.","Открытость.","Планы на следующий год."],
       tags:["❤️ Любовь: близость","💰 Финансы: рационально","💼 Карьера: нестандартность","🔢 Число: 11"] },
     dark:"Независимость — способ защититься от боли. Тёмная сторона — эмоциональная холодность. <b>Скрытая сила:</b> мыслить на десятилетия вперёд.",
-    arcana: { 
-      icon:"⭐", 
-      name:"Звезда", 
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/RWS_Tarot_17_Star.jpg/400px-RWS_Tarot_17_Star.jpg",
-      meaning:"Символ надежды, веры и вдохновения. Ты — проводник света для других.", 
-      advice:"Делись своим светом, не бойся мечтать." 
-    }
+    arcana: { icon:"⭐", name:"Звезда", meaning:"Символ надежды, веры и вдохновения. Ты — проводник света для других.", advice:"Делись своим светом, не бойся мечтать." }
   },
   { id:"pisces", name:"Рыбы", sym:"♓", el:"water", dates:"19.02–20.03",
     stats:{ energy:50, love:85, money:55, intuition:98 },
@@ -576,13 +494,7 @@ const SIGNS = [
       days:["Внутренний голос.","Творчество.","Чужая ответственность.","Романтический момент.","Прошлое.","Хобби.","Размышления о будущем."],
       tags:["❤️ Любовь: открытость","💰 Финансы: без эмоций","💼 Карьера: творчество","🔢 Число: 12"] },
     dark:"Ты убегаешь от реальности в иллюзии. Тёмная сторона — инфантильность и самообман. <b>Скрытая сила:</b> безграничное воображение.",
-    arcana: { 
-      icon:"🌕", 
-      name:"Луна", 
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/RWS_Tarot_18_Moon.jpg/400px-RWS_Tarot_18_Moon.jpg",
-      meaning:"Символ интуиции, подсознания и иллюзий. Доверяй своей интуиции и снам.", 
-      advice:"Смотри вглубь, не бойся своих теней." 
-    }
+    arcana: { icon:"🌕", name:"Луна", meaning:"Символ интуиции, подсознания и иллюзий. Доверяй своей интуиции и снам.", advice:"Смотри вглубь, не бойся своих теней." }
   }
 ];
 
@@ -709,7 +621,7 @@ function saveBirth() {
   
   initProfile();
   renderWeek(mySignId);
-  renderNatal(); // Перерисовываем карту, если открыта
+  renderNatal(); 
 }
 
 function showProfileSetup() {
@@ -727,14 +639,12 @@ function initProfile() {
   const setup = document.getElementById("profileSetup");
   const bar = document.getElementById("profileBar");
   
-  // Показываем бар только если есть и знак, и дата
   if (mySignId && myBirthDate) {
     setup.classList.add("hidden");
     bar.classList.remove("hidden");
     const s = SIGNS.find(x => x.id === mySignId);
     document.getElementById("mySignName").innerText = s.name + " " + s.sym;
   } else {
-    // Иначе показываем форму
     setup.classList.remove("hidden");
     bar.classList.add("hidden");
   }
@@ -937,7 +847,6 @@ function renderNatal() {
   const day = date.getDate();
   const month = date.getMonth(); // 0-11
   
-  // Простая эмуляция позиций
   const sunDeg = (month * 30 + day) % 360;
   const moonDeg = (sunDeg * 13.2) % 360;
   const mercuryDeg = (sunDeg + 15) % 360;
@@ -962,11 +871,9 @@ function renderNatal() {
 
   let svg = `<svg class="natal-svg" viewBox="0 0 340 340">`;
   
-  // Круг домов
   svg += `<circle cx="${cx}" cy="${cy}" r="${rOuter}" fill="#1a1233" stroke="#c9a227" stroke-width="2"/>`;
   svg += `<circle cx="${cx}" cy="${cy}" r="${rInner}" fill="#0d0820" stroke="#3d2f6b" stroke-width="1"/>`;
 
-  // Сектора и знаки
   for (let i = 0; i < 12; i++) {
     const angle = i * 30;
     const rad = (angle - 90) * Math.PI / 180;
@@ -977,14 +884,12 @@ function renderNatal() {
     
     svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#3d2f6b" stroke-width="1"/>`;
     
-    // Знаки зодиака
     const symRad = (angle + 15 - 90) * Math.PI / 180;
     const symX = cx + ((rInner + rOuter) / 2) * Math.cos(symRad);
     const symY = cy + ((rInner + rOuter) / 2) * Math.sin(symRad);
     svg += `<text x="${symX}" y="${symY + 5}" fill="#c9a227" font-size="16" text-anchor="middle" font-family="Arial">${SIGNS[i].sym}</text>`;
   }
 
-  // Планеты
   planets.forEach((p, idx) => {
     const rad = (p.deg - 90) * Math.PI / 180;
     const r = rInner + 20 + (idx % 3) * 15; 
@@ -995,42 +900,17 @@ function renderNatal() {
     svg += `<text x="${px}" y="${py + 5}" fill="#fff" font-size="14" text-anchor="middle" font-family="Arial">${p.sym}</text>`;
   });
 
-  // Центральная точка
   svg += `<circle cx="${cx}" cy="${cy}" r="4" fill="#c9a227"/>`;
   svg += `</svg>`;
 
   container.innerHTML = svg;
 
-  // Легенда
   legend.innerHTML = planets.map(p => `
     <div>
       <span>${p.sym}</span> 
       <div><b>${p.name}</b><br><span style="font-size:10px;color:#9a8fc0">${p.meaning}</span></div>
     </div>
   `).join("");
-}
-
-/* ========== ТЁМНАЯ ========== */
-function renderDark(id) {
-  const s = SIGNS.find(x => x.id === id);
-  setActiveSign("darkSigns", id);
-  document.getElementById("darkContent").innerHTML = `
-    <div class="week-title"><div>${s.sym} ${s.name}</div></div>
-    <div class="info-block" style="border-color:#e07fb0;"><p>${s.dark}</p></div>
-  `;
-}
-
-/* ========== СУДЬБА ========== */
-function renderFate(id) {
-  const s = SIGNS.find(x => x.id === id);
-  setActiveSign("fateSigns", id);
-  const f = FATE[s.name];
-  document.getElementById("fateContent").innerHTML = `
-    <div class="week-title"><div>${s.sym} ${s.name}</div></div>
-    <div class="info-block"><h4>Главная тема</h4><p><b>${f.theme[0]}:</b> ${f.theme[1]}</p></div>
-    <div class="info-block"><h4>Сильная сторона</h4><p><b>${f.strong[0]}:</b> ${f.strong[1]}</p></div>
-    <div class="info-block"><h4>Главный урок</h4><p><b>${f.lesson[0]}:</b> ${f.lesson[1]}</p></div>
-  `;
 }
 
 /* ========== СОВМЕСТИМОСТЬ ========== */
@@ -1073,27 +953,14 @@ function calcCompat() {
 function renderTarot() {
   const targetSign = mySignId || curSign;
   const s = SIGNS.find(x => x.id === targetSign);
-  const cardBox = document.getElementById("tCard");
   
-  cardBox.innerHTML = `
-    <img src="${s.arcana.img}" class="tarot-img" alt="${s.arcana.name}">
-    <div class="tarot-overlay"><span>${s.arcana.name}</span></div>
-  `;
+  document.getElementById("tIcon").innerText = s.arcana.icon;
+  document.getElementById("tName").innerText = s.arcana.name;
   
   document.getElementById("tarotDetails").innerHTML = `
     <div class="info-block"><h4>Значение для ${s.name}</h4><p>${s.arcana.meaning}</p></div>
     <div class="info-block" style="border-color:#4caf50;"><h4>✨ Твой совет</h4><p>${s.arcana.advice}</p></div>
   `;
-}
-
-/* ========== ЛУНА ========== */
-function renderMoon() {
-  const days = (new Date() - new Date("2024-01-11")) / 86400000;
-  const idx = Math.floor(((days % 29.53) / 29.53) * 8) % 8;
-  const ph = MOON[idx];
-  document.getElementById("moonIcon").textContent = ph.icon;
-  document.getElementById("moonPhaseName").textContent = ph.n;
-  document.getElementById("moonDesc").textContent = ph.d;
 }
 
 /* ========== КОЛЕСО УДАЧИ ========== */
@@ -1142,25 +1009,22 @@ function spinWheel() {
     const s = SIGNS[idx];
     const f = FORTUNE_SECTORS[idx];
 
-    resBox.innerHTML = `
-      <div class="fortune-header">Твоя удача:</div>
-      <div class="fortune-grid">
-        <div class="fortune-item">
-          <h5>Сектор</h5>
-          <p><b>${f.icon} ${f.name}</b> — под покровительством знака <b>${s.name} ${s.sym}</b></p>
-        </div>
-        <div class="fortune-item">
-          <h5>✨ Совет дня</h5>
-          <p>${f.advice}</p>
-        </div>
-        <div class="fortune-item">
-          <h5>⚠️ Остерегайся</h5>
-          <p>${f.avoid}</p>
-        </div>
-        <div class="fortune-item">
-          <h5>🌟 Аффирмация</h5>
-          <p style="font-style:italic;">«${f.affirm}»</p>
-        </div>
+    resBox.querySelector(".fortune-grid").innerHTML = `
+      <div class="fortune-item">
+        <h5>Сектор</h5>
+        <p><b>${f.icon} ${f.name}</b> — под покровительством знака <b>${s.name} ${s.sym}</b></p>
+      </div>
+      <div class="fortune-item">
+        <h5>✨ Совет дня</h5>
+        <p>${f.advice}</p>
+      </div>
+      <div class="fortune-item">
+        <h5>⚠️ Остерегайся</h5>
+        <p>${f.avoid}</p>
+      </div>
+      <div class="fortune-item">
+        <h5>🌟 Аффирмация</h5>
+        <p style="font-style:italic;">«${f.affirm}»</p>
       </div>
     `;
     resBox.classList.remove("hidden");
